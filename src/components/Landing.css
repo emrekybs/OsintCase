@@ -3,15 +3,61 @@
   display: flex;
   flex-direction: column;
   background:
-    radial-gradient(1100px 600px at 20% -10%, var(--accent-soft), transparent 60%),
-    radial-gradient(900px 500px at 110% 110%, var(--accent-soft), transparent 60%),
+    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 32px 32px,
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 32px 32px,
     var(--bg-0);
 }
 
 .landing-topbar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   padding: 14px 20px;
+}
+.landing-analyst {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.landing-analyst-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.landing-analyst-name {
+  color: var(--text-0);
+  border-bottom: 1px dashed var(--border-strong);
+  padding: 2px 0;
+}
+.landing-analyst input {
+  padding: 4px 8px;
+  width: 220px;
+}
+.landing-recent-no {
+  color: var(--accent);
+  font-size: 11px;
+  margin-right: 8px;
+}
+.mini-class {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  padding: 0 5px;
+  margin-right: 6px;
+  border-radius: 2px;
+  line-height: 15px;
+}
+.landing-recent-icon.locked {
+  color: var(--accent);
+}
+.landing-recent-plain {
+  color: var(--warn);
+  margin-left: 4px;
 }
 
 .landing-content {
@@ -31,21 +77,21 @@
 .landing-logo {
   width: 76px;
   height: 76px;
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-  color: #fff;
+  background: var(--bg-1);
+  border: 1px solid var(--border-strong);
+  color: var(--accent);
   margin-bottom: 18px;
-  box-shadow: var(--shadow-lg);
 }
 
 .landing-title {
   margin: 0 0 8px;
-  font-size: 30px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .landing-tagline {
@@ -75,7 +121,7 @@
   background: rgba(229, 72, 77, 0.08);
   border: 1px solid rgba(229, 72, 77, 0.25);
   padding: 10px 14px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   max-width: 420px;
 }
 
@@ -116,7 +162,7 @@
   padding: 10px 12px;
   background: var(--bg-1);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   cursor: pointer;
   color: var(--text-0);
   font-family: inherit;
@@ -133,7 +179,7 @@
 .landing-recent-icon {
   width: 30px;
   height: 30px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: var(--bg-2);
   color: var(--text-1);
   display: inline-flex;

@@ -37,6 +37,7 @@ public/app.config.*.json
 # OSINT project data — these files may contain real research subjects
 # ─────────────────────────────────────────────────────────────────────────────
 *.osint.json
+*.osint.enc.json
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Logs

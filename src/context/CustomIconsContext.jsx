@@ -13,7 +13,7 @@ export function CustomIconsProvider({ children }) {
   const addIcon = useCallback((name, dataUrl) => {
     const id = newCustomIconId();
     setIcons((cur) => {
-      const next = { ...cur, [id]: { name: name || 'Untitled icon', dataUrl } };
+      const next = { ...cur, [id]: { name: name || 'Adsız simge', dataUrl } };
       persistCustomIcons(next);
       return next;
     });

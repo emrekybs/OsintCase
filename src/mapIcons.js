@@ -35,21 +35,21 @@ import shoppingBlack from './images/icons/shopping-mall-black.png';
 import shoppingWhite from './images/icons/shopping-mall-white.png';
 
 export const BUILT_IN_MAP_ICONS = {
-  coffee: { name: 'Coffee shop', light: coffeeBlack, dark: coffeeWhite },
-  food: { name: 'Restaurant', light: foodBlack, dark: foodWhite },
-  gym: { name: 'Gym', light: gymBlack, dark: gymWhite },
-  home: { name: 'Home', light: homeBlack, dark: homeWhite },
-  movie: { name: 'Cinema', light: movieBlack, dark: movieWhite },
+  coffee: { name: 'Kafe', light: coffeeBlack, dark: coffeeWhite },
+  food: { name: 'Restoran', light: foodBlack, dark: foodWhite },
+  gym: { name: 'Spor salonu', light: gymBlack, dark: gymWhite },
+  home: { name: 'Ev', light: homeBlack, dark: homeWhite },
+  movie: { name: 'Sinema', light: movieBlack, dark: movieWhite },
   park: { name: 'Park', light: parkBlack, dark: parkWhite },
   amusementPark: {
-    name: 'Amusement park',
+    name: 'Eğlence parkı',
     light: amusementParkBlack,
     dark: amusementParkWhite,
   },
-  school: { name: 'School', light: schoolBlack, dark: schoolWhite },
-  shopping: { name: 'Shopping', light: shoppingBlack, dark: shoppingWhite },
-  clothes: { name: 'Clothing store', light: clothesBlack, dark: clothesWhite },
-  library: { name: 'Library', light: bookLibraryBlack, dark: bookLibraryWhite },
+  school: { name: 'Okul', light: schoolBlack, dark: schoolWhite },
+  shopping: { name: 'AVM / market', light: shoppingBlack, dark: shoppingWhite },
+  clothes: { name: 'Giyim mağazası', light: clothesBlack, dark: clothesWhite },
+  library: { name: 'Kütüphane', light: bookLibraryBlack, dark: bookLibraryWhite },
 };
 
 /**

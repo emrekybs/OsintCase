@@ -11,3 +11,4 @@ npm-debug.log
 .env
 public/app.config.json
 *.osint.json
+*.osint.enc.json

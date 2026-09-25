@@ -56,10 +56,10 @@ export default function Welcome() {
               <path d="m21 21-4.3-4.3" />
             </svg>
           </div>
-          <h1 className="welcome-title">Welcome</h1>
+          <h1 className="welcome-title">Hoş geldiniz</h1>
           <p className="welcome-sub">
-            Pick how you want to use the map. You can switch later from the
-            gear icon in the Map tab.
+            Harita sağlayıcısını seçin. Sonradan Harita sekmesindeki dişli
+            simgesinden değiştirebilirsiniz.
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export default function Welcome() {
               </div>
               <div className="welcome-card-title">OpenStreetMap</div>
               <div className="welcome-card-desc">
-                Free, no signup. Works immediately.
+                Ücretsiz, kayıt gerektirmez. Hemen çalışır.
               </div>
             </button>
 
@@ -95,11 +95,11 @@ export default function Welcome() {
               </div>
               <div className="welcome-card-title">Google Maps</div>
               <div className="welcome-card-desc">
-                Richer place details (ratings, hours, phone).{' '}
-                {hasExistingKey ? 'Key already set up.' : 'Needs an API key.'}
+                Daha zengin yer bilgisi (puan, saat, telefon).{' '}
+                {hasExistingKey ? 'Anahtar zaten tanımlı.' : 'API anahtarı gerekir.'}
               </div>
               <span className="welcome-card-tag">
-                {hasExistingKey ? 'Key detected' : 'Recommended'}
+                {hasExistingKey ? 'Anahtar bulundu' : 'Önerilen'}
               </span>
             </button>
           </div>
@@ -115,8 +115,8 @@ export default function Welcome() {
           >
             <div className="field">
               <label htmlFor="welcome-api-key">
-                Google Maps API key{' '}
-                <span className="welcome-optional">(optional)</span>
+                Google Maps API anahtarı{' '}
+                <span className="welcome-optional">(isteğe bağlı)</span>
               </label>
               <input
                 id="welcome-api-key"
@@ -127,8 +127,8 @@ export default function Welcome() {
                 placeholder="AIzaSy…"
               />
               <p className="welcome-help">
-                Skip this for now if you want — you can paste the key into the
-                Map tab whenever you're ready. The key stays on this device.
+                İsterseniz şimdilik atlayın; anahtarı daha sonra Harita
+                sekmesine yapıştırabilirsiniz. Anahtar bu cihazda kalır.
               </p>
             </div>
             <div className="welcome-key-actions">
@@ -137,10 +137,10 @@ export default function Welcome() {
                 className="btn btn-ghost"
                 onClick={() => setStep('choose')}
               >
-                Back
+                Geri
               </button>
               <button type="submit" className="btn btn-primary">
-                {apiKey.trim() ? 'Save key & continue' : 'Skip for now'}
+                {apiKey.trim() ? 'Kaydet ve devam et' : 'Şimdilik atla'}
               </button>
             </div>
           </form>
@@ -148,7 +148,7 @@ export default function Welcome() {
       </div>
 
       <div className="welcome-footer">
-        Local-only · Your data stays on this device
+        Yalnızca yerel · Veriler bu cihazdan çıkmaz
       </div>
     </div>
   );

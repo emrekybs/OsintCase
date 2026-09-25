@@ -18,7 +18,7 @@ export default function MapsKeySetup({ compact = false, onSaved }) {
     e.preventDefault();
     const trimmed = value.trim();
     if (!trimmed) {
-      setError('Paste your Google Maps API key first.');
+      setError('Önce Google Maps API anahtarını yapıştırın.');
       return;
     }
     setGoogleMapsApiKey(trimmed);
@@ -36,14 +36,14 @@ export default function MapsKeySetup({ compact = false, onSaved }) {
             <circle cx="12" cy="10" r="3" />
           </svg>
         </div>
-        <h2>Connect Google Maps</h2>
+        <h2>Google Maps bağla</h2>
         <p className="maps-setup-sub">
-          The map needs a Google Maps JavaScript API key. Your key stays on this
-          device — it never gets sent anywhere or stored in project files.
+          Harita için Google Maps JavaScript API anahtarı gerekir. Anahtar bu
+          cihazda kalır; hiçbir yere gönderilmez, dosyalara yazılmaz.
         </p>
 
         <form onSubmit={handleSubmit} className="maps-setup-form">
-          <label htmlFor="gmaps-key">Google Maps API key</label>
+          <label htmlFor="gmaps-key">Google Maps API anahtarı</label>
           <input
             id="gmaps-key"
             type="text"
@@ -56,12 +56,12 @@ export default function MapsKeySetup({ compact = false, onSaved }) {
           {error && <div className="maps-setup-error">{error}</div>}
           <div className="maps-setup-actions">
             <button type="submit" className="btn btn-primary">
-              Save key
+              Anahtarı kaydet
             </button>
           </div>
         </form>
 
-        <div className="maps-setup-divider"><span>or</span></div>
+        <div className="maps-setup-divider"><span>ya da</span></div>
 
         {/* Escape hatch for users who don't want to deal with Google Cloud
             at all — one click switches the provider to OpenStreetMap. */}
@@ -74,33 +74,33 @@ export default function MapsKeySetup({ compact = false, onSaved }) {
             <circle cx="12" cy="12" r="10" />
             <path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20" />
           </svg>
-          Use OpenStreetMap instead (no key needed)
+          OpenStreetMap kullan (anahtar gerekmez)
         </button>
 
         <div className="maps-setup-alt">
           <p>
-            Prefer editing a file? Copy <code>public/app.config.example.json</code> to{' '}
-            <code>{APP_CONFIG_PATH_HINT}</code> and paste your key under{' '}
-            <code>googleMaps.apiKey</code>. The app reads it on next load.
+            Dosyadan ayarlamak için <code>public/app.config.example.json</code> dosyasını{' '}
+            <code>{APP_CONFIG_PATH_HINT}</code> olarak kopyalayıp anahtarı{' '}
+            <code>googleMaps.apiKey</code> altına yazın. Uygulama bir sonraki açılışta okur.
           </p>
         </div>
 
         {googleMapsApiKeySource && (
           <div className="maps-setup-status">
-            Current key source: <strong>{googleMapsApiKeySource}</strong>
+            Anahtarın kaynağı: <strong>{googleMapsApiKeySource}</strong>
           </div>
         )}
 
         <details className="maps-setup-help">
-          <summary>How do I get an API key?</summary>
+          <summary>API anahtarı nasıl alınır?</summary>
           <ol>
-            <li>Open the <strong>Google Cloud Console</strong> and create or select a project.</li>
-            <li>Enable the <strong>Maps JavaScript API</strong> (and <strong>Places API</strong> if you want auto-fill for known places).</li>
-            <li>Under <strong>APIs &amp; Services → Credentials</strong>, create an API key.</li>
-            <li>For safety, restrict the key to <code>http://localhost</code> and any other origins you use.</li>
+            <li><strong>Google Cloud Console</strong>'da bir proje oluşturun ya da seçin.</li>
+            <li><strong>Maps JavaScript API</strong>'yi (yer bilgisi otomatik dolsun isterseniz <strong>Places API</strong>'yi de) etkinleştirin.</li>
+            <li><strong>APIs &amp; Services → Credentials</strong> altında API anahtarı oluşturun.</li>
+            <li>Güvenlik için anahtarı <code>http://localhost</code> ve kullandığınız diğer adreslerle sınırlandırın.</li>
           </ol>
           <p className="maps-setup-warning">
-            Usage is billed by Google under your account's free tier and pricing. Restrict your key.
+            Kullanım Google hesabınızın ücretsiz kotası ve fiyatlandırmasına göre faturalanır. Anahtarı mutlaka kısıtlayın.
           </p>
         </details>
       </div>

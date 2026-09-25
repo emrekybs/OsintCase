@@ -92,7 +92,7 @@ export default function MapSearchBox({ onPlaceSelected }) {
       <input
         ref={inputRef}
         type="text"
-        placeholder="Search a place, address, or business…"
+        placeholder="Yer, adres ya da işletme ara…"
         onKeyDown={handleKeyDown}
         autoComplete="off"
         spellCheck="false"
@@ -101,8 +101,8 @@ export default function MapSearchBox({ onPlaceSelected }) {
         type="button"
         className="map-searchbox-clear"
         onClick={clear}
-        title="Clear search"
-        aria-label="Clear search"
+        title="Aramayı temizle"
+        aria-label="Aramayı temizle"
       >
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 6 6 18M6 6l12 12" />

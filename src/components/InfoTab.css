@@ -39,7 +39,7 @@
 .btn-sm {
   padding: 5px 10px;
   font-size: 12px;
-  border-radius: 6px;
+  border-radius: var(--radius);
 }
 
 .empty-state {
@@ -68,7 +68,7 @@
   align-items: center;
   gap: 10px;
   padding: 9px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   cursor: pointer;
   margin-bottom: 3px;
   position: relative;
@@ -129,7 +129,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: var(--radius);
   color: var(--text-2);
   opacity: 0;
   transition: opacity 0.12s ease, background 0.12s ease, color 0.12s ease;
@@ -164,7 +164,7 @@
   color: var(--text-2);
   background: var(--bg-1);
   border: 1px dashed var(--border-strong);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   padding: 26px 32px;
   max-width: 380px;
   pointer-events: none;
@@ -195,7 +195,7 @@
   font-size: 11px;
   background: var(--bg-2);
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   padding: 1px 5px;
   color: var(--text-1);
 }
@@ -233,4 +233,93 @@
 .canvas-tips-sep {
   color: var(--text-2);
   opacity: 0.5;
+}
+
+
+/* ---- Analiz araç çubuğu --------------------------------------------------- */
+.info-canvas {
+  position: relative;
+}
+.graph-toolbar {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  z-index: 5;
+}
+.tool-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  font-size: 12px;
+  color: var(--text-1);
+  border-radius: var(--radius-sm);
+}
+.tool-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-0);
+}
+.tool-btn.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.tool-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--border);
+  margin: 0 4px;
+}
+.graph-stats {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  gap: 12px;
+  font-size: 10.5px;
+  color: var(--text-2);
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  padding: 5px 10px;
+  border-radius: var(--radius);
+  z-index: 5;
+  max-width: 45%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.graph-toast {
+  position: absolute;
+  top: 56px;
+  left: 12px;
+  max-width: min(640px, 80%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 12px;
+  background: var(--bg-1);
+  border: 1px solid var(--accent);
+  border-left-width: 3px;
+  border-radius: var(--radius);
+  font-size: 12.5px;
+  z-index: 5;
+}
+.graph-toast .icon-btn {
+  width: 24px;
+  height: 24px;
+}
+.identifier-type {
+  display: flex;
+  align-items: center;
+}
+.sidebar-header h3 {
+  display: flex;
+  align-items: center;
 }

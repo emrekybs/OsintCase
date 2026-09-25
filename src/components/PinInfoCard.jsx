@@ -86,13 +86,13 @@ export default function PinInfoCard({
         <div className="pin-info-section pin-info-custom">
           {pin.visitedAt?.trim?.() && (
             <div className="pin-info-row">
-              <span className="pin-info-field-label">Visited:</span>
+              <span className="pin-info-field-label">Ziyaret:</span>
               <span>{pin.visitedAt}</span>
             </div>
           )}
           {pin.withWho?.trim?.() && (
             <div className="pin-info-row">
-              <span className="pin-info-field-label">With:</span>
+              <span className="pin-info-field-label">Kiminle:</span>
               <span>{pin.withWho}</span>
             </div>
           )}
@@ -102,9 +102,32 @@ export default function PinInfoCard({
         </div>
       )}
 
+      {((pin.sightings?.length ?? 0) > 0 || pin.radius > 0) && (
+        <div className="pin-info-section pin-info-custom">
+          {pin.sightings?.length > 0 && (
+            <div className="pin-info-row">
+              <span className="pin-info-field-label">Görülme:</span>
+              <span>
+                {pin.sightings.length} kayıt · son{' '}
+                {[...pin.sightings].map((s) => s.date).filter(Boolean).sort().slice(-1)[0] ?? '—'}
+              </span>
+            </div>
+          )}
+          {pin.radius > 0 && (
+            <div className="pin-info-row">
+              <span className="pin-info-field-label">Yarıçap:</span>
+              <span>{pin.radius >= 1000 ? `${pin.radius / 1000} km` : `${pin.radius} m`}</span>
+            </div>
+          )}
+          <div className="pin-info-row mono small">
+            {pin.lat.toFixed(6)}, {pin.lng.toFixed(6)}
+          </div>
+        </div>
+      )}
+
       {linkedEntries.length > 0 && (
         <div className="pin-info-section pin-info-links">
-          <div className="pin-info-field-label">Linked to</div>
+          <div className="pin-info-field-label">İlişkili</div>
           <div className="pin-info-link-chips">
             {linkedEntries.map(({ link, identifier: i }) => (
               <button
@@ -118,7 +141,7 @@ export default function PinInfoCard({
                 }}
                 onMouseEnter={() => setHoveredIdentifierId(i.id)}
                 onMouseLeave={() => setHoveredIdentifierId(null)}
-                title={`Open ${getTypeDef(i.type).label} in Information tab`}
+                title={`${getTypeDef(i.type).label} — Ağ sekmesinde aç`}
               >
                 <IdentifierBadge
                   typeKey={i.type}
@@ -150,7 +173,7 @@ export default function PinInfoCard({
           className="btn btn-primary btn-sm"
           onClick={onEdit}
         >
-          Edit details
+          Düzenle
         </button>
         <a
           href={externalUrl}

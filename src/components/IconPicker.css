@@ -51,7 +51,7 @@
   justify-content: center;
   gap: 6px;
   padding: 10px 8px;
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--bg-2);
   border: 1px solid var(--border);
   cursor: pointer;
@@ -85,7 +85,7 @@
   width: 42px;
   height: 42px;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: var(--radius);
 }
 
 .icon-tile-text {
@@ -163,6 +163,6 @@
   border: 1px solid rgba(229, 72, 77, 0.25);
   color: var(--danger);
   padding: 8px 12px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-size: 12.5px;
 }

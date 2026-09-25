@@ -25,7 +25,11 @@ const EMPTY = {
   notes: '',
   color: DEFAULT_PIN_COLOR,
   iconId: null,
+  radius: 0,
+  sightings: [],
 };
+
+const RADIUS_PRESETS = [0, 100, 250, 500, 1000, 2000, 5000];
 
 export default function PinModal({ pin, onClose, onSave, onDelete }) {
   const { project, addPinLink, removePinLinkByPair, setPinLinkContext } =
@@ -91,6 +95,8 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
       notes: draft.notes.trim(),
       color: draft.color ?? DEFAULT_PIN_COLOR,
       iconId: draft.iconId ?? null,
+      radius: Number(draft.radius) || 0,
+      sightings: (draft.sightings ?? []).filter((s) => s.date || s.note),
     });
   };
 
@@ -138,7 +144,7 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
           ),
           label: getIdentifierDisplayLabel(i),
           secondary: def.label,
-          group: CATEGORIES[def.category]?.label ?? 'Other',
+          group: CATEGORIES[def.category]?.label ?? 'Diğer',
         };
       }),
     [identifiers],
@@ -152,12 +158,12 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
         onSubmit={handleSubmit}
       >
         <div className="modal-header">
-          <h2>{pin?.id ? 'Edit pin' : 'New pin'}</h2>
+          <h2>{pin?.id ? 'Konumu düzenle' : 'Yeni konum'}</h2>
           <button
             type="button"
             className="icon-btn"
             onClick={onClose}
-            aria-label="Close"
+            aria-label="Kapat"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
@@ -172,7 +178,7 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
         </div>
 
         <div className="field">
-          <label>Color</label>
+          <label>Renk</label>
           <div className="color-picker">
             {Object.entries(PIN_COLORS).map(([key, c]) => {
               const isSelected = (draft.color ?? DEFAULT_PIN_COLOR) === key;
@@ -208,8 +214,8 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
                         : undefined
                     }
                     onClick={() => pinColorInputRef.current?.click()}
-                    aria-label="Custom color"
-                    title="Custom color"
+                    aria-label="Özel renk"
+                    title="Özel renk"
                   >
                     {isCustom && (
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={resolved.glyph} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
@@ -233,13 +239,13 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
         </div>
 
         <div className="field">
-          <label>Icon</label>
+          <label>Simge</label>
           <div className="pin-icon-picker">
             <button
               type="button"
               className={`pin-icon-tile pin-icon-default ${!draft.iconId ? 'selected' : ''}`}
               onClick={() => change('iconId', null)}
-              title="Default colored pin"
+              title="Varsayılan renkli iğne"
             >
               <span
                 className="pin-icon-default-dot"
@@ -272,61 +278,158 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
         </div>
 
         <div className="field">
-          <label htmlFor="pin-label">Label</label>
+          <label htmlFor="pin-label">Ad</label>
           <input
             id="pin-label"
             autoFocus
             value={draft.label}
             onChange={(e) => change('label', e.target.value)}
-            placeholder="e.g. Coffee shop, Workplace"
+            placeholder="ör. Kafe, iş yeri, buluşma noktası"
           />
         </div>
 
         <div className="field">
-          <label htmlFor="pin-address">Address</label>
+          <label htmlFor="pin-address">Adres</label>
           <input
             id="pin-address"
             value={draft.address}
             onChange={(e) => change('address', e.target.value)}
-            placeholder="123 Main St…"
+            placeholder="Mahalle, cadde, no…"
           />
         </div>
 
         <div className="field-row">
           <div className="field">
-            <label htmlFor="pin-visited">Visited</label>
+            <label htmlFor="pin-visited">Ziyaret</label>
             <input
               id="pin-visited"
               type="text"
               value={draft.visitedAt}
               onChange={(e) => change('visitedAt', e.target.value)}
-              placeholder="e.g. 2025-03-14 or every Tuesday"
+              placeholder="ör. 2025-03-14 18:30 ya da her salı"
             />
           </div>
           <div className="field">
-            <label htmlFor="pin-with">With whom</label>
+            <label htmlFor="pin-with">Kiminle</label>
             <input
               id="pin-with"
               value={draft.withWho}
               onChange={(e) => change('withWho', e.target.value)}
-              placeholder="People they were with"
+              placeholder="Birlikte olduğu kişiler"
             />
           </div>
         </div>
 
+        <div className="field-row">
+          <div className="field">
+            <label htmlFor="pin-radius">Etki / arama yarıçapı</label>
+            <select
+              id="pin-radius"
+              value={RADIUS_PRESETS.includes(Number(draft.radius)) ? Number(draft.radius) : 'custom'}
+              onChange={(e) =>
+                change('radius', e.target.value === 'custom' ? draft.radius || 750 : Number(e.target.value))
+              }
+            >
+              {RADIUS_PRESETS.map((r) => (
+                <option key={r} value={r}>
+                  {r === 0 ? 'Yok' : r >= 1000 ? `${r / 1000} km` : `${r} m`}
+                </option>
+              ))}
+              <option value="custom">Özel…</option>
+            </select>
+          </div>
+          {!RADIUS_PRESETS.includes(Number(draft.radius)) && (
+            <div className="field">
+              <label htmlFor="pin-radius-custom">Metre</label>
+              <input
+                id="pin-radius-custom"
+                type="number"
+                min="0"
+                step="50"
+                value={draft.radius}
+                onChange={(e) => change('radius', e.target.value)}
+              />
+            </div>
+          )}
+        </div>
+
         <div className="field">
-          <label htmlFor="pin-notes">Notes</label>
+          <label>Görülme kayıtları</label>
+          <div className="sightings">
+            {(draft.sightings ?? []).map((s, i) => (
+              <div className="sighting-row" key={s.id}>
+                <input
+                  type="date"
+                  value={s.date}
+                  onChange={(e) =>
+                    change(
+                      'sightings',
+                      draft.sightings.map((x, j) => (j === i ? { ...x, date: e.target.value } : x)),
+                    )
+                  }
+                  aria-label="Tarih"
+                />
+                <input
+                  type="time"
+                  value={s.time}
+                  onChange={(e) =>
+                    change(
+                      'sightings',
+                      draft.sightings.map((x, j) => (j === i ? { ...x, time: e.target.value } : x)),
+                    )
+                  }
+                  aria-label="Saat"
+                />
+                <input
+                  value={s.note}
+                  placeholder="Not / kaynak"
+                  onChange={(e) =>
+                    change(
+                      'sightings',
+                      draft.sightings.map((x, j) => (j === i ? { ...x, note: e.target.value } : x)),
+                    )
+                  }
+                  aria-label="Not"
+                />
+                <button
+                  type="button"
+                  className="icon-btn"
+                  onClick={() => change('sightings', draft.sightings.filter((_, j) => j !== i))}
+                  aria-label="Kaydı sil"
+                  title="Kaydı sil"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="link-chip-add"
+              onClick={() =>
+                change('sightings', [
+                  ...(draft.sightings ?? []),
+                  { id: crypto.randomUUID(), date: new Date().toISOString().slice(0, 10), time: '', note: '' },
+                ])
+              }
+            >
+              + Görülme ekle
+            </button>
+          </div>
+        </div>
+
+        <div className="field">
+          <label htmlFor="pin-notes">Notlar</label>
           <textarea
             id="pin-notes"
             rows={4}
             value={draft.notes}
             onChange={(e) => change('notes', e.target.value)}
-            placeholder="Anything else worth recording…"
+            placeholder="Kayda geçmesi gereken diğer bilgiler…"
           />
         </div>
 
         <div className="field">
-          <label>Linked identifiers</label>
+          <label>İlişkili tanımlayıcılar</label>
           <div className="link-chips">
             {stagedIdentifiers.map((i) => {
               const context = staged.get(i.id) ?? '';
@@ -344,8 +447,8 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
                     }
                     title={
                       context
-                        ? `Context: ${context}`
-                        : 'Click to add context'
+                        ? `Bağlam: ${context}`
+                        : 'Bağlam eklemek için tıklayın'
                     }
                   >
                     <IdentifierBadge
@@ -366,8 +469,8 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
                     type="button"
                     className="link-chip-remove"
                     onClick={() => toggleStaged(i.id)}
-                    aria-label="Remove link"
-                    title="Remove link"
+                    aria-label="İlişkiyi kaldır"
+                    title="İlişkiyi kaldır"
                   >
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
                   </button>
@@ -376,7 +479,7 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
                       type="text"
                       autoFocus
                       className="link-chip-context-input"
-                      placeholder="Context, e.g. tagged in IG post"
+                      placeholder="Bağlam, ör. IG gönderisinde etiketlenmiş"
                       value={context}
                       onChange={(e) => setStagedContext(i.id, e.target.value)}
                       onKeyDown={(e) => {
@@ -399,7 +502,7 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
               onClick={() => setPickerOpen(true)}
             >
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-              Link identifier
+              Tanımlayıcı ilişkilendir
             </button>
           </div>
         </div>
@@ -410,32 +513,32 @@ export default function PinModal({ pin, onClose, onSave, onDelete }) {
               type="button"
               className="btn btn-ghost danger"
               onClick={() => {
-                if (confirm(`Delete this pin? This cannot be undone.`)) {
+                if (confirm('Bu konum silinsin mi? Bu işlem geri alınamaz.')) {
                   onDelete(pin.id);
                 }
               }}
             >
-              Delete pin
+              Konumu sil
             </button>
           )}
           <div className="modal-actions-right">
             <button type="button" className="btn btn-ghost" onClick={onClose}>
-              Cancel
+              Vazgeç
             </button>
             <button type="submit" className="btn btn-primary">
-              {pin?.id ? 'Save changes' : 'Save pin'}
+              {pin?.id ? 'Değişiklikleri kaydet' : 'Kaydet'}
             </button>
           </div>
         </div>
       </form>
       {pickerOpen && (
         <LinkPicker
-          title="Link identifiers"
+          title="Tanımlayıcı ilişkilendir"
           items={pickerItems}
           selectedIds={stagedIdSet}
           onToggle={toggleStaged}
           onClose={() => setPickerOpen(false)}
-          emptyText="No identifiers yet. Add some on the Information tab."
+          emptyText="Henüz tanımlayıcı yok. Ağ sekmesinden ekleyin."
         />
       )}
     </div>

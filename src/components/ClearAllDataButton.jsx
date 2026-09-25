@@ -32,7 +32,7 @@ export default function ClearAllDataButton({ variant = 'block' }) {
     <>
       <div className={`clear-all ${variant}`}>
         {variant === 'block' && (
-          <div className="clear-all-label">Reset this browser</div>
+          <div className="clear-all-label">Bu tarayıcıyı sıfırla</div>
         )}
         <button
           type="button"
@@ -43,12 +43,12 @@ export default function ClearAllDataButton({ variant = 'block' }) {
           }
           onClick={() => setConfirming(true)}
         >
-          Clear all saved data
+          Tüm yerel verileri sil
         </button>
         {variant === 'block' && (
           <p className="clear-all-hint">
-            Wipes settings, custom icons, and the Continue-recent list from
-            this browser. Saved project files on disk are untouched.
+            Ayarları, özel simgeleri ve kurtarma kayıtlarını bu tarayıcıdan
+            siler. Diskteki dosyalar etkilenmez.
           </p>
         )}
       </div>
@@ -59,9 +59,9 @@ export default function ClearAllDataButton({ variant = 'block' }) {
           onClick={() => setConfirming(false)}
         >
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2>Clear all saved data?</h2>
+            <h2>Tüm yerel veriler silinsin mi?</h2>
             <p className="modal-sub">
-              This wipes everything this browser is holding for the app:
+              Bu tarayıcıda uygulamaya ait her şey silinir:
             </p>
             <ul className="clear-all-list">
               {CLEAR_ALL_SUMMARY.map((line) => (
@@ -76,18 +76,18 @@ export default function ClearAllDataButton({ variant = 'block' }) {
                 onChange={(e) => setAlsoClearApiKey(e.target.checked)}
               />
               <span>
-                <strong>Also clear the Google Maps API key</strong>
+                <strong>Google Maps API anahtarını da temizle</strong>
                 <span className="clear-all-checkbox-hint">
-                  Hides any key that lives in{' '}
-                  <code>public/app.config.json</code>. Leaves the file itself
-                  alone — to delete it for good, remove the file by hand.
+                  <code>public/app.config.json</code> içindeki anahtarı gizler.
+                  Dosyanın kendisine dokunmaz; kalıcı silmek için dosyayı elle
+                  kaldırın.
                 </span>
               </span>
             </label>
 
             <p className="modal-sub">
-              Project files you've saved to disk (<code>*.osint.json</code>)
-              are not touched.
+              Diske kaydettiğiniz dosyalar (<code>*.osint.json</code>,{' '}
+              <code>*.osint.enc.json</code>) etkilenmez.
             </p>
             <div className="modal-actions">
               <button
@@ -95,14 +95,14 @@ export default function ClearAllDataButton({ variant = 'block' }) {
                 className="btn btn-ghost"
                 onClick={() => setConfirming(false)}
               >
-                Cancel
+                Vazgeç
               </button>
               <button
                 type="button"
                 className="btn btn-danger"
                 onClick={handleConfirm}
               >
-                Yes, clear everything
+                Evet, hepsini sil
               </button>
             </div>
           </div>

@@ -12,7 +12,7 @@
 .link-picker {
   background: var(--bg-1);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   width: 100%;
   max-width: 460px;
@@ -69,7 +69,7 @@
   gap: 10px;
   width: 100%;
   padding: 8px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   background: transparent;
   border: 1px solid transparent;
   text-align: left;
@@ -175,7 +175,7 @@
   font-size: inherit;
   min-width: 0;
   text-align: left;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
 }
 
 .link-chip-body:hover {
@@ -212,7 +212,7 @@
   z-index: 1;
   background: var(--bg-1);
   border: 1px solid var(--accent);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 6px 9px;
   font-size: 12px;
   color: var(--text-0);

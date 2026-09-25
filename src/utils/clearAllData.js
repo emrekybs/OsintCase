@@ -1,4 +1,5 @@
 import { readConfigFile } from './appConfig.js';
+import { clearAllRecents } from './recentProjects.js';
 
 /**
  * Wipes every piece of app state that the browser is holding for this
@@ -32,6 +33,8 @@ export async function clearAllSavedData({ overrideFileGoogleConfig = false } = {
     localStorage.removeItem(k);
     removed.push(k);
   }
+  // Kurtarma kayıtları IndexedDB'de tutuluyor.
+  await clearAllRecents();
 
   if (overrideFileGoogleConfig) {
     // Write the sentinel directly rather than going through writeLocalConfig
@@ -53,10 +56,10 @@ export async function clearAllSavedData({ overrideFileGoogleConfig = false } = {
   return removed;
 }
 
-/** Human-readable list of what gets wiped — used in confirm dialogs. */
+/** Onay penceresinde gösterilen silinecekler listesi. */
 export const CLEAR_ALL_SUMMARY = [
-  'Google Maps Map ID and map provider choice',
-  'Custom identifier icons you uploaded',
-  'Continue-recent project snapshots',
-  'Light/dark theme preference',
+  'Google Maps Map ID ve harita sağlayıcı seçimi',
+  'Yüklediğiniz özel tanımlayıcı simgeleri',
+  'Otomatik kurtarma kayıtları (şifreli olanlar dahil)',
+  'Analist adı, açık/koyu tema tercihi',
 ];

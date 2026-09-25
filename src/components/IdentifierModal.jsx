@@ -6,6 +6,7 @@ import {
 } from '../identifierTypes.js';
 import { useProject } from '../context/ProjectContext.jsx';
 import { getPinColor } from '../pinColors.js';
+import { INFO_CREDIBILITY, SOURCE_RELIABILITY } from '../caseModel.js';
 import IdentifierBadge from './IdentifierBadge.jsx';
 import IconPicker from './IconPicker.jsx';
 import LinkPicker from './LinkPicker.jsx';
@@ -28,6 +29,18 @@ function FieldInput({ field, value, onChange, autoFocus }) {
   if (field.type === 'textarea') {
     return <textarea rows={3} {...common} />;
   }
+  if (field.type === 'select') {
+    return (
+      <select {...common}>
+        <option value="">— seçilmedi —</option>
+        {field.options.map((o) => (
+          <option key={o.key} value={o.key}>
+            {o.label}
+          </option>
+        ))}
+      </select>
+    );
+  }
   return <input type={field.type} {...common} />;
 }
 
@@ -47,6 +60,10 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
     initial?.fields ?? (initial?.type ? buildEmptyFields(initial.type) : {}),
   );
   const [notes, setNotes] = useState(initial?.notes ?? '');
+  const [reliability, setReliability] = useState(
+    initial?.reliability ?? { source: '', info: '', sourceNote: '', collectedAt: '' },
+  );
+  const setRel = (k, v) => setReliability((r) => ({ ...r, [k]: v }));
   const [error, setError] = useState('');
   const [pickerOpen, setPickerOpen] = useState(false);
   const [expandedChip, setExpandedChip] = useState(null);
@@ -118,7 +135,7 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
     if (!primaryValue || !String(primaryValue).trim()) {
       const def = getTypeDef(typeKey);
       const primaryField = def.fields.find((f) => f.primary);
-      setError(`${primaryField?.label ?? 'Primary field'} is required.`);
+      setError(`${primaryField?.label ?? 'Ana alan'} zorunlu.`);
       formScrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -147,6 +164,15 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
       fields: trimmedFields,
       notes: notes.trim(),
       customIconId,
+      reliability:
+        reliability.source || reliability.info || reliability.sourceNote || reliability.collectedAt
+          ? {
+              source: reliability.source,
+              info: reliability.info,
+              sourceNote: (reliability.sourceNote ?? '').trim(),
+              collectedAt: reliability.collectedAt ?? '',
+            }
+          : null,
     });
   };
 
@@ -203,12 +229,12 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
           label:
             p.label?.trim() ||
             p.address?.trim() ||
-            `Pin ${idx + 1}`,
+            `Konum ${idx + 1}`,
           secondary:
             p.label && p.address
               ? p.address
               : `${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}`,
-          group: 'Locations',
+          group: 'Konumlar',
         };
       }),
     [pins],
@@ -231,22 +257,22 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
         {stage === 'picker' ? (
           <>
             <div className="modal-header">
-              <h2>Add identifier</h2>
+              <h2>Tanımlayıcı ekle</h2>
               <button
                 type="button"
                 className="icon-btn"
                 onClick={onClose}
-                aria-label="Close"
+                aria-label="Kapat"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
               </button>
             </div>
-            <p className="modal-sub">Pick a category and type for this piece of information.</p>
+            <p className="modal-sub">Bu bilgi için kategori ve tür seçin.</p>
 
             <input
               type="text"
               autoFocus
-              placeholder="Search types…"
+              placeholder="Tür ara…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="type-search"
@@ -254,7 +280,7 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
 
             <div className="type-picker">
               {filteredCategories.length === 0 ? (
-                <div className="empty-state">No types match "{search}".</div>
+                <div className="empty-state">"{search}" ile eşleşen tür yok.</div>
               ) : (
                 filteredCategories.map((cat) => (
                   <section key={cat.key} className="type-category">
@@ -289,8 +315,8 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                       setStage('picker');
                       setError('');
                     }}
-                    aria-label="Back to type picker"
-                    title="Back"
+                    aria-label="Tür seçimine dön"
+                    title="Geri"
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18 9 12l6-6"/></svg>
                   </button>
@@ -299,8 +325,8 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                   type="button"
                   className="form-title-icon"
                   onClick={() => setIconPickerOpen(true)}
-                  title="Change icon"
-                  aria-label="Change icon"
+                  title="Simgeyi değiştir"
+                  aria-label="Simgeyi değiştir"
                 >
                   <IdentifierBadge
                     typeKey={typeKey}
@@ -312,14 +338,14 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                   </span>
                 </button>
                 <h2>
-                  {editing ? 'Edit' : 'New'} {def.label.toLowerCase()}
+                  {def.label} · {editing ? 'düzenle' : 'yeni'}
                 </h2>
               </div>
               <button
                 type="button"
                 className="icon-btn"
                 onClick={onClose}
-                aria-label="Close"
+                aria-label="Kapat"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
               </button>
@@ -341,20 +367,72 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                   />
                 </div>
               ))}
+              <fieldset className="reliability-box">
+                <legend>Kaynak değerlendirmesi (Admiralty)</legend>
+                <div className="field-row">
+                  <div className="field">
+                    <label htmlFor="rel-source">Kaynak güvenilirliği</label>
+                    <select
+                      id="rel-source"
+                      value={reliability.source ?? ''}
+                      onChange={(e) => setRel('source', e.target.value)}
+                    >
+                      <option value="">— değerlendirilmedi —</option>
+                      {SOURCE_RELIABILITY.map((o) => (
+                        <option key={o.key} value={o.key}>{o.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="rel-info">Bilgi doğruluğu</label>
+                    <select
+                      id="rel-info"
+                      value={reliability.info ?? ''}
+                      onChange={(e) => setRel('info', e.target.value)}
+                    >
+                      <option value="">— değerlendirilmedi —</option>
+                      {INFO_CREDIBILITY.map((o) => (
+                        <option key={o.key} value={o.key}>{o.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="field-row">
+                  <div className="field grow2">
+                    <label htmlFor="rel-note">Kaynak</label>
+                    <input
+                      id="rel-note"
+                      value={reliability.sourceNote ?? ''}
+                      onChange={(e) => setRel('sourceNote', e.target.value)}
+                      placeholder="URL, belge, görüşme, açık kaynak adı…"
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="rel-date">Elde edilme tarihi</label>
+                    <input
+                      id="rel-date"
+                      type="date"
+                      value={reliability.collectedAt ?? ''}
+                      onChange={(e) => setRel('collectedAt', e.target.value)}
+                    />
+                  </div>
+                </div>
+              </fieldset>
+
               <div className="field">
-                <label htmlFor="field-notes">Notes</label>
+                <label htmlFor="field-notes">Notlar</label>
                 <textarea
                   id="field-notes"
                   rows={3}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Anything else worth recording…"
+                  placeholder="Kayda geçmesi gereken diğer bilgiler…"
                 />
               </div>
 
               {editing && (
                 <div className="field">
-                  <label>Visited locations</label>
+                  <label>İlişkili konumlar</label>
                   <div className="link-chips">
                     {stagedPins.map((p) => {
                       const c = getPinColor(p.color);
@@ -362,7 +440,7 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                       const label =
                         p.label?.trim() ||
                         p.address?.trim() ||
-                        `Pin ${idx ?? ''}`;
+                        `Konum ${idx ?? ''}`;
                       const context = stagedLinks.get(p.id) ?? '';
                       const isExpanded = expandedChip === p.id;
                       return (
@@ -378,8 +456,8 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                             }
                             title={
                               context
-                                ? `Context: ${context}`
-                                : 'Click to add context'
+                                ? `Bağlam: ${context}`
+                                : 'Bağlam eklemek için tıklayın'
                             }
                           >
                             <span
@@ -403,8 +481,8 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                             type="button"
                             className="link-chip-remove"
                             onClick={() => toggleStagedPin(p.id)}
-                            aria-label="Remove link"
-                            title="Remove link"
+                            aria-label="İlişkiyi kaldır"
+                            title="İlişkiyi kaldır"
                           >
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
                           </button>
@@ -413,7 +491,7 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                               type="text"
                               autoFocus
                               className="link-chip-context-input"
-                              placeholder="Context, e.g. checked-in on IG"
+                              placeholder="Bağlam, ör. IG'de konum bildirmiş"
                               value={context}
                               onChange={(e) =>
                                 setStagedPinContext(p.id, e.target.value)
@@ -438,7 +516,7 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                       onClick={() => setPickerOpen(true)}
                     >
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-                      Link location
+                      Konum ilişkilendir
                     </button>
                   </div>
                 </div>
@@ -447,10 +525,10 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
 
             <div className="modal-actions">
               <button type="button" className="btn btn-ghost" onClick={onClose}>
-                Cancel
+                Vazgeç
               </button>
               <button type="submit" className="btn btn-primary">
-                {editing ? 'Save changes' : 'Add identifier'}
+                {editing ? 'Değişiklikleri kaydet' : 'Ekle'}
               </button>
             </div>
           </form>
@@ -458,12 +536,12 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
       </div>
       {pickerOpen && (
         <LinkPicker
-          title="Link locations"
+          title="Konum ilişkilendir"
           items={pinPickerItems}
           selectedIds={stagedPinIdSet}
           onToggle={toggleStagedPin}
           onClose={() => setPickerOpen(false)}
-          emptyText="No pins yet. Drop some on the Map tab."
+          emptyText="Henüz konum yok. Harita sekmesinden ekleyin."
         />
       )}
       {iconPickerOpen && typeKey && (
