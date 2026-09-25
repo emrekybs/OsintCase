@@ -45,7 +45,7 @@
 
 .map-searchbox:focus-within {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-lg);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-lg);
 }
 
 .map-searchbox-icon {

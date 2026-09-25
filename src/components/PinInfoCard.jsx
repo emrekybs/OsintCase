@@ -8,6 +8,7 @@ import {
 } from '../identifierTypes.js';
 import IdentifierBadge from './IdentifierBadge.jsx';
 import './PinInfoWindow.css';
+import { t } from '../i18n/index.jsx';
 
 /**
  * Provider-agnostic body of the pin details card. Renders the header,
@@ -86,13 +87,13 @@ export default function PinInfoCard({
         <div className="pin-info-section pin-info-custom">
           {pin.visitedAt?.trim?.() && (
             <div className="pin-info-row">
-              <span className="pin-info-field-label">Ziyaret:</span>
+              <span className="pin-info-field-label">{t('Ziyaret:')}</span>
               <span>{pin.visitedAt}</span>
             </div>
           )}
           {pin.withWho?.trim?.() && (
             <div className="pin-info-row">
-              <span className="pin-info-field-label">Kiminle:</span>
+              <span className="pin-info-field-label">{t('Kiminle:')}</span>
               <span>{pin.withWho}</span>
             </div>
           )}
@@ -106,16 +107,16 @@ export default function PinInfoCard({
         <div className="pin-info-section pin-info-custom">
           {pin.sightings?.length > 0 && (
             <div className="pin-info-row">
-              <span className="pin-info-field-label">Görülme:</span>
+              <span className="pin-info-field-label">{t('Görülme:')}</span>
               <span>
-                {pin.sightings.length} kayıt · son{' '}
+                {pin.sightings.length}{' '}{t('kayıt · son')}{' '}
                 {[...pin.sightings].map((s) => s.date).filter(Boolean).sort().slice(-1)[0] ?? '—'}
               </span>
             </div>
           )}
           {pin.radius > 0 && (
             <div className="pin-info-row">
-              <span className="pin-info-field-label">Yarıçap:</span>
+              <span className="pin-info-field-label">{t('Yarıçap:')}</span>
               <span>{pin.radius >= 1000 ? `${pin.radius / 1000} km` : `${pin.radius} m`}</span>
             </div>
           )}
@@ -127,7 +128,7 @@ export default function PinInfoCard({
 
       {linkedEntries.length > 0 && (
         <div className="pin-info-section pin-info-links">
-          <div className="pin-info-field-label">İlişkili</div>
+          <div className="pin-info-field-label">{t('İlişkili')}</div>
           <div className="pin-info-link-chips">
             {linkedEntries.map(({ link, identifier: i }) => (
               <button
@@ -141,7 +142,9 @@ export default function PinInfoCard({
                 }}
                 onMouseEnter={() => setHoveredIdentifierId(i.id)}
                 onMouseLeave={() => setHoveredIdentifierId(null)}
-                title={`${getTypeDef(i.type).label} — Ağ sekmesinde aç`}
+                title={t('{0} — Ağ sekmesinde aç', {
+                  '0': getTypeDef(i.type).label
+                })}
               >
                 <IdentifierBadge
                   typeKey={i.type}
@@ -172,9 +175,7 @@ export default function PinInfoCard({
           type="button"
           className="btn btn-primary btn-sm"
           onClick={onEdit}
-        >
-          Düzenle
-        </button>
+        >{t('Düzenle')}</button>
         <a
           href={externalUrl}
           target="_blank"

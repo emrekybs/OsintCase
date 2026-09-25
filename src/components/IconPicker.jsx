@@ -6,6 +6,7 @@ import { MAX_ICON_BYTES } from '../utils/customIcons.js';
 import { getTypeDef } from '../identifierTypes.js';
 import IdentifierBadge from './IdentifierBadge.jsx';
 import './IconPicker.css';
+import { t } from '../i18n/index.jsx';
 
 /**
  * Modal for picking an icon for an identifier. Stacks on top of the
@@ -43,12 +44,15 @@ export default function IconPicker({ typeKey, currentIconId, onSelect, onClose }
     e.target.value = '';
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      setError('Bir görsel dosyası seçin (PNG, JPG, SVG…).');
+      setError(t('Bir görsel dosyası seçin (PNG, JPG, SVG…).'));
       return;
     }
     if (file.size > MAX_ICON_BYTES) {
       setError(
-        `Simge çok büyük (${Math.round(file.size / 1024)} KB). En fazla ${Math.round(MAX_ICON_BYTES / 1024)} KB.`,
+        t('Simge çok büyük ({0} KB). En fazla {1} KB.', {
+          '0': Math.round(file.size / 1024),
+          '1': Math.round(MAX_ICON_BYTES / 1024)
+        }),
       );
       return;
     }
@@ -65,7 +69,9 @@ export default function IconPicker({ typeKey, currentIconId, onSelect, onClose }
       const id = addIcon(niceName, dataUrl);
       onSelect(id);
     } catch (err) {
-      setError(`Dosya okunamadı: ${err.message ?? err}`);
+      setError(t('Dosya okunamadı: {0}', {
+        '0': err.message ?? err
+      }));
     }
   };
 
@@ -93,24 +99,24 @@ export default function IconPicker({ typeKey, currentIconId, onSelect, onClose }
     <div className="modal-backdrop icon-picker-backdrop" onMouseDown={onClose}>
       <div className="modal icon-picker" onMouseDown={(e) => e.stopPropagation()}>
         <div className="modal-header">
-          <h2>Simge seç</h2>
+          <h2>{t('Simge seç')}</h2>
           <button
             type="button"
             className="icon-btn"
             onClick={onClose}
-            aria-label="Kapat"
+            aria-label={t('Kapat')}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
         </div>
 
         <div className="icon-picker-section">
-          <h4>Varsayılan</h4>
+          <h4>{t('Varsayılan')}</h4>
           <button
             type="button"
             className={`icon-tile icon-tile-default ${!currentIconId ? 'selected' : ''}`}
             onClick={() => onSelect(null)}
-            title="Bu türün varsayılan simgesini kullan"
+            title={t('Bu türün varsayılan simgesini kullan')}
           >
             <IdentifierBadge
               typeKey={typeKey}
@@ -118,13 +124,12 @@ export default function IconPicker({ typeKey, currentIconId, onSelect, onClose }
               size="lg"
             />
             <span className="icon-tile-text">
-              {getTypeDef(typeKey).label} (varsayılan)
-            </span>
+              {getTypeDef(typeKey).label}{' '}{t('(varsayılan)')}</span>
           </button>
         </div>
 
         <div className="icon-picker-section">
-          <h4>Hazır simgeler</h4>
+          <h4>{t('Hazır simgeler')}</h4>
           <div className="icon-grid">
             {builtInEntries.map(([id, icon]) => (
               <button
@@ -146,12 +151,11 @@ export default function IconPicker({ typeKey, currentIconId, onSelect, onClose }
         </div>
 
         <div className="icon-picker-section">
-          <h4>Sizin simgeleriniz</h4>
+          <h4>{t('Sizin simgeleriniz')}</h4>
           {customEntries.length === 0 && (
-            <p className="icon-picker-hint">
-              PNG, JPG ya da SVG yükleyip tanımlayıcılarda tekrar kullanın.
-              Yalnızca bu tarayıcıda saklanır.
-            </p>
+            <p className="icon-picker-hint">{t(
+              'PNG, JPG ya da SVG yükleyip tanımlayıcılarda tekrar kullanın. Yalnızca bu tarayıcıda saklanır.'
+            )}</p>
           )}
           <div className="icon-grid">
             {customEntries.map(([id, icon]) => (
@@ -178,15 +182,22 @@ export default function IconPicker({ typeKey, currentIconId, onSelect, onClose }
                     e.stopPropagation();
                     if (
                       confirm(
-                        `"${icon.name}" simgelerinizden kaldırılsın mı? Bu simgeyi kullanan tanımlayıcılar varsayılana döner.`,
+                        t(
+                          '"{0}" simgelerinizden kaldırılsın mı? Bu simgeyi kullanan tanımlayıcılar varsayılana döner.',
+                          {
+                            '0': icon.name
+                          }
+                        ),
                       )
                     ) {
                       removeIcon(id);
                       if (currentIconId === id) onSelect(null);
                     }
                   }}
-                  aria-label={`${icon.name} kaldır`}
-                  title="Kitaplıktan kaldır"
+                  aria-label={t('{0} kaldır', {
+                    '0': icon.name
+                  })}
+                  title={t('Kitaplıktan kaldır')}
                 >
                   <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
                 </button>
@@ -196,10 +207,10 @@ export default function IconPicker({ typeKey, currentIconId, onSelect, onClose }
               type="button"
               className="icon-tile icon-tile-upload"
               onClick={handleUploadClick}
-              title="Özel simge yükle"
+              title={t('Özel simge yükle')}
             >
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-              <span className="icon-tile-text">Yükle</span>
+              <span className="icon-tile-text">{t('Yükle')}</span>
             </button>
           </div>
           {error && <div className="icon-picker-error">{error}</div>}

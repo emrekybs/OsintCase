@@ -1,3 +1,4 @@
+import { localizeRegistry } from './i18n/index.jsx';
 /**
  * Pin color palette for map markers and matching sidebar badges.
  *
@@ -85,3 +86,5 @@ export function getPinColor(value) {
   }
   return PIN_COLORS[DEFAULT_PIN_COLOR];
 }
+
+localizeRegistry(PIN_COLORS);

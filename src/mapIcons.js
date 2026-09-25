@@ -33,6 +33,7 @@ import schoolBlack from './images/icons/school-black.png';
 import schoolWhite from './images/icons/school-white.png';
 import shoppingBlack from './images/icons/shopping-mall-black.png';
 import shoppingWhite from './images/icons/shopping-mall-white.png';
+import { localizeRegistry } from './i18n/index.jsx';
 
 export const BUILT_IN_MAP_ICONS = {
   coffee: { name: 'Kafe', light: coffeeBlack, dark: coffeeWhite },
@@ -125,3 +126,5 @@ export function getMapIconSrc(iconId, theme = 'dark') {
   if (theme === 'light') return entry.light ?? entry.dark ?? null;
   return entry.dark ?? entry.light ?? null;
 }
+
+localizeRegistry(BUILT_IN_MAP_ICONS);

@@ -12,6 +12,7 @@ import {
   findOption,
 } from '../caseModel.js';
 import './IdentifierNode.css';
+import { t } from '../i18n/index.jsx';
 
 const SIDES = [
   { position: Position.Top, id: 'top' },
@@ -27,9 +28,11 @@ export function AdmiraltyTag({ reliability, size = 'sm' }) {
   return (
     <span
       className={`admiralty-tag tone-${tone} ${size}`}
-      title={`Kaynak güvenilirliği ${reliability.source || '?'} · Bilgi doğruluğu ${reliability.info || '?'}${
-        reliability.sourceNote ? ` · ${reliability.sourceNote}` : ''
-      }`}
+      title={t('Kaynak güvenilirliği {0} · Bilgi doğruluğu {1}{2}', {
+        '0': reliability.source || '?',
+        '1': reliability.info || '?',
+        '2': reliability.sourceNote ? ` · ${reliability.sourceNote}` : ''
+      })}
     >
       {code}
     </span>
@@ -89,15 +92,14 @@ export default function IdentifierNode({ data, selected }) {
               </span>
             )}
             {threat && threat.key !== 'yok' && (
-              <span className="node-chip solid" style={{ background: threat.color }}>
-                Tehdit: {threat.label}
+              <span className="node-chip solid" style={{ background: threat.color }}>{t('Tehdit:')}{' '}{threat.label}
               </span>
             )}
           </div>
         )}
       </div>
       {data.showDegree && (
-        <span className="id-node-degree" title="Bağlantı sayısı">
+        <span className="id-node-degree" title={t('Bağlantı sayısı')}>
           {data.degree}
         </span>
       )}

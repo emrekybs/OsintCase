@@ -1,10 +1,10 @@
-# Soruşturma Dosyaları
+# OSINT Case
 
 Tarayıcıda çalışan, sunucusuz bir soruşturma/istihbarat analiz panosu. Şahısları ve tanımlayıcıları bir bağlantı ağında, konumları haritada, olayları kronolojide, delilleri SHA-256 bütünlük kaydıyla tek bir dosyada toplar. Hiçbir veri cihazdan çıkmaz.
 
 > Bu proje, [anonymousRAID/OSINT-Mapping-Tool](https://github.com/anonymousRAID/OSINT-Mapping-Tool) (GPL-3.0) üzerine geliştirilmiş **değiştirilmiş bir sürümdür**. Değişiklikler aşağıda listelenmiştir. Lisans GPL-3.0 olarak devam eder; dağıtırken kaynak kodu da verilmelidir.
 
-Ürün adı/başlık `src/brand.js` dosyasından değiştirilir.
+Ürün adı, slogan ve logo `src/brand.js` ve `src/images/brand/` üzerinden değiştirilir (beyaz etiket).
 
 ## Kurulum
 
@@ -15,6 +15,21 @@ npm run build      # üretim derlemesi → dist/
 ```
 
 Docker: `docker compose up --build` (ayrıntılar orijinal README ile aynı; Google Maps anahtarı `.env` içinden okunur, OpenStreetMap anahtarsız çalışır).
+
+## İlk açılış
+
+Kurulum sihirbazı 4 adımdır: **Dil** (Türkçe / English) → **Harita katmanı** → **API anahtarı** (gerekiyorsa, atlanabilir) → **Analist adı**. Hepsi sonradan **Ayarlar**'dan değiştirilebilir.
+
+## Ayarlar
+
+Sol şeritteki **Ayarlar** (ya da açılış ekranındaki dişli):
+- **Genel:** dil, tema, analist adı, otomatik kurtarma kaydı
+- **Harita ve API:** harita katmanı ve API anahtarları
+  - Anahtarsız: CARTO Koyu (önerilen), OpenStreetMap, CARTO Açık, Esri Uydu
+  - Anahtarlı: MapTiler (Sokak / Uydu / Koyu), Google Maps (+ Map ID)
+- **Veri:** tarayıcıdaki tüm yerel verileri silme
+
+Anahtarlar yalnızca tarayıcıda (localStorage) tutulur; dosyalara yazılmaz.
 
 ## Sekmeler
 
@@ -29,7 +44,9 @@ Docker: `docker compose up --build` (ayrıntılar orijinal README ile aynı; Goo
 ## Orijinale göre eklenenler
 
 **Görünüm**
-- Tamamen Türkçe arayüz, mat taktik tema (koyu/açık), IBM Plex yazı tipleri (pakete gömülü, internetten yüklenmez)
+- OSINT Case kimliği: siyah / kırmızı / beyaz mat tema (koyu ve açık), logo, sol navigasyon şeridi, durum çubuğu
+- Türkçe / English arayüz (rapor dahil), anında değiştirilebilir
+- IBM Plex ve Black Ops One yazı tipleri pakete gömülü, internetten yüklenmez
 - Her ekranın üstünde/altında gizlilik bandı: TASNİF DIŞI · HİZMETE ÖZEL · ÖZEL · GİZLİ · ÇOK GİZLİ
 
 **Dosya künyesi**

@@ -1,4 +1,5 @@
 import { useTheme } from '../context/ThemeContext.jsx';
+import { t } from '../i18n/index.jsx';
 
 export default function ThemeToggle() {
   const { theme, toggle } = useTheme();
@@ -7,8 +8,8 @@ export default function ThemeToggle() {
     <button
       className="icon-btn"
       onClick={toggle}
-      title={isDark ? 'Açık temaya geç' : 'Koyu temaya geç'}
-      aria-label="Temayı değiştir"
+      title={isDark ? t('Açık temaya geç') : t('Koyu temaya geç')}
+      aria-label={t('Temayı değiştir')}
     >
       {isDark ? (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

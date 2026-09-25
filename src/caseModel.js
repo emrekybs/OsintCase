@@ -4,6 +4,8 @@
  * tehdit seviyeleri ve delil teslim işlemleri.
  */
 
+import { getLocale, localizeRegistry } from './i18n/index.jsx';
+
 export const CLASSIFICATIONS = [
   { key: 'tasnif-disi', label: 'TASNİF DIŞI', color: '#2f7d46', text: '#ffffff' },
   { key: 'hizmete-ozel', label: 'HİZMETE ÖZEL', color: '#2b5f9e', text: '#ffffff' },
@@ -119,32 +121,21 @@ export function suggestCaseNumber(date = new Date()) {
   return `${y}/SOR-${n}`;
 }
 
-const TR_DATE = new Intl.DateTimeFormat('tr-TR', {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-});
-const TR_DATETIME = new Intl.DateTimeFormat('tr-TR', {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-});
+const DATE_OPTS = { day: '2-digit', month: '2-digit', year: 'numeric' };
+const DATETIME_OPTS = { ...DATE_OPTS, hour: '2-digit', minute: '2-digit', second: '2-digit' };
 
 export function fmtDate(iso) {
   if (!iso) return '—';
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return String(iso);
-  return TR_DATE.format(d);
+  return new Intl.DateTimeFormat(getLocale(), DATE_OPTS).format(d);
 }
 
 export function fmtDateTime(iso) {
   if (!iso) return '—';
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return String(iso);
-  return TR_DATETIME.format(d);
+  return new Intl.DateTimeFormat(getLocale(), DATETIME_OPTS).format(d);
 }
 
 export function fmtBytes(n) {
@@ -177,3 +168,15 @@ export function parseLooseDate(text) {
   }
   return null;
 }
+
+localizeRegistry(
+  CLASSIFICATIONS,
+  CASE_STATUSES,
+  PRIORITIES,
+  SOURCE_RELIABILITY,
+  INFO_CREDIBILITY,
+  SUBJECT_ROLES,
+  THREAT_LEVELS,
+  LINK_CONFIDENCE,
+  EVENT_CATEGORIES,
+);

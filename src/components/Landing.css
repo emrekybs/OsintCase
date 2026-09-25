@@ -1,24 +1,82 @@
 .landing {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  background:
-    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 32px 32px,
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 32px 32px,
-    var(--bg-0);
+  display: grid;
+  grid-template-columns: minmax(320px, 36%) 1fr;
+  background: var(--bg-0);
 }
 
+/* ---- Sol: kimlik paneli (her iki temada da siyah) ---------------------- */
+.landing-side {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 32px;
+  background:
+    linear-gradient(#141414 1px, transparent 1px) 0 0 / 28px 28px,
+    linear-gradient(90deg, #141414 1px, transparent 1px) 0 0 / 28px 28px,
+    #070707;
+  color: #f1f1f1;
+  border-right: 4px solid #d32f2f;
+  overflow: hidden;
+}
+.landing-side .brandmark-logo {
+  width: min(300px, 72%);
+}
+.landing-side-word {
+  font-family: var(--font-display);
+  font-size: 32px;
+  letter-spacing: 0.05em;
+  margin-top: 22px;
+}
+.landing-side-word .w1 { color: #f1f1f1; }
+.landing-side-word .w2 { color: #d32f2f; }
+.landing-side-tag {
+  margin: 4px 0 0;
+  color: #9a9a9a;
+  font-size: 13.5px;
+}
+.landing-side-foot {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: #6d6d6d;
+}
+.landing-side-foot span::before {
+  content: '■ ';
+  color: #d32f2f;
+}
+
+/* ---- Sağ: çalışma alanı ---------------------------------------------------- */
+.landing-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
 .landing-topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 20px;
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--border);
+}
+.landing-top-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .landing-analyst {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 12px;
+  font-size: 13px;
 }
 .landing-analyst-label {
   font-family: var(--font-mono);
@@ -36,210 +94,232 @@
   padding: 4px 8px;
   width: 220px;
 }
-.landing-recent-no {
-  color: var(--accent);
-  font-size: 11px;
-  margin-right: 8px;
-}
-.mini-class {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  padding: 0 5px;
-  margin-right: 6px;
-  border-radius: 2px;
-  line-height: 15px;
-}
-.landing-recent-icon.locked {
-  color: var(--accent);
-}
-.landing-recent-plain {
-  color: var(--warn);
-  margin-left: 4px;
-}
 
-.landing-content {
+.landing-body {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0 24px;
-  text-align: center;
+  overflow-y: auto;
+  padding: 44px 48px 24px;
+  max-width: 900px;
+  width: 100%;
 }
-
-.landing-brand {
-  margin-bottom: 38px;
-}
-
-.landing-logo {
-  width: 76px;
-  height: 76px;
-  border-radius: var(--radius-lg);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--bg-1);
-  border: 1px solid var(--border-strong);
-  color: var(--accent);
-  margin-bottom: 18px;
-}
-
 .landing-title {
-  margin: 0 0 8px;
-  font-size: 28px;
+  margin: 0 0 22px;
+  font-size: 26px;
   font-weight: 600;
-  letter-spacing: 0.01em;
 }
-
-.landing-tagline {
-  margin: 0;
-  color: var(--text-2);
-  font-size: 15px;
-  max-width: 460px;
-}
-
-.landing-actions {
-  display: flex;
+.landing-tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
-  flex-wrap: wrap;
-  justify-content: center;
+  margin-bottom: 30px;
 }
-
-.landing-cta {
-  min-width: 180px;
-  padding: 14px 22px;
-  font-size: 15px;
-}
-
-.landing-error {
-  margin-top: 16px;
-  color: var(--danger);
-  font-size: 13px;
-  background: rgba(229, 72, 77, 0.08);
-  border: 1px solid rgba(229, 72, 77, 0.25);
-  padding: 10px 14px;
-  border-radius: var(--radius);
-  max-width: 420px;
-}
-
-/* "Continue recent" — auto-snapshots of previously open projects so
-   accidentally backing out doesn't lose the in-memory state. */
-.landing-recents {
-  margin-top: 28px;
-  width: 100%;
-  max-width: 420px;
-  text-align: left;
-}
-
-.landing-recents-header {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--text-2);
-  margin-bottom: 8px;
-  text-align: center;
-}
-
-.landing-recents-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.landing-recent-item {
-  position: relative;
-  width: 100%;
+.landing-tile {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
+  gap: 16px;
+  text-align: left;
+  padding: 18px;
   background: var(--bg-1);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  cursor: pointer;
-  color: var(--text-0);
-  font-family: inherit;
-  font-size: inherit;
-  text-align: left;
-  transition: background 0.12s ease, border-color 0.12s ease;
 }
-
-.landing-recent-item:hover {
-  background: var(--bg-hover);
+.landing-tile:hover {
   border-color: var(--border-strong);
+  background: var(--bg-2);
+}
+.landing-tile.primary {
+  border-left: 3px solid var(--accent);
+}
+.tile-icon {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--text-0);
+}
+.landing-tile.primary .tile-icon {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.tile-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tile-text b {
+  font-size: 15px;
+  font-weight: 600;
+}
+.tile-text span {
+  font-size: 12.5px;
+  color: var(--text-2);
 }
 
+.landing-recents-header {
+  display: flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-2);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.landing-recents-empty {
+  padding: 18px 0;
+  font-size: 13px;
+  color: var(--text-2);
+}
+.landing-recents-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.landing-recent-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 11px 8px;
+  border-bottom: 1px solid var(--border);
+}
+.landing-recent-item:hover {
+  background: var(--bg-1);
+}
 .landing-recent-icon {
   width: 30px;
   height: 30px;
-  border-radius: var(--radius);
-  background: var(--bg-2);
-  color: var(--text-1);
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-2);
   flex-shrink: 0;
 }
-
+.landing-recent-icon.locked {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
+}
 .landing-recent-body {
   flex: 1;
   min-width: 0;
 }
-
 .landing-recent-name {
-  font-size: 14px;
   font-weight: 500;
-  color: var(--text-0);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+.landing-recent-no {
+  color: var(--accent);
+  font-size: 11.5px;
+  margin-right: 8px;
+}
 .landing-recent-meta {
   font-size: 12px;
   color: var(--text-2);
-  margin-top: 2px;
 }
-
 .landing-recent-unsaved {
-  color: var(--accent);
-  font-weight: 500;
+  color: var(--warn);
   margin-left: 4px;
 }
-
-.landing-recent-remove {
-  width: 22px;
-  height: 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
+.landing-recent-plain {
   color: var(--text-2);
-  opacity: 0;
-  transition: opacity 0.12s ease, background 0.12s ease, color 0.12s ease;
+  margin-left: 4px;
+}
+.mini-class {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  padding: 1px 6px;
+  border-radius: 2px;
+  line-height: 16px;
   flex-shrink: 0;
 }
-
-.landing-recent-item:hover .landing-recent-remove,
-.landing-recent-remove:focus {
+.landing-recent-remove {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-2);
+  border-radius: var(--radius);
+  opacity: 0;
+}
+.landing-recent-item:hover .landing-recent-remove {
   opacity: 1;
 }
-
 .landing-recent-remove:hover {
-  background: rgba(229, 72, 77, 0.12);
   color: var(--danger);
+  background: var(--bg-hover);
+}
+.landing-error {
+  margin-top: 16px;
+  color: var(--danger);
+  font-size: 13px;
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent);
+  padding: 10px 14px;
+  border-radius: var(--radius);
+}
+.landing-footer {
+  padding: 12px 28px;
+  font-size: 11px;
+  color: var(--text-2);
+  border-top: 1px solid var(--border);
 }
 
-.landing-footer {
-  text-align: center;
-  padding: 18px;
-  font-size: 12px;
+/* ---- Marka işareti --------------------------------------------------------- */
+.brandmark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brandmark-lg {
+  flex-direction: column;
+}
+.brandmark-logo {
+  display: block;
+  user-select: none;
+}
+.brandmark-rail .brandmark-logo {
+  width: 46px;
+  height: 46px;
+}
+.brandmark-sm .brandmark-logo {
+  width: 34px;
+  height: 34px;
+}
+.brandmark-word {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+.brandmark-word .w1 { color: var(--text-0); }
+.brandmark-word .w2 { color: var(--accent); margin-left: 4px; }
+.brandmark-tagline {
+  font-size: 11px;
   color: var(--text-2);
+}
+
+@media (max-width: 900px) {
+  .landing {
+    grid-template-columns: 1fr;
+  }
+  .landing-side {
+    display: none;
+  }
+  .landing-tiles {
+    grid-template-columns: 1fr;
+  }
 }

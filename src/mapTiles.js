@@ -1,3 +1,4 @@
+import { localizeRegistry } from './i18n/index.jsx';
 /**
  * Leaflet (anahtarsız / anahtarlı) harita karo sağlayıcıları.
  * Google Maps ayrı bir sağlayıcıdır (MapTab.jsx).
@@ -78,3 +79,5 @@ export function resolveTileStyle(styleKey, keys = {}) {
     : style.url;
   return { key: styleKey in TILE_STYLES ? styleKey : DEFAULT_TILE_STYLE, ...style, url };
 }
+
+localizeRegistry(TILE_STYLES);

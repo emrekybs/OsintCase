@@ -17,7 +17,7 @@ import {
   getMapIconSrc,
 } from '../mapIcons.js';
 import MapsKeySetup from './MapsKeySetup.jsx';
-import ClearAllDataButton from './ClearAllDataButton.jsx';
+import SettingsModal from './SettingsModal.jsx';
 import MapSearchBox from './MapSearchBox.jsx';
 import PinModal from './PinModal.jsx';
 import PinInfoWindow from './PinInfoWindow.jsx';
@@ -30,6 +30,7 @@ import {
   pinWeights,
 } from '../utils/mapUtils.js';
 import './MapTab.css';
+import { t } from '../i18n/index.jsx';
 
 const DOUBLE_CLICK_MS = 300;
 
@@ -38,11 +39,13 @@ const DEFAULT_CENTER = { lat: 20, lng: 0 };
 const DEFAULT_ZOOM = 2;
 
 function pinDisplayLabel(pin) {
-  return pin.label?.trim() || pin.address?.trim() || 'Adsız konum';
+  return pin.label?.trim() || pin.address?.trim() || t('Adsız konum');
 }
 
 function pinSecondaryLabel(pin) {
-  const extra = pin.sightings?.length ? ` · ${pin.sightings.length} görülme` : '';
+  const extra = pin.sightings?.length ? ' · ' + t('{0} görülme', {
+    '0': pin.sightings.length
+  }) + '' : '';
   if (pin.label && pin.address) return pin.address + extra;
   return `${pin.lat.toFixed(4)}, ${pin.lng.toFixed(4)}${extra}`;
 }
@@ -53,7 +56,7 @@ export default function MapTab({ visible = true }) {
   if (!loaded) {
     return (
       <div className="map-tab">
-        <div className="map-loading">Yükleniyor…</div>
+        <div className="map-loading">{t('Yükleniyor…')}</div>
       </div>
     );
   }
@@ -210,12 +213,12 @@ function MapTabInner() {
     <div className="map-tab">
       <aside className="map-sidebar">
         <div className="sidebar-header">
-          <h3>Konumlar <span className="count-pill">{pins.length}</span></h3>
+          <h3>{t('Konumlar')}{' '}<span className="count-pill">{pins.length}</span></h3>
           <button
             className="icon-btn"
             onClick={() => setShowSettings((s) => !s)}
-            title="Harita ayarları"
-            aria-label="Harita ayarları"
+            title={t('Harita ayarları')}
+            aria-label={t('Harita ayarları')}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="3" />
@@ -236,8 +239,8 @@ function MapTabInner() {
             aria-pressed={mapDisplay.showPinConnections}
             title={
               mapDisplay.showPinConnections
-                ? 'Rotayı gizle'
-                : 'Konumları sırayla birleştir'
+                ? t('Rotayı gizle')
+                : t('Konumları sırayla birleştir')
             }
           >
             <svg
@@ -252,27 +255,21 @@ function MapTabInner() {
               strokeDasharray="3 3"
             >
               <line x1="3" y1="20" x2="21" y2="4" />
-            </svg>
-            Rotayı çiz
-          </button>
+            </svg>{t('Rotayı çiz')}</button>
           <button
             type="button"
             className={`map-connect-toggle ${mapDisplay.showRadius !== false ? 'active' : ''}`}
             onClick={() => updateMapDisplay({ showRadius: mapDisplay.showRadius === false })}
-            title="Konumlara girilen yarıçap halkalarını göster"
+            title={t('Konumlara girilen yarıçap halkalarını göster')}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" strokeDasharray="3 3"/><circle cx="12" cy="12" r="2"/></svg>
-            Yarıçap halkaları
-          </button>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" strokeDasharray="3 3"/><circle cx="12" cy="12" r="2"/></svg>{t('Yarıçap halkaları')}</button>
           <button
             type="button"
             className={`map-connect-toggle ${mapDisplay.showDensity ? 'active' : ''}`}
             onClick={() => updateMapDisplay({ showDensity: !mapDisplay.showDensity })}
-            title="Görülme, ziyaret ve olay sayısına göre yoğunluk (yaşam örüntüsü)"
+            title={t('Görülme, ziyaret ve olay sayısına göre yoğunluk (yaşam örüntüsü)')}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity="0.8"><circle cx="9" cy="10" r="6" opacity="0.35"/><circle cx="15" cy="14" r="5" opacity="0.5"/><circle cx="14" cy="9" r="2.5"/></svg>
-            Yoğunluk
-          </button>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity="0.8"><circle cx="9" cy="10" r="6" opacity="0.35"/><circle cx="15" cy="14" r="5" opacity="0.5"/><circle cx="14" cy="9" r="2.5"/></svg>{t('Yoğunluk')}</button>
           {mapDisplay.showPinConnections && (
             <div className="map-connect-colors">
               {Object.values(PIN_COLORS).map((c) => {
@@ -288,7 +285,9 @@ function MapTabInner() {
                     onClick={() =>
                       updateMapDisplay({ pinConnectionColor: c.bg })
                     }
-                    aria-label={`Çizgi rengi: ${c.name}`}
+                    aria-label={t('Çizgi rengi: {0}', {
+                      '0': c.name
+                    })}
                     title={c.name}
                   />
                 );
@@ -307,8 +306,8 @@ function MapTabInner() {
                       className={`map-connect-swatch color-swatch-custom ${isCustom ? 'selected' : ''}`}
                       style={isCustom ? { background: current } : undefined}
                       onClick={() => connectorColorInputRef.current?.click()}
-                      aria-label="Özel çizgi rengi"
-                      title="Özel renk"
+                      aria-label={t('Özel çizgi rengi')}
+                      title={t('Özel renk')}
                     />
                     <input
                       ref={connectorColorInputRef}
@@ -330,10 +329,8 @@ function MapTabInner() {
 
         {pins.length === 0 ? (
           <div className="empty-state">
-            <p>Henüz konum yok.</p>
-            <p className="empty-hint">
-              Haritada herhangi bir yere tıklayarak konum ekleyin.
-            </p>
+            <p>{t('Henüz konum yok.')}</p>
+            <p className="empty-hint">{t('Haritada herhangi bir yere tıklayarak konum ekleyin.')}</p>
           </div>
         ) : (
           <ul className="pin-list">
@@ -344,62 +341,62 @@ function MapTabInner() {
               const iconVariantTheme = c.glyph === '#ffffff' ? 'dark' : 'light';
               const iconSrc = getMapIconSrc(pin.iconId, iconVariantTheme);
               return (
-              <li
-                key={pin.id}
-                className={`pin-item ${highlightedPinIds.has(pin.id) ? 'highlighted' : ''}`}
-                onClick={() => openEdit(pin)}
-              >
-                {iconSrc ? (
-                  <div
-                    className="pin-index pin-index-icon"
-                    style={{
-                      background: c.bg,
-                      borderColor: c.border,
-                    }}
-                  >
-                    <img src={iconSrc} alt="" draggable={false} />
-                    <span
-                      className="pin-index-num"
-                      style={{ background: c.glyph, color: c.bg, borderColor: c.bg }}
+                <li
+                  key={pin.id}
+                  className={`pin-item ${highlightedPinIds.has(pin.id) ? 'highlighted' : ''}`}
+                  onClick={() => openEdit(pin)}
+                >
+                  {iconSrc ? (
+                    <div
+                      className="pin-index pin-index-icon"
+                      style={{
+                        background: c.bg,
+                        borderColor: c.border,
+                      }}
+                    >
+                      <img src={iconSrc} alt="" draggable={false} />
+                      <span
+                        className="pin-index-num"
+                        style={{ background: c.glyph, color: c.bg, borderColor: c.bg }}
+                      >
+                        {idx + 1}
+                      </span>
+                    </div>
+                  ) : (
+                    <div
+                      className="pin-index"
+                      style={{
+                        background: c.bg,
+                        color: c.glyph,
+                        borderColor: c.border,
+                      }}
                     >
                       {idx + 1}
-                    </span>
+                    </div>
+                  )}
+                  <div className="pin-body">
+                    <div className="pin-label">{pinDisplayLabel(pin)}</div>
+                    <div className="pin-secondary">
+                      {pinSecondaryLabel(pin)}
+                    </div>
                   </div>
-                ) : (
-                  <div
-                    className="pin-index"
-                    style={{
-                      background: c.bg,
-                      color: c.glyph,
-                      borderColor: c.border,
+                  <button
+                    type="button"
+                    className="pin-delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (confirm(`"${pinDisplayLabel(pin)}" silinsin mi?`)) {
+                        deletePin(pin.id);
+                      }
                     }}
+                    aria-label={t('Konumu sil')}
+                    title={t('Konumu sil')}
                   >
-                    {idx + 1}
-                  </div>
-                )}
-                <div className="pin-body">
-                  <div className="pin-label">{pinDisplayLabel(pin)}</div>
-                  <div className="pin-secondary">
-                    {pinSecondaryLabel(pin)}
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className="pin-delete"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (confirm(`"${pinDisplayLabel(pin)}" silinsin mi?`)) {
-                      deletePin(pin.id);
-                    }
-                  }}
-                  aria-label="Konumu sil"
-                  title="Konumu sil"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-                  </svg>
-                </button>
-              </li>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    </svg>
+                  </button>
+                </li>
               );
             })}
           </ul>
@@ -546,17 +543,7 @@ function MapTabInner() {
         </Map>
 
         {showSettings && (
-          <div
-            className="map-settings-overlay"
-            onClick={() => setShowSettings(false)}
-          >
-            <div
-              className="map-settings-panel"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <MapsKeySetupSettings onClose={() => setShowSettings(false)} />
-            </div>
-          </div>
+          <SettingsModal initialSection="map" onClose={() => setShowSettings(false)} />
         )}
 
         {editingPin && (
@@ -754,181 +741,4 @@ function PlaceLookup({ editingPin, onResolved }) {
   }, [editingPin, geocodingLibrary, placesLibrary, map, onResolved]);
 
   return null;
-}
-
-function MapsKeySetupSettings({ onClose }) {
-  const {
-    googleMapsApiKey,
-    googleMapsApiKeySource,
-    clearGoogleMapsApiKey,
-    googleMapsMapId,
-    googleMapsMapIdSource,
-    setGoogleMapsMapId,
-    clearGoogleMapsMapId,
-    mapProvider,
-    setMapProvider,
-  } = useAppConfig();
-  const [mapIdDraft, setMapIdDraft] = useState(googleMapsMapId ?? '');
-
-  // Keep the input in sync when the value changes externally (e.g. clear).
-  useEffect(() => {
-    setMapIdDraft(googleMapsMapId ?? '');
-  }, [googleMapsMapId]);
-
-  const handleSaveMapId = (e) => {
-    e.preventDefault();
-    setGoogleMapsMapId(mapIdDraft);
-  };
-
-  const mapIdChanged = (mapIdDraft || '').trim() !== (googleMapsMapId || '');
-
-  const handleSwitchProvider = async (next) => {
-    if (next === mapProvider) return;
-    await setMapProvider(next);
-    onClose();
-  };
-
-  return (
-    <div className="map-settings">
-      <div className="modal-header">
-        <h2>Harita ayarları</h2>
-        <button
-          type="button"
-          className="icon-btn"
-          onClick={onClose}
-          aria-label="Kapat"
-        >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-        </button>
-      </div>
-
-      {/* Provider toggle. Lives above the Google-specific sections so the
-          choice is the first thing the user sees. */}
-      <div className="settings-current">
-        <div className="settings-row">
-          <span className="settings-label">Harita sağlayıcısı</span>
-        </div>
-        <div className="provider-toggle" role="tablist">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mapProvider === 'google'}
-            className={`provider-toggle-btn ${mapProvider === 'google' ? 'active' : ''}`}
-            onClick={() => handleSwitchProvider('google')}
-          >
-            Google Maps
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mapProvider === 'osm'}
-            className={`provider-toggle-btn ${mapProvider === 'osm' ? 'active' : ''}`}
-            onClick={() => handleSwitchProvider('osm')}
-          >
-            OpenStreetMap
-          </button>
-        </div>
-        <p className="settings-hint">
-          Google Maps daha zengin yer bilgisi verir ama API anahtarı ister.
-          OpenStreetMap ücretsiz ve anahtarsızdır; yer bilgisi daha sadedir.
-        </p>
-      </div>
-
-      <hr className="settings-divider" />
-
-      <div className="settings-current">
-        <div className="settings-row">
-          <span className="settings-label">Kayıtlı API anahtarı</span>
-          <code className="settings-value">{maskKey(googleMapsApiKey)}</code>
-        </div>
-        <div className="settings-row">
-          <span className="settings-label">Kaynak</span>
-          <span className="settings-value">
-            {googleMapsApiKeySource ?? 'bilinmiyor'}
-          </span>
-        </div>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={() => {
-            if (
-              confirm(
-                'Kayıtlı Google Maps API anahtarı bu tarayıcıdan silinsin mi? İstediğiniz zaman yeniden girebilirsiniz.',
-              )
-            ) {
-              clearGoogleMapsApiKey();
-            }
-          }}
-        >
-          Anahtarı sil
-        </button>
-      </div>
-
-      <hr className="settings-divider" />
-
-      {/* Optional Map ID — needed for Cloud-styled maps + Advanced Markers.
-          The app works without one (falls back to a placeholder), so this is
-          purposely optional with a clearly-marked "optional" hint. */}
-      <form className="settings-current" onSubmit={handleSaveMapId}>
-        <div className="settings-row">
-          <span className="settings-label">
-            Map ID <span className="settings-optional">(isteğe bağlı)</span>
-          </span>
-          <code className="settings-value">
-            {googleMapsMapId ?? '—'}
-          </code>
-        </div>
-        <div className="settings-row">
-          <span className="settings-label">Kaynak</span>
-          <span className="settings-value">
-            {googleMapsMapIdSource ?? 'tanımsız'}
-          </span>
-        </div>
-        <input
-          type="text"
-          autoComplete="off"
-          spellCheck="false"
-          placeholder="Google Cloud → Map Management'tan Map ID yapıştırın"
-          value={mapIdDraft}
-          onChange={(e) => setMapIdDraft(e.target.value)}
-          className="settings-input"
-        />
-        <p className="settings-hint">
-          İsteğe bağlı. Boş bırakırsanız Google'ın varsayılan stili kullanılır.
-          Yalnızca Google Cloud'da oluşturduğunuz özel bir stil için gerekir.
-        </p>
-        <div className="settings-actions">
-          <button
-            type="button"
-            className="btn btn-ghost"
-            onClick={clearGoogleMapsMapId}
-            disabled={!googleMapsMapId}
-          >
-            Temizle
-          </button>
-          <button
-            type="submit"
-            className="btn btn-primary"
-            disabled={!mapIdChanged}
-          >
-            Map ID kaydet
-          </button>
-        </div>
-      </form>
-
-      <hr className="settings-divider" />
-
-      <MapsKeySetup compact onSaved={onClose} />
-
-      <hr className="settings-divider" />
-
-      <ClearAllDataButton />
-    </div>
-  );
-}
-
-function maskKey(key) {
-  if (!key) return '—';
-  if (key.length <= 8) return '••••';
-  return `${key.slice(0, 4)}…${key.slice(-4)}`;
 }

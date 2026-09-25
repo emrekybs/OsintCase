@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { listTypesByCategory } from '../identifierTypes.js';
 import IdentifierBadge from './IdentifierBadge.jsx';
 import './NodeCreationMenu.css';
+import { t } from '../i18n/index.jsx';
 
 /**
  * Floating popup shown when the user drags a connection line into empty
@@ -114,7 +115,7 @@ export default function NodeCreationMenu({ position, onSelect, onClose }) {
         <input
           type="text"
           autoFocus
-          placeholder="Tanımlayıcı ekle…"
+          placeholder={t('Tanımlayıcı ekle…')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleSearchKeyDown}
@@ -122,7 +123,7 @@ export default function NodeCreationMenu({ position, onSelect, onClose }) {
         />
         <div className="node-menu-list" ref={listRef}>
           {totalShown === 0 ? (
-            <div className="node-menu-empty">Eşleşme yok.</div>
+            <div className="node-menu-empty">{t('Eşleşme yok.')}</div>
           ) : (
             filtered.map((cat) => (
               <div key={cat.key} className="node-menu-group">
