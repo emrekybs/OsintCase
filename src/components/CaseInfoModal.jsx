@@ -64,7 +64,6 @@ export default function CaseInfoModal({ onClose }) {
       >
         <div className="modal-header">
           <div>
-            <div className="modal-kicker">{t('Künye')}</div>
             <h2>{t('Dosya bilgileri')}</h2>
           </div>
           <button type="button" className="icon-btn" onClick={onClose} aria-label={t('Kapat')}>

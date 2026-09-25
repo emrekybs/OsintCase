@@ -1,42 +1,46 @@
 import { localizeRegistry } from './i18n/index.jsx';
 /**
- * Leaflet (anahtarsız / anahtarlı) harita karo sağlayıcıları.
- * Google Maps ayrı bir sağlayıcıdır (MapTab.jsx).
+ * Leaflet harita katmanları. Google Maps ayrı sağlayıcıdır (MapTab.jsx).
+ *
+ * Not: CARTO karoları 2026 itibarıyla API anahtarı istiyor (anahtarsız
+ * isteklerde "API KEY REQUIRED" filigranı basıyor), bu yüzden listede yok.
+ * OpenStreetMap geçerli bir Referer ister; index.html'de Referer'ı kapatan
+ * bir ayar OLMAMALI (osm.wiki/Blocked hatasının sebebi budur).
  */
+const OSM_ATTR =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
 export const TILE_STYLES = {
-  'carto-dark': {
-    label: 'CARTO Koyu',
-    desc: 'Ücretsiz, anahtarsız. Koyu temaya en uygun.',
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    subdomains: 'abcd',
-    maxZoom: 20,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    recommended: true,
-  },
   osm: {
     label: 'OpenStreetMap',
     desc: 'Ücretsiz, anahtarsız. Standart sokak haritası.',
     url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
     maxZoom: 19,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    attribution: OSM_ATTR,
+    recommended: true,
   },
-  'carto-light': {
-    label: 'CARTO Açık',
-    desc: 'Ücretsiz, anahtarsız. Sade açık zemin.',
-    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    subdomains: 'abcd',
-    maxZoom: 20,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+  'osm-dark': {
+    label: 'OpenStreetMap Koyu',
+    desc: 'Ücretsiz, anahtarsız. Aynı harita, koyu temaya uygun renklerde.',
+    url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    maxZoom: 19,
+    attribution: OSM_ATTR,
+    className: 'tiles-dark',
+  },
+  topo: {
+    label: 'OpenTopoMap',
+    desc: 'Ücretsiz, anahtarsız. Arazi ve yükselti.',
+    url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+    subdomains: 'abc',
+    maxZoom: 17,
+    attribution: `${OSM_ATTR}, SRTM | &copy; <a href="https://opentopomap.org">OpenTopoMap</a>`,
   },
   'esri-sat': {
     label: 'Esri Uydu',
-    desc: 'Ücretsiz, anahtarsız uydu görüntüsü.',
+    desc: 'Ücretsiz uydu görüntüsü. Esri kullanım şartları geçerlidir.',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     maxZoom: 19,
-    attribution: 'Tiles &copy; Esri — Esri, Maxar, Earthstar Geographics',
+    attribution: 'Tiles &copy; Esri — Esri, Vantor, Earthstar Geographics',
   },
   'maptiler-streets': {
     label: 'MapTiler Sokak',
@@ -44,8 +48,7 @@ export const TILE_STYLES = {
     url: 'https://api.maptiler.com/maps/streets-v2/256/{z}/{x}/{y}.png?key={key}',
     maxZoom: 20,
     needsKey: 'maptiler',
-    attribution:
-      '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    attribution: `&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> ${OSM_ATTR}`,
   },
   'maptiler-satellite': {
     label: 'MapTiler Uydu',
@@ -61,23 +64,27 @@ export const TILE_STYLES = {
     url: 'https://api.maptiler.com/maps/dataviz-dark/256/{z}/{x}/{y}.png?key={key}',
     maxZoom: 20,
     needsKey: 'maptiler',
-    attribution:
-      '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    attribution: `&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a> ${OSM_ATTR}`,
   },
 };
 
-export const DEFAULT_TILE_STYLE = 'carto-dark';
+export const DEFAULT_TILE_STYLE = 'osm';
 
-/** Seçili stil anahtar istiyorsa ve anahtar yoksa ücretsiz stile düşer. */
+/**
+ * Seçili stili çözer. Bilinmeyen stil (ör. eskiden kaydedilmiş CARTO) ya da
+ * anahtarı girilmemiş anahtarlı stil → OpenStreetMap.
+ */
 export function resolveTileStyle(styleKey, keys = {}) {
-  const style = TILE_STYLES[styleKey] ?? TILE_STYLES[DEFAULT_TILE_STYLE];
+  const known = styleKey && Object.hasOwn(TILE_STYLES, styleKey);
+  const key = known ? styleKey : DEFAULT_TILE_STYLE;
+  const style = TILE_STYLES[key];
   if (style.needsKey && !keys[style.needsKey]) {
     return { key: DEFAULT_TILE_STYLE, ...TILE_STYLES[DEFAULT_TILE_STYLE], fallback: true };
   }
   const url = style.needsKey
     ? style.url.replace('{key}', encodeURIComponent(keys[style.needsKey]))
     : style.url;
-  return { key: styleKey in TILE_STYLES ? styleKey : DEFAULT_TILE_STYLE, ...style, url };
+  return { key, ...style, url, fallback: !known && !!styleKey };
 }
 
 localizeRegistry(TILE_STYLES);

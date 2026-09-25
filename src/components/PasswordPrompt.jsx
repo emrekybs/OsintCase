@@ -41,7 +41,6 @@ export default function PasswordPrompt({ title = t('Şifreli dosya'), subtitle, 
         onMouseDown={(e) => e.stopPropagation()}
         onSubmit={handleSubmit}
       >
-        <div className="modal-kicker">{t('AES-256-GCM')}</div>
         <h2>{title}</h2>
         <p className="modal-sub">
           {subtitle ?? t('Bu dosya parolayla şifrelenmiş. Açmak için dosya parolasını girin.')}

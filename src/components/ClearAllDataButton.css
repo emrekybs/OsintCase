@@ -12,8 +12,6 @@
 .clear-all-label {
   font-size: 11.5px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: var(--danger, #e5484d);
 }
 

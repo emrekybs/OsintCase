@@ -124,7 +124,6 @@ export default function EventModal({ initial, onClose, onSave, onDelete }) {
       <form className="modal modal-wide" onMouseDown={(e) => e.stopPropagation()} onSubmit={submit}>
         <div className="modal-header">
           <div>
-            <div className="modal-kicker">{t('Kronoloji')}</div>
             <h2>{initial?.id ? t('Olayı düzenle') : t('Yeni olay')}</h2>
           </div>
           <button type="button" className="icon-btn" onClick={onClose} aria-label={t('Kapat')}>

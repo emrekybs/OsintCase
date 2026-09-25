@@ -154,8 +154,6 @@
   font-size: 13px;
 }
 .verify-banner strong {
-  font-family: var(--font-mono);
-  letter-spacing: 0.12em;
 }
 .verify-banner.ok {
   background: color-mix(in srgb, var(--success) 12%, transparent);
@@ -187,10 +185,7 @@
   background: var(--bg-1);
 }
 .kv span {
-  font-family: var(--font-mono);
   font-size: 9.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--text-2);
 }
 .kv b {

@@ -687,16 +687,12 @@ function InfoTabInner() {
 
         {identifiers.length > 0 && (
           <div className="graph-toolbar" role="toolbar" aria-label={t('Analiz araçları')}>
-            <button type="button" className="tool-btn" onClick={handleAutoLayout} title={t('Kuvvet yönlendirmeli otomatik yerleşim')}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7.3 11 16.7 6M7.3 13l9.4 5"/></svg>{t('Yerleşim')}</button>
+            <button type="button" className="tool-btn" onClick={handleAutoLayout} title={t('Kuvvet yönlendirmeli otomatik yerleşim')}>{t('Yerleşim')}</button>
             <button type="button" className={`tool-btn ${pathResult ? 'active' : ''}`} onClick={pathResult ? clearPath : handleShortestPath} title={t('Seçili iki düğüm arasındaki en kısa yolu bul')}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="5" r="2.5"/><path d="M7 17c4-1 3-9 10-10" strokeDasharray="3 3"/></svg>
               {pathResult ? 'Yolu temizle' : t('En kısa yol')}
             </button>
-            <button type="button" className={`tool-btn ${showDegree ? 'active' : ''}`} onClick={() => setShowDegree((v) => !v)} title={t('Her düğümün bağlantı sayısını göster')}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg>{t('Merkezilik')}</button>
-            <button type="button" className="tool-btn" onClick={() => fitView({ padding: 0.15, duration: 300 })} title={t('Tümünü ekrana sığdır')}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>{t('Sığdır')}</button>
+            <button type="button" className={`tool-btn ${showDegree ? 'active' : ''}`} onClick={() => setShowDegree((v) => !v)} title={t('Her düğümün bağlantı sayısını göster')}>{t('Merkezilik')}</button>
+            <button type="button" className="tool-btn" onClick={() => fitView({ padding: 0.15, duration: 300 })} title={t('Tümünü ekrana sığdır')}>{t('Sığdır')}</button>
             <span className="tool-sep" />
             <button type="button" className="tool-btn" onClick={() => handleExport('png')} title={t('PNG olarak dışa aktar')}>{t('PNG')}</button>
             <button type="button" className="tool-btn" onClick={() => handleExport('svg')} title={t('SVG olarak dışa aktar')}>{t('SVG')}</button>

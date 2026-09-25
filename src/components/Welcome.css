@@ -35,9 +35,7 @@
   max-width: 360px;
 }
 .welcome-word {
-  font-family: var(--font-display);
   font-size: 34px;
-  letter-spacing: 0.04em;
 }
 .welcome-word .w1 { color: #f1f1f1; }
 .welcome-word .w2 { color: #d32f2f; }
@@ -50,7 +48,6 @@
   padding: 0;
   margin: 0;
   font-size: 11px;
-  letter-spacing: 0.06em;
   color: #8a8a8a;
   line-height: 2;
 }
@@ -184,10 +181,7 @@
 }
 .welcome .tag-rec,
 .welcome .tag-key {
-  font-family: var(--font-mono);
   font-size: 9.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   padding: 1px 6px;
   border-radius: 2px;
 }

@@ -25,11 +25,21 @@ Kurulum sihirbazı 4 adımdır: **Dil** (Türkçe / English) → **Harita katman
 Sol şeritteki **Ayarlar** (ya da açılış ekranındaki dişli):
 - **Genel:** dil, tema, analist adı, otomatik kurtarma kaydı
 - **Harita ve API:** harita katmanı ve API anahtarları
-  - Anahtarsız: CARTO Koyu (önerilen), OpenStreetMap, CARTO Açık, Esri Uydu
+  - Anahtarsız: OpenStreetMap (önerilen, varsayılan), OpenStreetMap Koyu, OpenTopoMap, Esri Uydu
+  - CARTO kaldırıldı: 2026 itibarıyla anahtar istiyor ve anahtarsız karolara "API KEY REQUIRED" basıyor
   - Anahtarlı: MapTiler (Sokak / Uydu / Koyu), Google Maps (+ Map ID)
 - **Veri:** tarayıcıdaki tüm yerel verileri silme
 
 Anahtarlar yalnızca tarayıcıda (localStorage) tutulur; dosyalara yazılmaz.
+
+Bir harita katmanı yüklenemezse haritanın üstünde uyarı çıkar ve tek tıkla OpenStreetMap'e dönülür.
+
+> OpenStreetMap karoları geçerli bir `Referer` ister. `index.html`'e `referrer` kapatan bir meta etiketi eklemeyin; OSM "Access blocked / osm.wiki/Blocked" döner.
+
+## Dosya biçimi
+
+- Kayıt: `<ad>.case.json`, şifreli kayıt: `<ad>.case.enc.json`
+- Eski `.osint.json` / `.osint.enc.json` dosyaları da açılır.
 
 ## Sekmeler
 
@@ -46,7 +56,7 @@ Anahtarlar yalnızca tarayıcıda (localStorage) tutulur; dosyalara yazılmaz.
 **Görünüm**
 - OSINT Case kimliği: siyah / kırmızı / beyaz mat tema (koyu ve açık), logo, sol navigasyon şeridi, durum çubuğu
 - Türkçe / English arayüz (rapor dahil), anında değiştirilebilir
-- IBM Plex ve Black Ops One yazı tipleri pakete gömülü, internetten yüklenmez
+- İşletim sisteminin kendi yazı tipi (Segoe UI / San Francisco / Ubuntu); dışarıdan yazı tipi yüklenmez
 - Her ekranın üstünde/altında gizlilik bandı: TASNİF DIŞI · HİZMETE ÖZEL · ÖZEL · GİZLİ · ÇOK GİZLİ
 
 **Dosya künyesi**
@@ -70,7 +80,7 @@ Anahtarlar yalnızca tarayıcıda (localStorage) tutulur; dosyalara yazılmaz.
 - Silme işlemi gerekçe ister ve kayda geçer
 
 **Güvenlik**
-- Dosya parolası: AES-256-GCM, anahtar PBKDF2-SHA256 (600.000 tur) ile türetilir → `*.osint.enc.json`
+- Dosya parolası: AES-256-GCM, anahtar PBKDF2-SHA256 (600.000 tur) ile türetilir → `*.case.enc.json`
 - Otomatik kurtarma kaydı IndexedDB'ye taşındı; parolalı dosyalarda kurtarma kaydı da şifreli (liste dosya adını bile göstermez)
 - Otomatik kurtarma kaydı ayarlardan kapatılabilir
 - Yüksek gizlilik dereceli dosya şifresiz kaydedilirken uyarı
@@ -80,7 +90,7 @@ Anahtarlar yalnızca tarayıcıda (localStorage) tutulur; dosyalara yazılmaz.
 
 ## Uyumluluk
 
-- Orijinal sürümün `.osint.json` dosyaları (şema v1) olduğu gibi açılır; eksik alanlar boş gelir.
+- Orijinal sürümün `.osint.json` dosyaları (şema v1) olduğu gibi açılır; eksik alanlar boş gelir. Yeni kayıtlar `.case.json` uzantısıyla iner.
 - Yeni dosyalar şema v2 ile yazılır. Eski localStorage kurtarma kayıtları ilk açılışta IndexedDB'ye taşınır.
 - Alan anahtarları değiştirilmedi; yalnızca etiketler Türkçeleştirildi.
 

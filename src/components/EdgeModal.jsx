@@ -38,7 +38,6 @@ export default function EdgeModal({ connection, source, target, onSave, onDelete
           onSave({ label: label.trim(), confidence, note: note.trim() });
         }}
       >
-        <div className="modal-kicker">{t('Bağlantı')}</div>
         <h2 className="edge-title">
           {getDisplayLabel(source)} <span className="edge-arrow">↔</span> {getDisplayLabel(target)}
         </h2>

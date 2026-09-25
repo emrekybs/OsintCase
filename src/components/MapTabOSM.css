@@ -217,14 +217,51 @@
   border-bottom: 1px solid var(--border);
 }
 .map-layer-select label {
-  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-1);
   font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--text-2);
 }
 .map-layer-select select {
   flex: 1;
   padding: 5px 28px 5px 8px;
   font-size: 12.5px;
+}
+
+/* Koyu katman: OSM karolarını ters çevirip tonunu düzelt (anahtar gerekmez). */
+.tiles-dark {
+  filter: invert(100%) hue-rotate(180deg) brightness(92%) contrast(88%) saturate(60%);
+}
+.map-canvas .tile-alert {
+  width: auto;
+  position: absolute;
+  top: auto;
+  right: auto;
+  height: auto;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(640px, 90%);
+  padding: 10px 12px 10px 14px;
+  background: var(--bg-1);
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  font-size: 13px;
+}
+.tile-alert.info {
+  border-left-color: var(--warn);
+}
+.tile-alert > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tile-alert span {
+  color: var(--text-1);
 }

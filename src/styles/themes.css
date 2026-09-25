@@ -1,10 +1,11 @@
 /* OSINT Case — siyah / kırmızı / beyaz, mat. Parlama efekti yok. */
 :root {
-  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto,
-    Arial, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas,
-    monospace;
-  --font-display: 'Black Ops One', var(--font-sans);
+  /* İşletim sisteminin kendi yazı tipi: Windows'ta Segoe UI, macOS'ta
+     San Francisco, Linux'ta Ubuntu / Cantarell / Noto. */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Ubuntu, Cantarell,
+    'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', 'Ubuntu Mono',
+    'DejaVu Sans Mono', Menlo, Consolas, monospace;
   --radius-sm: 2px;
   --radius: 3px;
   --radius-lg: 5px;

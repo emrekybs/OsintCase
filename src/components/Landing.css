@@ -25,9 +25,7 @@
   width: min(300px, 72%);
 }
 .landing-side-word {
-  font-family: var(--font-display);
   font-size: 32px;
-  letter-spacing: 0.05em;
   margin-top: 22px;
 }
 .landing-side-word .w1 { color: #f1f1f1; }
@@ -46,7 +44,6 @@
   justify-content: center;
   gap: 18px;
   font-size: 10px;
-  letter-spacing: 0.16em;
   color: #6d6d6d;
 }
 .landing-side-foot span::before {
@@ -79,10 +76,7 @@
   font-size: 13px;
 }
 .landing-analyst-label {
-  font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: var(--text-2);
 }
 .landing-analyst-name {
@@ -163,10 +157,7 @@
 .landing-recents-header {
   display: flex;
   align-items: center;
-  font-family: var(--font-mono);
   font-size: 10.5px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: var(--text-2);
   padding-bottom: 8px;
   border-bottom: 1px solid var(--border);
@@ -293,20 +284,17 @@
   user-select: none;
 }
 .brandmark-rail .brandmark-logo {
-  width: 46px;
-  height: 46px;
+  width: 34px;
+  height: 34px;
 }
 .brandmark-sm .brandmark-logo {
   width: 34px;
   height: 34px;
 }
 .brandmark-word {
-  font-family: var(--font-display);
-  letter-spacing: 0.04em;
   line-height: 1;
 }
-.brandmark-word .w1 { color: var(--text-0); }
-.brandmark-word .w2 { color: var(--accent); margin-left: 4px; }
+
 .brandmark-tagline {
   font-size: 11px;
   color: var(--text-2);
@@ -322,4 +310,19 @@
   .landing-tiles {
     grid-template-columns: 1fr;
   }
+}
+.enc-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  border-radius: 2px;
+  padding: 0 5px;
+  margin-right: 6px;
+}
+.landing-side-tag {
+  margin: 20px 0 0;
+  color: #a8a8a8;
+  font-size: 14px;
 }

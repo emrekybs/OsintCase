@@ -90,16 +90,13 @@
   margin-bottom: 8px;
 }
 .rp-kicker {
-  font-family: var(--font-mono);
   font-size: 10px;
-  letter-spacing: 0.24em;
   color: #b71c1c;
 }
 .rp-cover h1 {
   margin: 4px 0 12px;
   font-size: 22px;
   font-weight: 600;
-  letter-spacing: 0.01em;
 }
 .rp-kv {
   width: 100%;
@@ -109,10 +106,7 @@
 .rp-kv th {
   text-align: left;
   font-weight: 500;
-  font-family: var(--font-mono);
   font-size: 9.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: #6b6f66;
   width: 17%;
   padding: 3px 6px 3px 0;
@@ -146,7 +140,6 @@
   break-after: avoid;
 }
 .rp-no {
-  font-family: var(--font-mono);
   color: #b71c1c;
 }
 .rp-h3 {
@@ -173,11 +166,8 @@
 }
 .rp-table th {
   text-align: left;
-  font-family: var(--font-mono);
   font-weight: 500;
   font-size: 9px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   background: #efeee7;
   color: #454a42;
   padding: 4px 6px;
@@ -234,7 +224,6 @@
 .rp-end {
   margin-top: 26px;
   text-align: center;
-  font-family: var(--font-mono);
   font-size: 10px;
   color: #6b6f66;
   break-inside: avoid;
@@ -254,8 +243,6 @@
 }
 .rp-sign span {
   font-size: 9px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
 }
 .rp-sign b {
   font-family: var(--font-sans);

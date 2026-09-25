@@ -28,7 +28,7 @@ export function triggerDownload(blob, filename) {
 
 /**
  * Dosyayı indirir. `session` verilirse AES-256-GCM ile şifreli zarf olarak
- * (<ad>.osint.enc.json) kaydeder; yoksa düz JSON (<ad>.osint.json).
+ * (<ad>.case.enc.json) kaydeder; yoksa düz JSON (<ad>.case.json).
  */
 export async function downloadProject(project, { session } = {}) {
   const stamped = { ...project, updatedAt: new Date().toISOString() };
@@ -37,14 +37,14 @@ export async function downloadProject(project, { session } = {}) {
     const envelope = await encryptWithSession(session, stamped);
     triggerDownload(
       new Blob([JSON.stringify(envelope)], { type: 'application/json' }),
-      `${base}.osint.enc.json`,
+      `${base}.case.enc.json`,
     );
   } else {
     triggerDownload(
       new Blob([JSON.stringify(stamped, null, 2)], {
         type: 'application/json',
       }),
-      `${base}.osint.json`,
+      `${base}.case.json`,
     );
   }
   return stamped;

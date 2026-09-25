@@ -61,7 +61,6 @@ export default function AuditTab() {
     <div className="audit-tab">
       <div className="audit-head">
         <div>
-          <div className="modal-kicker">{t('İşlem kaydı')}</div>
           <h2>{log.length}{' '}{t('kayıt')}</h2>
           <div className="audit-digest mono" title={t(
             'Kaydın tamamının SHA-256 özeti. Rapora yazılır; sonradan değişiklik olup olmadığını karşılaştırmak için kullanılır.'
