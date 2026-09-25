@@ -1,7 +1,7 @@
-# OsintCase
+# OSINTCase
 
 <p align="center">
-  <img src="docs/osintcase.png" alt="OSINT Case" width="250">
+  <img src="docs/osintcase.png" alt="OSINT Case" width="350">
 </p>
 
 > **Based on [OSINTMapper](https://github.com/Geistnigma/OSINTMapper) by [Geistnigma](https://github.com/Geistnigma).**
