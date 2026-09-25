@@ -24,7 +24,7 @@ export default function Welcome() {
     tileKeys,
   } = useAppConfig();
   const [step, setStep] = useState(0);
-  const [choice, setChoice] = useState('carto-dark');
+  const [choice, setChoice] = useState('osm');
   const [gKey, setGKey] = useState('');
   const [mtKey, setMtKey] = useState(tileKeys?.maptiler ?? '');
   const [analyst, setAnalystDraft] = useState(getAnalyst());
@@ -33,7 +33,7 @@ export default function Welcome() {
     choice === 'google' ? 'google' : TILE_STYLES[choice]?.needsKey ?? null;
 
   const options = [
-    ...['carto-dark', 'osm', 'esri-sat', 'maptiler-satellite'].map((key) => ({
+    ...['osm', 'osm-dark', 'esri-sat', 'maptiler-satellite'].map((key) => ({
       key,
       ...TILE_STYLES[key],
     })),
@@ -71,15 +71,7 @@ export default function Welcome() {
       <aside className="welcome-side">
         <BrandMark size="lg" showWord={false} />
         <div className="welcome-side-text">
-          <div className="welcome-word">
-            <span className="w1">OSINT</span> <span className="w2">CASE</span>
-          </div>
           <p>{t('Soruşturma ve istihbarat analiz masası')}</p>
-          <ul className="welcome-facts mono">
-            <li>{t('Sunucusuz · veriler cihazdan çıkmaz')}</li>
-            <li>{t('AES-256-GCM dosya şifreleme')}</li>
-            <li>{t('SHA-256 delil bütünlüğü')}</li>
-          </ul>
         </div>
       </aside>
 
@@ -93,8 +85,7 @@ export default function Welcome() {
                   i === 2 && !needsKey ? 'skipped' : ''
                 }`}
               >
-                <span className="stepper-no mono">{String(i + 1).padStart(2, '0')}</span>
-                {t(s)}
+                {i + 1}. {t(s)}
               </li>
             ))}
           </ol>
@@ -104,7 +95,6 @@ export default function Welcome() {
         <div className="welcome-panel">
           {step === 0 && (
             <>
-              <div className="modal-kicker">{t('Kurulum')} · 01</div>
               <h1>{t('Dil seçin')}</h1>
               <p className="welcome-lead">{t('Arayüz ve raporlar bu dilde olur. Sonradan Ayarlar’dan değiştirilebilir.')}</p>
               <div className="choice-grid two">
@@ -115,7 +105,6 @@ export default function Welcome() {
                     className={`choice-card ${lang === l.key ? 'active' : ''}`}
                     onClick={() => setLang(l.key)}
                   >
-                    <span className="choice-big mono">{l.short}</span>
                     <b>{l.label}</b>
                   </button>
                 ))}
@@ -125,7 +114,6 @@ export default function Welcome() {
 
           {step === 1 && (
             <>
-              <div className="modal-kicker">{t('Kurulum')} · 02</div>
               <h1>{t('Harita katmanı')}</h1>
               <p className="welcome-lead">{t('Konumlar bu harita üzerinde gösterilir. Anahtarsız seçenekler hemen çalışır.')}</p>
               <div className="choice-grid">
@@ -150,7 +138,6 @@ export default function Welcome() {
 
           {step === 2 && (
             <>
-              <div className="modal-kicker">{t('Kurulum')} · 03</div>
               <h1>{t('API anahtarı')}</h1>
               <p className="welcome-lead">
                 {t('İsterseniz şimdi girin, isterseniz atlayın. Anahtar yalnızca bu tarayıcıda saklanır.')}
@@ -181,14 +168,13 @@ export default function Welcome() {
                 </div>
               )}
               <p className="set-hint">
-                {t('Anahtar girilmezse harita ücretsiz CARTO katmanıyla açılır.')}
+                {t('Anahtar girilmezse harita ücretsiz OpenStreetMap ile açılır.')}
               </p>
             </>
           )}
 
           {step === 3 && (
             <>
-              <div className="modal-kicker">{t('Kurulum')} · 04</div>
               <h1>{t('Analist')}</h1>
               <p className="welcome-lead">
                 {t('Bu cihazda çalışan analistin adı. İşlem kaydına ve delil teslim zincirine otomatik yazılır.')}

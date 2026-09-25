@@ -140,15 +140,7 @@ export default function Landing() {
     <div className="landing">
       <aside className="landing-side">
         <BrandMark size="lg" showWord={false} />
-        <div className="landing-side-word">
-          <span className="w1">OSINT</span> <span className="w2">CASE</span>
-        </div>
         <p className="landing-side-tag">{t('Soruşturma ve istihbarat analiz masası')}</p>
-        <div className="landing-side-foot mono">
-          <span>AES-256-GCM</span>
-          <span>SHA-256</span>
-          <span>{t('YEREL')}</span>
-        </div>
       </aside>
 
       <section className="landing-main">
@@ -182,34 +174,27 @@ export default function Landing() {
           </div>
           <div className="landing-top-right">
             <LangSwitch />
-            <button type="button" className="icon-btn" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => setShowSettings(true)}>
+              {t('Ayarlar')}
             </button>
             <ThemeToggle />
           </div>
         </header>
 
         <div className="landing-body">
-          <div className="modal-kicker">{t('Dosyalar')}</div>
           <h1 className="landing-title">{t('Soruşturma dosyaları')}</h1>
 
           <div className="landing-tiles">
             <button className="landing-tile primary" onClick={openNew}>
-              <span className="tile-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square"><path d="M12 5v14M5 12h14" /></svg>
-              </span>
               <span className="tile-text">
                 <b>{t('Yeni dosya')}</b>
                 <span>{t('Künye, gizlilik derecesi ve hedefle yeni soruşturma aç')}</span>
               </span>
             </button>
             <button className="landing-tile" onClick={handleOpenClick}>
-              <span className="tile-icon">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
-              </span>
               <span className="tile-text">
                 <b>{t('Dosya aç')}</b>
-                <span>{t('.osint.json ya da şifreli .osint.enc.json')}</span>
+                <span>{t('.case.json ya da şifreli .case.enc.json')}</span>
               </span>
             </button>
           </div>
@@ -236,19 +221,13 @@ export default function Landing() {
                         onClick={() => handleResume(r)}
                         title={r.encrypted ? t('Şifreli kayıt — parola gerekir') : r.name}
                       >
-                        <div className={`landing-recent-icon ${r.encrypted ? 'locked' : ''}`}>
-                          {r.encrypted ? (
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="11" width="16" height="10" rx="1" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
-                          ) : (
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><path d="M14 3v6h6" /></svg>
-                          )}
-                        </div>
                         <div className="landing-recent-body">
                           <div className="landing-recent-name">
                             {r.caseNumber && <span className="mono landing-recent-no">{r.caseNumber}</span>}
                             {r.encrypted ? t('Şifreli dosya') : r.name}
                           </div>
                           <div className="landing-recent-meta">
+                            {r.encrypted && <span className="enc-tag">{t('Şifreli')}</span>}
                             {t('Düzenleme')} {relativeTime(r.snapshotAt)}
                             {unsaved && <span className="landing-recent-unsaved">· {t('kaydedilmedi')}</span>}
                             {!r.encrypted && <span className="landing-recent-plain">· {t('şifresiz')}</span>}
@@ -312,7 +291,6 @@ export default function Landing() {
             onMouseDown={(e) => e.stopPropagation()}
             onSubmit={handleCreate}
           >
-            <div className="modal-kicker">{t('Yeni kayıt')}</div>
             <h2>{t('Soruşturma dosyası aç')}</h2>
             <p className="modal-sub">{t('Künye bilgileri sonradan da düzenlenebilir.')}</p>
 

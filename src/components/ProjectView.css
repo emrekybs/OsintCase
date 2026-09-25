@@ -10,78 +10,70 @@
   display: flex;
 }
 
-/* ---- Sol navigasyon şeridi ------------------------------------------------ */
+/* ---- Sol menü (yazılı, simgesiz) ------------------------------------------- */
 .rail {
-  width: var(--rail-w);
+  width: 176px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  background: #080808;
-  border-right: 1px solid #1f1f1f;
-  padding: 10px 0;
-  color: #8a8a8a;
+  background: #0c0c0c;
+  border-right: 1px solid #222;
+  color: #a8a8a8;
 }
 :root[data-theme='light'] .rail {
-  background: #111111;
+  background: #141414;
 }
 .rail-brand {
   display: flex;
-  justify-content: center;
-  padding: 2px 0 14px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #1f1f1f;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid #222;
+  text-align: left;
+}
+.rail-brand .brandmark-word {
+  color: #f1f1f1;
+  font-weight: 700;
+  font-size: 15px;
 }
 .rail-group {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  padding: 8px 0;
+}
+.rail-bottom {
+  border-top: 1px solid #222;
 }
 .rail-spacer {
   flex: 1;
 }
 .rail-btn {
-  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 9px 4px 8px;
-  color: #8a8a8a;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 9px 14px 9px 13px;
+  font-size: 14px;
+  color: #a8a8a8;
+  text-align: left;
   border-left: 3px solid transparent;
 }
 .rail-btn:hover {
   color: #f1f1f1;
-  background: #141414;
+  background: #161616;
 }
 .rail-btn.active {
   color: #ffffff;
-  background: #161616;
+  font-weight: 600;
+  background: #181818;
   border-left-color: #d32f2f;
 }
-.rail-btn.active svg {
-  color: #e53935;
-}
-.rail-label {
-  font-size: 10.5px;
-  letter-spacing: 0.02em;
-}
 .rail-count {
-  position: absolute;
-  top: 5px;
-  right: 9px;
-  font-size: 9px;
-  min-width: 15px;
-  padding: 0 3px;
-  line-height: 14px;
-  text-align: center;
-  background: #262626;
-  color: #bdbdbd;
-  border-radius: 7px;
+  font-size: 12px;
+  color: #7a7a7a;
+  font-variant-numeric: tabular-nums;
 }
 .rail-btn.active .rail-count {
-  background: #d32f2f;
-  color: #fff;
+  color: #e53935;
 }
 
 /* ---- Başlık ---------------------------------------------------------------- */
@@ -177,10 +169,7 @@
   gap: 6px;
   padding: 5px 9px;
   border-radius: var(--radius);
-  font-family: var(--font-mono);
   font-size: 10.5px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   border: 1px solid;
 }
 .lock-btn.on {
@@ -218,6 +207,7 @@
 
 /* ---- Durum çubuğu ------------------------------------------------------- */
 .statusbar {
+  font-variant-numeric: tabular-nums;
   display: flex;
   align-items: center;
   gap: 18px;
@@ -232,8 +222,7 @@
   overflow: hidden;
 }
 .sb-key {
-  color: var(--accent);
-  letter-spacing: 0.12em;
+  color: var(--text-1);
   margin-right: 4px;
 }
 .sb-item {

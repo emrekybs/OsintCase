@@ -38,7 +38,6 @@ export default function SettingsModal({ onClose, initialSection = 'general' }) {
     <div className="modal-backdrop" onMouseDown={onClose}>
       <div className="modal settings-modal" onMouseDown={(e) => e.stopPropagation()}>
         <aside className="settings-nav">
-          <div className="modal-kicker">{t('Ayarlar')}</div>
           {SECTIONS.map((s) => (
             <button
               key={s.key}
@@ -46,7 +45,6 @@ export default function SettingsModal({ onClose, initialSection = 'general' }) {
               className={`settings-nav-btn ${section === s.key ? 'active' : ''}`}
               onClick={() => setSection(s.key)}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={s.icon} /></svg>
               {t(s.label)}
             </button>
           ))}

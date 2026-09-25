@@ -8,7 +8,7 @@ import { clearAllRecents } from './recentProjects.js';
  *
  * Does NOT touch:
  *   - public/app.config.json (file on disk; this code runs in the browser)
- *   - *.osint.json project files the user has saved to disk
+ *   - *.case.json project files the user has saved to disk
  *
  * Implemented as a prefix scan so a future osint-tool:* key gets wiped
  * automatically without anyone having to remember to update this list.

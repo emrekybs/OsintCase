@@ -183,7 +183,6 @@ export default function EvidenceTab() {
           role="button"
           tabIndex={0}
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg>
           <span>{busy || t('Dosyayı sürükleyin ya da tıklayın')}</span>
         </div>
         <label className="check-row compact embed-toggle">

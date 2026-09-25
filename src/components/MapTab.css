@@ -513,8 +513,6 @@
 .settings-label {
   color: var(--text-2);
   font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
 .settings-value {
@@ -533,7 +531,6 @@
   font-size: 11px;
   color: var(--text-2);
   text-transform: none;
-  letter-spacing: 0;
   margin-left: 4px;
 }
 

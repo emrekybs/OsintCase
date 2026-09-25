@@ -76,6 +76,10 @@ export default function MapTabOSM({ visible = true }) {
     () => resolveTileStyle(tileStyle ?? DEFAULT_TILE_STYLE, tileKeys),
     [tileStyle, tileKeys],
   );
+  // Katman sağlığı: hiç karo yüklenmeden art arda hata gelirse uyar.
+  const [tileHealth, setTileHealth] = useState({ errors: 0, loads: 0 });
+  useEffect(() => setTileHealth({ errors: 0, loads: 0 }), [tiles.url]);
+  const tilesFailing = tileHealth.errors >= 4 && tileHealth.loads === 0;
   const { hoveredIdentifierId, focus, consumeFocus } = useNavigation();
   const [showSettings, setShowSettings] = useState(false);
   const pins = useMemo(() => project?.locations ?? [], [project?.locations]);
@@ -226,24 +230,19 @@ export default function MapTabOSM({ visible = true }) {
                 showPinConnections: !mapDisplay.showPinConnections,
               })
             }
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="3 3">
-              <line x1="3" y1="20" x2="21" y2="4" />
-            </svg>{t('Rotayı çiz')}</button>
+          >{t('Rotayı çiz')}</button>
           <button
             type="button"
             className={`map-connect-toggle ${mapDisplay.showRadius !== false ? 'active' : ''}`}
             onClick={() => updateMapDisplay({ showRadius: mapDisplay.showRadius === false })}
             title={t('Konumlara girilen yarıçap halkalarını göster')}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" strokeDasharray="3 3"/><circle cx="12" cy="12" r="2"/></svg>{t('Yarıçap halkaları')}</button>
+          >{t('Yarıçap halkaları')}</button>
           <button
             type="button"
             className={`map-connect-toggle ${mapDisplay.showDensity ? 'active' : ''}`}
             onClick={() => updateMapDisplay({ showDensity: !mapDisplay.showDensity })}
             title={t('Görülme, ziyaret ve olay sayısına göre yoğunluk (yaşam örüntüsü)')}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity="0.8"><circle cx="9" cy="10" r="6" opacity="0.35"/><circle cx="15" cy="14" r="5" opacity="0.5"/><circle cx="14" cy="9" r="2.5"/></svg>{t('Yoğunluk')}</button>
+          >{t('Yoğunluk')}</button>
           {mapDisplay.showPinConnections && (
             <div className="map-connect-colors">
               {Object.values(PIN_COLORS).map((c) => {
@@ -382,12 +381,17 @@ export default function MapTabOSM({ visible = true }) {
           className="osm-map-container"
         >
           <TileLayer
-            key={tiles.key}
+            key={tiles.key + (tiles.url.includes('key=') ? tiles.url.slice(-6) : '')}
             attribution={tiles.attribution}
             url={tiles.url}
             subdomains={tiles.subdomains ?? 'abc'}
             maxZoom={tiles.maxZoom ?? 19}
-            detectRetina={false}
+            maxNativeZoom={tiles.maxZoom ?? 19}
+            className={tiles.className ?? ''}
+            eventHandlers={{
+              tileerror: () => setTileHealth((h) => ({ ...h, errors: h.errors + 1 })),
+              tileload: () => setTileHealth((h) => ({ ...h, loads: h.loads + 1 })),
+            }}
           />
           <ClickToPin onClick={handleMapClick} disabled={!!editingPin} />
           <PanController pendingPanRef={pendingPanRef} />
@@ -496,6 +500,38 @@ export default function MapTabOSM({ visible = true }) {
             }}
           />
         </MapContainer>
+
+        {tilesFailing && (
+          <div className="tile-alert" role="alert">
+            <div>
+              <b>{t('Harita katmanı yüklenemedi')}</b>
+              <span>
+                {t('“{0}” karoları alınamıyor. İnternet bağlantısını, ağ engelini ya da API anahtarını kontrol edin.', { 0: tiles.label })}
+              </span>
+            </div>
+            {tiles.key !== DEFAULT_TILE_STYLE ? (
+              <button type="button" className="btn btn-primary btn-sm" onClick={() => setTileStyle(DEFAULT_TILE_STYLE)}>
+                {t('OpenStreetMap’e geç')}
+              </button>
+            ) : (
+              <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowSettings(true)}>
+                {t('Harita ayarları')}
+              </button>
+            )}
+          </div>
+        )}
+        {tiles.fallback && tileStyle && !tilesFailing && (
+          <div className="tile-alert info" role="status">
+            <div>
+              <span>
+                {t('Seçili katman kullanılamıyor (API anahtarı yok ya da katman kaldırıldı). OpenStreetMap gösteriliyor.')}
+              </span>
+            </div>
+            <button type="button" className="btn btn-secondary btn-sm" onClick={() => setTileStyle(DEFAULT_TILE_STYLE)}>
+              {t('Tamam')}
+            </button>
+          </div>
+        )}
 
         {editingPin && (
           <PinModal
@@ -613,7 +649,8 @@ function NominatimSearch({ onSelect }) {
 
   useEffect(() => {
     clearTimeout(debounceRef.current);
-    if (!query.trim()) {
+    // Nominatim kullanım politikası: saniyede en fazla 1 istek.
+    if (query.trim().length < 3) {
       setResults([]);
       setOpen(false);
       return;
@@ -640,7 +677,7 @@ function NominatimSearch({ onSelect }) {
       } finally {
         setLoading(false);
       }
-    }, 400);
+    }, 800);
     return () => clearTimeout(debounceRef.current);
   }, [query]);
 

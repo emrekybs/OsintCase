@@ -242,34 +242,19 @@ function MapTabInner() {
                 ? t('Rotayı gizle')
                 : t('Konumları sırayla birleştir')
             }
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray="3 3"
-            >
-              <line x1="3" y1="20" x2="21" y2="4" />
-            </svg>{t('Rotayı çiz')}</button>
+          >{t('Rotayı çiz')}</button>
           <button
             type="button"
             className={`map-connect-toggle ${mapDisplay.showRadius !== false ? 'active' : ''}`}
             onClick={() => updateMapDisplay({ showRadius: mapDisplay.showRadius === false })}
             title={t('Konumlara girilen yarıçap halkalarını göster')}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" strokeDasharray="3 3"/><circle cx="12" cy="12" r="2"/></svg>{t('Yarıçap halkaları')}</button>
+          >{t('Yarıçap halkaları')}</button>
           <button
             type="button"
             className={`map-connect-toggle ${mapDisplay.showDensity ? 'active' : ''}`}
             onClick={() => updateMapDisplay({ showDensity: !mapDisplay.showDensity })}
             title={t('Görülme, ziyaret ve olay sayısına göre yoğunluk (yaşam örüntüsü)')}
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity="0.8"><circle cx="9" cy="10" r="6" opacity="0.35"/><circle cx="15" cy="14" r="5" opacity="0.5"/><circle cx="14" cy="9" r="2.5"/></svg>{t('Yoğunluk')}</button>
+          >{t('Yoğunluk')}</button>
           {mapDisplay.showPinConnections && (
             <div className="map-connect-colors">
               {Object.values(PIN_COLORS).map((c) => {

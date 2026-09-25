@@ -80,8 +80,8 @@ export default function ClearAllDataButton({ variant = 'block' }) {
               </span>
             </label>
 
-            <p className="modal-sub">{t('Diske kaydettiğiniz dosyalar (')}<code>{t('*.osint.json')}</code>,{' '}
-              <code>{t('*.osint.enc.json')}</code>{t(') etkilenmez.')}</p>
+            <p className="modal-sub">{t('Diske kaydettiğiniz dosyalar (')}<code>{t('*.case.json')}</code>,{' '}
+              <code>{t('*.case.enc.json')}</code>{t(') etkilenmez.')}</p>
             <div className="modal-actions">
               <button
                 type="button"

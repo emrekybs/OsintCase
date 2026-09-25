@@ -46,8 +46,6 @@
 .maps-setup-form label {
   display: block;
   font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: var(--text-2);
   margin-bottom: 6px;
 }
@@ -79,8 +77,6 @@
   margin: 18px 0 14px;
   color: var(--text-2);
   font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
 }
 
 .maps-setup-divider::before,

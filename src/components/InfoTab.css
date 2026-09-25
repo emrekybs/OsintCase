@@ -31,8 +31,6 @@
   margin: 0;
   font-size: 13px;
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   color: var(--text-2);
 }
 
@@ -99,8 +97,6 @@
 .identifier-type {
   font-size: 10px;
   color: var(--text-2);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
   font-weight: 600;
 }
 

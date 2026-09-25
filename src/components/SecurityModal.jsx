@@ -51,7 +51,7 @@ export default function SecurityModal({ onClose }) {
       setDone(
         isEncrypted
           ? t('Parola değiştirildi. Bir sonraki kayıtta yeni parola kullanılacak.')
-          : t('Dosya şifrelendi. Kaydettiğinizde .osint.enc.json olarak inecek.'),
+          : t('Dosya şifrelendi. Kaydettiğinizde .case.enc.json olarak inecek.'),
       );
     } catch (err) {
       setError(err?.message ?? t('Parola ayarlanamadı.'));
@@ -85,7 +85,6 @@ export default function SecurityModal({ onClose }) {
       <div className="modal modal-wide security-modal" onMouseDown={(e) => e.stopPropagation()}>
         <div className="modal-header">
           <div>
-            <div className="modal-kicker">{t('Güvenlik')}</div>
             <h2>{t('Şifreleme ve cihaz ayarları')}</h2>
           </div>
           <button type="button" className="icon-btn" onClick={onClose} aria-label={t('Kapat')}>
