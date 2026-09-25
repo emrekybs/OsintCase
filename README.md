@@ -1,103 +1,126 @@
 # OSINT Case
 
-Tarayıcıda çalışan, sunucusuz bir soruşturma/istihbarat analiz panosu. Şahısları ve tanımlayıcıları bir bağlantı ağında, konumları haritada, olayları kronolojide, delilleri SHA-256 bütünlük kaydıyla tek bir dosyada toplar. Hiçbir veri cihazdan çıkmaz.
+A serverless investigation and intelligence analysis desk that runs entirely in the browser. Map subjects and identifiers on a link graph, pin locations on a map, build a timeline of events and register evidence with SHA-256 integrity, all in a single case file. Nothing leaves your device.
 
-> Bu proje, [anonymousRAID/OSINT-Mapping-Tool](https://github.com/anonymousRAID/OSINT-Mapping-Tool) (GPL-3.0) üzerine geliştirilmiş **değiştirilmiş bir sürümdür**. Değişiklikler aşağıda listelenmiştir. Lisans GPL-3.0 olarak devam eder; dağıtırken kaynak kodu da verilmelidir.
+![Network view](docs/screenshots/network.png)
 
-Ürün adı, slogan ve logo `src/brand.js` ve `src/images/brand/` üzerinden değiştirilir (beyaz etiket).
+## Try the sample case
 
-## Kurulum
+`examples/operation-nightjar.case.json` is a complete, fictional case you can open right away: **Open file** on the home screen, then pick the file. It contains 3 subjects, 15 identifiers, 16 graded links, 5 locations with sightings, a timeline, 5 evidence items with chain of custody and a full audit log. A printed report generated from it is in [`docs/sample-report.pdf`](docs/sample-report.pdf).
+
+All names, numbers, addresses and accounts in the sample are invented.
+
+## Screenshots
+
+| | |
+|---|---|
+| ![Home](docs/screenshots/home.png) Home screen | ![Shortest path](docs/screenshots/shortest-path.png) Shortest path between two nodes |
+| ![Timeline](docs/screenshots/timeline.png) Timeline | ![Evidence](docs/screenshots/evidence.png) Evidence locker and chain of custody |
+| ![Audit log](docs/screenshots/audit-log.png) Audit log | ![Report](docs/screenshots/report.png) Printable report |
+| ![Settings](docs/screenshots/settings.png) Map layers and API keys | |
+
+## Getting started
+
+Requires Node.js 18+.
 
 ```bash
 npm install
 npm run dev        # http://localhost:5173
-npm run build      # üretim derlemesi → dist/
+npm run build      # production build → dist/
+npm run preview    # serve the build on http://localhost:4173
 ```
 
-Docker: `docker compose up --build` (ayrıntılar orijinal README ile aynı; Google Maps anahtarı `.env` içinden okunur, OpenStreetMap anahtarsız çalışır).
+### Docker
 
-## İlk açılış
+```bash
+cp .env.example .env     # optional, only needed for Google Maps
+docker compose up --build
+```
 
-Kurulum sihirbazı 4 adımdır: **Dil** (Türkçe / English) → **Harita katmanı** → **API anahtarı** (gerekiyorsa, atlanabilir) → **Analist adı**. Hepsi sonradan **Ayarlar**'dan değiştirilebilir.
+Then open http://localhost:5173. OpenStreetMap works without any key; a Google Maps key can be supplied through `.env`.
 
-## Ayarlar
+## First run
 
-Sol şeritteki **Ayarlar** (ya da açılış ekranındaki dişli):
-- **Genel:** dil, tema, analist adı, otomatik kurtarma kaydı
-- **Harita ve API:** harita katmanı ve API anahtarları
-  - Anahtarsız: OpenStreetMap (önerilen, varsayılan), OpenStreetMap Koyu, OpenTopoMap, Esri Uydu
-  - CARTO kaldırıldı: 2026 itibarıyla anahtar istiyor ve anahtarsız karolara "API KEY REQUIRED" basıyor
-  - Anahtarlı: MapTiler (Sokak / Uydu / Koyu), Google Maps (+ Map ID)
-- **Veri:** tarayıcıdaki tüm yerel verileri silme
+A short setup wizard walks you through four steps:
 
-Anahtarlar yalnızca tarayıcıda (localStorage) tutulur; dosyalara yazılmaz.
+1. **Language:** Türkçe or English
+2. **Map layer:** OpenStreetMap is recommended and works immediately
+3. **API key:** only shown if the chosen layer needs one; can be skipped
+4. **Analyst name:** written automatically to the audit log and chain of custody
 
-Bir harita katmanı yüklenemezse haritanın üstünde uyarı çıkar ve tek tıkla OpenStreetMap'e dönülür.
+Everything can be changed later under **Settings**.
 
-> OpenStreetMap karoları geçerli bir `Referer` ister. `index.html`'e `referrer` kapatan bir meta etiketi eklemeyin; OSM "Access blocked / osm.wiki/Blocked" döner.
+## Workspace
 
-## Dosya biçimi
-
-- Kayıt: `<ad>.case.json`, şifreli kayıt: `<ad>.case.enc.json`
-- Eski `.osint.json` / `.osint.enc.json` dosyaları da açılır.
-
-## Sekmeler
-
-| Sekme | İçerik |
+| Section | What it does |
 |---|---|
-| **Ağ** | Tanımlayıcı düğümleri ve bağlantılar. Otomatik yerleşim, en kısa yol, merkezilik, PNG/SVG dışa aktarma |
-| **Harita** | Konumlar, rota, yarıçap halkaları, yoğunluk (yaşam örüntüsü), görülme kayıtları |
-| **Kronoloji** | Elle girilen olaylar + konum ziyaretleri + görülmeler + deliller, tek zaman çizelgesinde |
-| **Deliller** | SHA-256 özetli delil kasası, teslim zinciri, doğrulama |
-| **Kayıt** | Dosyadaki her işlemin kim/ne zaman kaydı, CSV dışa aktarma |
+| **Network** | Identifiers as nodes and the links between them. Auto layout, shortest path, centrality, PNG/SVG export |
+| **Map** | Locations, route line, radius rings, density layer (pattern of life), sightings |
+| **Timeline** | Manual events, location visits, sightings and evidence on one chronological view |
+| **Evidence** | Evidence locker with SHA-256 hashing, chain of custody and verification |
+| **Log** | Audit log of every change: who did what and when. CSV export |
+| **Report** | Printable A4 intelligence report (Print / Save as PDF) |
 
-## Orijinale göre eklenenler
+## Features
 
-**Görünüm**
-- OSINT Case kimliği: siyah / kırmızı / beyaz mat tema (koyu ve açık), logo, sol navigasyon şeridi, durum çubuğu
-- Türkçe / English arayüz (rapor dahil), anında değiştirilebilir
-- İşletim sisteminin kendi yazı tipi (Segoe UI / San Francisco / Ubuntu); dışarıdan yazı tipi yüklenmez
-- Her ekranın üstünde/altında gizlilik bandı: TASNİF DIŞI · HİZMETE ÖZEL · ÖZEL · GİZLİ · ÇOK GİZLİ
+**Case management**
+- Case number, classification, status, priority, investigator, unit, opening date, legal basis and summary
+- Classification banner on every screen and every printed page: UNCLASSIFIED · RESTRICTED · CONFIDENTIAL · SECRET · TOP SECRET
 
-**Dosya künyesi**
-- Dosya no, gizlilik derecesi, durum, öncelik, soruşturmacı, birim, açılış tarihi, hukuki dayanak, özet
-- Bu cihazdaki analist adı (işlem kaydına ve teslim zincirine otomatik yazılır)
+**Identifiers**
+- Subject (role: suspect, defendant, witness, victim, associate, informant; threat level; code name, nationality, ID number, description)
+- Social media accounts, email, phone, address, family member, organisation, ID document
+- IP address, domain, device (IMEI / MAC), crypto wallet, bank account, vehicle, licence plate, VIN
+- Custom types and custom icons
 
-**Yeni tanımlayıcı türleri**
-- Şahıs (rol: şüpheli/sanık/tanık/mağdur/irtibatlı/muhbir; tehdit seviyesi; kod adı, uyruk, kimlik no, eşkal)
-- Kuruluş, kimlik belgesi, genel kullanıcı adı, IP adresi, alan adı, cihaz (IMEI/MAC), kripto cüzdan, banka hesabı
+**Analysis**
+- NATO Admiralty grading (A–F / 1–6) on every identifier and event, shown on the node
+- Link relation type and confidence (confirmed / probable / doubtful → solid / dashed / dotted line)
+- Force-directed auto layout (undo with Ctrl+Z)
+- Shortest path between two selected nodes, link count per node, cluster count
+- Map radius rings, sightings and density layer
 
-**Analiz**
-- Her tanımlayıcı ve olaya NATO Admiralty kaynak değerlendirmesi (A–F / 1–6), düğümde renkli kod
-- Bağlantılara ilişki türü ve teyit derecesi (kesin / muhtemel / şüpheli → düz / kesikli / noktalı çizgi); çift tıkla düzenlenir
-- Kuvvet yönlendirmeli otomatik yerleşim (Ctrl+Z ile geri alınır)
-- Seçili iki düğüm arasında en kısa yol; bağlantı sayısı (merkezilik); küme sayısı
-- Harita: yarıçap halkası, görülme kayıtları, yoğunluk katmanı
+**Evidence**
+- SHA-256 computed in the browser; file content optionally embedded in the case file (≤ 10 MB)
+- Chain of custody entries (received, handed over, stored, examined…)
+- Re-verification: prove a file has not been altered since it was registered
+- Removing evidence requires a reason and is logged
 
-**Delil kasası**
-- Eklenen her dosyanın SHA-256 özeti tarayıcıda hesaplanır; içerik isteğe bağlı olarak dosyaya gömülür (≤ 10 MB)
-- Teslim zinciri (teslim alındı/edildi, muhafaza, inceleme…), doğrulama (dosya değişmiş mi?)
-- Silme işlemi gerekçe ister ve kayda geçer
+**Security**
+- Optional file password: AES-256-GCM, key derived with PBKDF2-SHA256 (600,000 rounds)
+- Recovery snapshots stored in IndexedDB; for encrypted cases the snapshot is encrypted too
+- Automatic recovery snapshots can be turned off
+- Warning when a highly classified case is about to be saved without encryption
 
-**Güvenlik**
-- Dosya parolası: AES-256-GCM, anahtar PBKDF2-SHA256 (600.000 tur) ile türetilir → `*.case.enc.json`
-- Otomatik kurtarma kaydı IndexedDB'ye taşındı; parolalı dosyalarda kurtarma kaydı da şifreli (liste dosya adını bile göstermez)
-- Otomatik kurtarma kaydı ayarlardan kapatılabilir
-- Yüksek gizlilik dereceli dosya şifresiz kaydedilirken uyarı
+**Interface**
+- Turkish and English, switchable at any time (reports included)
+- Dark and light themes
+- Uses the operating system's own font; no external fonts are loaded
 
-**Rapor**
-- A4 istihbarat raporu önizlemesi → Yazdır / PDF. Her sayfada gizlilik bandı, dosya parmak izi (SHA-256), şahıslar, tanımlayıcılar, ağ şeması, bağlantılar, konum krokisi, kronoloji, deliller + teslim zinciri, işlem kaydı, Admiralty cetveli, imza alanı
+## Settings
 
-## Uyumluluk
+- **General:** language, theme, analyst name, automatic recovery snapshots
+- **Map & API:** map layer and API keys
+  - No key: OpenStreetMap (default), OpenStreetMap Dark, OpenTopoMap, Esri Satellite
+  - Key required: MapTiler (Streets / Satellite / Dark), Google Maps (+ optional Map ID)
+- **Data:** wipe all local data from this browser
 
-- Orijinal sürümün `.osint.json` dosyaları (şema v1) olduğu gibi açılır; eksik alanlar boş gelir. Yeni kayıtlar `.case.json` uzantısıyla iner.
-- Yeni dosyalar şema v2 ile yazılır. Eski localStorage kurtarma kayıtları ilk açılışta IndexedDB'ye taşınır.
-- Alan anahtarları değiştirilmedi; yalnızca etiketler Türkçeleştirildi.
+API keys are kept in the browser only. They are never written to case files or sent anywhere else. If a map layer fails to load, a notice appears with a one-click switch back to OpenStreetMap.
 
-## Gizlilik
+## File format
 
-Sunucu yok, analitik yok. Dışarıya giden istekler yalnızca harita karoları ve adres aramasıdır (Google Maps ya da OpenStreetMap/Nominatim). Delil dosyaları, parolalar ve dosya içeriği hiçbir yere gönderilmez.
+- Case file: `<name>.case.json`
+- Encrypted case file: `<name>.case.enc.json`
+- Older `.osint.json` files open as well.
 
-## Lisans
+## Privacy
 
-[GPL-3.0](LICENSE). Orijinal telif: OSINT-Mapping-Tool katkıcıları. Bu sürümdeki değişiklikler de GPL-3.0 kapsamındadır.
+No server, no analytics, no telemetry. The only outbound requests are map tiles and address search (OpenStreetMap / Nominatim, or Google Maps if selected). Evidence files, passwords and case content never leave the device.
+
+## Customisation
+
+Product name, tagline and logo live in `src/brand.js` and `src/images/brand/`.
+
+## License
+
+[GPL-3.0](LICENSE)
