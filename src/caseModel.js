@@ -43,21 +43,21 @@ export function findOption(list, key) {
 
 // NATO Admiralty sistemi — kaynak güvenilirliği (harf) + bilgi doğruluğu (rakam)
 export const SOURCE_RELIABILITY = [
-  { key: 'A', label: 'A — Tamamen güvenilir' },
-  { key: 'B', label: 'B — Genellikle güvenilir' },
-  { key: 'C', label: 'C — Oldukça güvenilir' },
-  { key: 'D', label: 'D — Genellikle güvenilmez' },
-  { key: 'E', label: 'E — Güvenilmez' },
-  { key: 'F', label: 'F — Değerlendirilemiyor' },
+  { key: 'A', label: 'A: Tamamen güvenilir' },
+  { key: 'B', label: 'B: Genellikle güvenilir' },
+  { key: 'C', label: 'C: Oldukça güvenilir' },
+  { key: 'D', label: 'D: Genellikle güvenilmez' },
+  { key: 'E', label: 'E: Güvenilmez' },
+  { key: 'F', label: 'F: Değerlendirilemiyor' },
 ];
 
 export const INFO_CREDIBILITY = [
-  { key: '1', label: '1 — Başka kaynaklarca doğrulandı' },
-  { key: '2', label: '2 — Muhtemelen doğru' },
-  { key: '3', label: '3 — Olasılıkla doğru' },
-  { key: '4', label: '4 — Şüpheli' },
-  { key: '5', label: '5 — Olasılık dışı' },
-  { key: '6', label: '6 — Değerlendirilemiyor' },
+  { key: '1', label: '1: Başka kaynaklarca doğrulandı' },
+  { key: '2', label: '2: Muhtemelen doğru' },
+  { key: '3', label: '3: Olasılıkla doğru' },
+  { key: '4', label: '4: Şüpheli' },
+  { key: '5', label: '5: Olasılık dışı' },
+  { key: '6', label: '6: Değerlendirilemiyor' },
 ];
 
 /** Admiralty kodu için renk: iyi (yeşil) → zayıf (kırmızı), bilinmiyor gri. */

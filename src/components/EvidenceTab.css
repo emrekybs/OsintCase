@@ -125,7 +125,6 @@
   padding: 10px 12px;
   background: var(--bg-2);
   border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
   border-radius: var(--radius);
 }
 .hash-box.compact {

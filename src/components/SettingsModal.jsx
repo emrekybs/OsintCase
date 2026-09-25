@@ -245,7 +245,7 @@ function MapSection() {
           <b>MapTiler</b>
           <span className="mono dim">{maskKey(tileKeys.maptiler)}</span>
           <a href="https://cloud.maptiler.com/account/keys/" target="_blank" rel="noreferrer">
-            {t('Anahtar al')} ↗
+            {t('Anahtar al')}
           </a>
         </div>
         <div className="set-inline">
@@ -277,7 +277,7 @@ function MapSection() {
             {googleMapsApiKeySource ? ` · ${googleMapsApiKeySource}` : ''}
           </span>
           <a href="https://console.cloud.google.com/google/maps-apis/credentials" target="_blank" rel="noreferrer">
-            {t('Anahtar al')} ↗
+            {t('Anahtar al')}
           </a>
         </div>
         <div className="set-inline">

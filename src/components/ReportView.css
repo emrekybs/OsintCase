@@ -37,10 +37,7 @@
   flex: 1;
   overflow: auto;
   padding: 24px 0 60px;
-  background:
-    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 32px 32px,
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 32px 32px,
-    var(--bg-0);
+  background: var(--bg-3);
 }
 
 /* ---- Kâğıt ---------------------------------------------------------------- */

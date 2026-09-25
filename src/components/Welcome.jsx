@@ -72,6 +72,11 @@ export default function Welcome() {
         <BrandMark size="lg" showWord={false} />
         <div className="welcome-side-text">
           <p>{t('Soruşturma ve istihbarat analiz masası')}</p>
+          <ul className="side-facts">
+            <li>{t('Sunucusuz, veriler bu cihazdan çıkmaz')}</li>
+            <li>{t('AES-256-GCM dosya şifreleme')}</li>
+            <li>{t('SHA-256 delil bütünlüğü')}</li>
+          </ul>
         </div>
       </aside>
 
@@ -203,11 +208,11 @@ export default function Welcome() {
           )}
           {step < STEPS.length - 1 ? (
             <button type="button" className="btn btn-primary" onClick={next}>
-              {step === 2 && !gKey.trim() && !mtKey.trim() ? t('Atla') : t('Devam')} →
+              {step === 2 && !gKey.trim() && !mtKey.trim() ? t('Atla') : t('Devam')}
             </button>
           ) : (
             <button type="button" className="btn btn-primary" onClick={finish}>
-              {t('Başla')} →
+              {t('Başla')}
             </button>
           )}
         </div>

@@ -123,7 +123,7 @@ export default function TimelineTab() {
           </select>
           {span && (
             <div className="timeline-span mono">
-              {fmtShortDate(span.first)}→ {fmtShortDate(span.last)}
+              {fmtShortDate(span.first)} – {fmtShortDate(span.last)}
               <br />
               {items.length}/ {all.length}{' '}{t('kayıt')}</div>
           )}

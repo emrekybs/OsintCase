@@ -117,7 +117,7 @@ function ProjectViewInner() {
       <div className="pv-body">
         <nav className="rail" aria-label={t('Bölümler')}>
           <button type="button" className="rail-brand" onClick={closeProject} title={t('Dosyalara dön')}>
-            <BrandMark size="rail" />
+            <BrandMark size="rail" showWord={false} />
           </button>
           <div className="rail-group" role="tablist">
             {TABS.map((tb) => (
@@ -191,7 +191,7 @@ function ProjectViewInner() {
                 type="button"
                 className={`lock-btn ${isEncrypted ? 'on' : 'off'}`}
                 onClick={() => setShowSecurity(true)}
-                title={isEncrypted ? t('Şifreli — güvenlik ayarları') : t('Şifresiz — parola belirle')}
+                title={isEncrypted ? t('Şifreli: güvenlik ayarları') : t('Şifresiz: parola belirle')}
               >
                 {isEncrypted ? t('Şifreli') : t('Şifresiz')}
               </button>

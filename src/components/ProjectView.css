@@ -25,10 +25,13 @@
 }
 .rail-brand {
   display: flex;
-  align-items: center;
-  padding: 12px 14px;
+  justify-content: center;
+  padding: 14px 10px 12px;
   border-bottom: 1px solid #222;
-  text-align: left;
+}
+.rail .rail-brand .brandmark-logo {
+  width: 112px;
+  height: 112px;
 }
 .rail-brand .brandmark-word {
   color: #f1f1f1;

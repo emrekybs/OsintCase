@@ -514,8 +514,8 @@ export default function ReportView({ onClose }) {
                   <thead><tr><th colSpan={2}>{t('Kaynak güvenilirliği')}</th></tr></thead>
                   <tbody>
                     {SOURCE_RELIABILITY.map((o) => {
-                      const [code, ...rest] = o.label.split(' — ');
-                      return <tr key={o.key}><td className="mono">{code}</td><td>{rest.join(' — ')}</td></tr>;
+                      const [code, ...rest] = o.label.split(': ');
+                      return <tr key={o.key}><td className="mono">{code}</td><td>{rest.join(': ')}</td></tr>;
                     })}
                   </tbody>
                 </table>
@@ -523,8 +523,8 @@ export default function ReportView({ onClose }) {
                   <thead><tr><th colSpan={2}>{t('Bilgi doğruluğu')}</th></tr></thead>
                   <tbody>
                     {INFO_CREDIBILITY.map((o) => {
-                      const [code, ...rest] = o.label.split(' — ');
-                      return <tr key={o.key}><td className="mono">{code}</td><td>{rest.join(' — ')}</td></tr>;
+                      const [code, ...rest] = o.label.split(': ');
+                      return <tr key={o.key}><td className="mono">{code}</td><td>{rest.join(': ')}</td></tr>;
                     })}
                   </tbody>
                 </table>
@@ -533,7 +533,7 @@ export default function ReportView({ onClose }) {
           )}
 
           <footer className="rp-end">
-            <div>{t('— Rapor sonu —')}</div>
+            <div>{t('Rapor sonu')}</div>
             <div className="rp-sign">
               <div>
                 <span>{t('Hazırlayan')}</span>

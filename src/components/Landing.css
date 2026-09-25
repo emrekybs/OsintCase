@@ -13,12 +13,9 @@
   align-items: center;
   justify-content: center;
   padding: 40px 32px;
-  background:
-    linear-gradient(#141414 1px, transparent 1px) 0 0 / 28px 28px,
-    linear-gradient(90deg, #141414 1px, transparent 1px) 0 0 / 28px 28px,
-    #070707;
+  background: #080808;
   color: #f1f1f1;
-  border-right: 4px solid #d32f2f;
+  border-right: 1px solid #222;
   overflow: hidden;
 }
 .landing-side .brandmark-logo {
@@ -122,7 +119,7 @@
   background: var(--bg-2);
 }
 .landing-tile.primary {
-  border-left: 3px solid var(--accent);
+  border-color: var(--accent);
 }
 .tile-icon {
   width: 46px;
@@ -325,4 +322,14 @@
   margin: 20px 0 0;
   color: #a8a8a8;
   font-size: 14px;
+}
+
+.side-facts {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.9;
+  color: #8f8f8f;
 }

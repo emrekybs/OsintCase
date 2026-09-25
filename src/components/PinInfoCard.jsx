@@ -142,7 +142,7 @@ export default function PinInfoCard({
                 }}
                 onMouseEnter={() => setHoveredIdentifierId(i.id)}
                 onMouseLeave={() => setHoveredIdentifierId(null)}
-                title={t('{0} — Ağ sekmesinde aç', {
+                title={t('{0}: Ağ sekmesinde aç', {
                   '0': getTypeDef(i.type).label
                 })}
               >
