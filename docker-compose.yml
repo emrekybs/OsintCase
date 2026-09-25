@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    container_name: osint-mapping-tool
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    # .env is optional: with no keys the app boots to its first-run screen
+    # where OpenStreetMap works with no key at all. required:false lets the
+    # container start even when the user hasn't created a .env yet.
+    env_file:
+      - path: .env
+        required: false
