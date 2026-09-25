@@ -6,8 +6,6 @@
 
 A browser-based OSINT investigation and case mapping tool.
 
-A browser-based OSINT investigation and case mapping tool.
-
 Organize subjects, identifiers, relationships, locations, timelines and evidence in a single case file.
 
 ![Network View](docs/screenshots/network.png)
