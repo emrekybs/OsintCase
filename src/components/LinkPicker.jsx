@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import './LinkPicker.css';
+import { t } from '../i18n/index.jsx';
 
 /**
  * Generic searchable multi-select picker used to link a pin to identifiers,
@@ -20,7 +21,7 @@ export default function LinkPicker({
   selectedIds,
   onToggle,
   onClose,
-  emptyText = 'Henüz bağlanacak bir şey yok.',
+  emptyText = t('Henüz bağlanacak bir şey yok.'),
 }) {
   const [query, setQuery] = useState('');
 
@@ -63,7 +64,7 @@ export default function LinkPicker({
             type="button"
             className="icon-btn"
             onClick={onClose}
-            aria-label="Kapat"
+            aria-label={t('Kapat')}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
@@ -72,7 +73,7 @@ export default function LinkPicker({
         <input
           type="text"
           autoFocus
-          placeholder="Ara…"
+          placeholder={t('Ara…')}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="link-picker-search"
@@ -83,7 +84,7 @@ export default function LinkPicker({
             <div className="link-picker-empty">{emptyText}</div>
           )}
           {items.length > 0 && filtered.length === 0 && (
-            <div className="link-picker-empty">Eşleşme yok.</div>
+            <div className="link-picker-empty">{t('Eşleşme yok.')}</div>
           )}
           {grouped.map(([group, rows]) => (
             <div key={group || '_'} className="link-picker-group">
@@ -120,11 +121,8 @@ export default function LinkPicker({
 
         <div className="link-picker-footer">
           <span className="link-picker-count">
-            {selectedIds.size} seçili
-          </span>
-          <button type="button" className="btn btn-primary" onClick={onClose}>
-            Tamam
-          </button>
+            {selectedIds.size}{' '}{t('seçili')}</span>
+          <button type="button" className="btn btn-primary" onClick={onClose}>{t('Tamam')}</button>
         </div>
       </div>
     </div>

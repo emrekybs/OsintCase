@@ -44,6 +44,7 @@ import homeBlack from './images/node_icons/home-black.png';
 import homeWhite from './images/node_icons/home-white.png';
 import locationBlack from './images/node_icons/location-black.png';
 import locationWhite from './images/node_icons/location-white.png';
+import { localizeRegistry } from './i18n/index.jsx';
 
 export const BUILT_IN_ICONS = {
   instagram: { name: 'Instagram', src: instagramIcon },
@@ -110,3 +111,5 @@ export function getBuiltInSrc(iconId, theme = 'dark') {
   if (theme === 'light') return entry.light ?? entry.dark ?? null;
   return entry.dark ?? entry.light ?? null;
 }
+
+localizeRegistry(BUILT_IN_ICONS);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { LINK_CONFIDENCE } from '../caseModel.js';
 import { getDisplayLabel } from '../identifierTypes.js';
+import { t } from '../i18n/index.jsx';
 
 const PRESETS = [
   'Akraba',
@@ -37,31 +38,31 @@ export default function EdgeModal({ connection, source, target, onSave, onDelete
           onSave({ label: label.trim(), confidence, note: note.trim() });
         }}
       >
-        <div className="modal-kicker">Bağlantı</div>
+        <div className="modal-kicker">{t('Bağlantı')}</div>
         <h2 className="edge-title">
           {getDisplayLabel(source)} <span className="edge-arrow">↔</span> {getDisplayLabel(target)}
         </h2>
 
         <div className="field">
-          <label htmlFor="edge-label">İlişki türü</label>
+          <label htmlFor="edge-label">{t('İlişki türü')}</label>
           <input
             id="edge-label"
             autoFocus
             value={label}
             onChange={(e) => setLabel(e.target.value)}
-            placeholder="ör. kardeşi, aynı IP, para transferi"
+            placeholder={t('ör. kardeşi, aynı IP, para transferi')}
           />
           <div className="preset-chips">
             {PRESETS.map((p) => (
-              <button type="button" key={p} className="preset-chip" onClick={() => setLabel(p)}>
-                {p}
+              <button type="button" key={p} className="preset-chip" onClick={() => setLabel(t(p))}>
+                {t(p)}
               </button>
             ))}
           </div>
         </div>
 
         <div className="field">
-          <label>Teyit derecesi</label>
+          <label>{t('Teyit derecesi')}</label>
           <div className="seg-picker">
             {LINK_CONFIDENCE.map((c) => (
               <button
@@ -80,21 +81,15 @@ export default function EdgeModal({ connection, source, target, onSave, onDelete
         </div>
 
         <div className="field">
-          <label htmlFor="edge-note">Not</label>
+          <label htmlFor="edge-note">{t('Not')}</label>
           <textarea id="edge-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
         </div>
 
         <div className="modal-actions modal-actions-spread">
-          <button type="button" className="btn btn-ghost danger" onClick={onDelete}>
-            Bağlantıyı sil
-          </button>
+          <button type="button" className="btn btn-ghost danger" onClick={onDelete}>{t('Bağlantıyı sil')}</button>
           <div className="modal-actions-right">
-            <button type="button" className="btn btn-ghost" onClick={onClose}>
-              Vazgeç
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Kaydet
-            </button>
+            <button type="button" className="btn btn-ghost" onClick={onClose}>{t('Vazgeç')}</button>
+            <button type="submit" className="btn btn-primary">{t('Kaydet')}</button>
           </div>
         </div>
       </form>

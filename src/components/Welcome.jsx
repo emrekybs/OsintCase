@@ -1,155 +1,232 @@
 import { useState } from 'react';
 import { useAppConfig } from '../context/AppConfigContext.jsx';
+import { LANGUAGES, t, useI18n } from '../i18n/index.jsx';
+import { setAnalyst, getAnalyst } from '../utils/analyst.js';
+import { TILE_STYLES } from '../mapTiles.js';
+import BrandMark from './BrandMark.jsx';
 import ThemeToggle from './ThemeToggle.jsx';
 import './Welcome.css';
 
+const STEPS = ['Dil', 'Harita', 'API', 'Analist'];
+
 /**
- * First-run chooser. Shown whenever the user has never picked a map provider,
- * regardless of whether an API key is already configured — a Docker user with
- * a key in .env still gets to choose OpenStreetMap vs Google Maps. Picking
- * either option writes `map.provider` to localStorage, so this screen won't
- * appear again. If Google is picked and a key already exists, the key-entry
- * step is skipped entirely.
+ * İlk kurulum sihirbazı. Harita sağlayıcısı seçilene kadar gösterilir;
+ * seçim yapıldığında bir daha çıkmaz (Ayarlar'dan değiştirilebilir).
  */
 export default function Welcome() {
-  const { setMapProvider, setGoogleMapsApiKey, googleMapsApiKey } =
-    useAppConfig();
-  // 'choose' = picking provider; 'google-key' = entering the optional key.
-  const [step, setStep] = useState('choose');
-  const [apiKey, setApiKey] = useState('');
+  const { lang, setLang } = useI18n();
+  const {
+    setMapProvider,
+    setTileStyle,
+    setTileKey,
+    setGoogleMapsApiKey,
+    googleMapsApiKey,
+    tileKeys,
+  } = useAppConfig();
+  const [step, setStep] = useState(0);
+  const [choice, setChoice] = useState('carto-dark');
+  const [gKey, setGKey] = useState('');
+  const [mtKey, setMtKey] = useState(tileKeys?.maptiler ?? '');
+  const [analyst, setAnalystDraft] = useState(getAnalyst());
 
-  // A key can already be present before the user ever picks a provider —
-  // e.g. a Docker run generates public/app.config.json from .env, or a power
-  // user edited the config file by hand. In that case there's nothing to ask.
-  const hasExistingKey = !!googleMapsApiKey;
+  const needsKey =
+    choice === 'google' ? 'google' : TILE_STYLES[choice]?.needsKey ?? null;
 
-  const pickOSM = async () => {
-    await setMapProvider('osm');
-  };
+  const options = [
+    ...['carto-dark', 'osm', 'esri-sat', 'maptiler-satellite'].map((key) => ({
+      key,
+      ...TILE_STYLES[key],
+    })),
+    {
+      key: 'google',
+      label: 'Google Maps',
+      desc: t('Zengin yer bilgisi (puan, saat, telefon). API anahtarı gerekir.'),
+      needsKey: 'google',
+    },
+  ];
 
-  const pickGoogle = async () => {
-    if (hasExistingKey) {
-      // Key already set up — skip the entry step and go straight into the app.
+  const finish = async () => {
+    if (analyst.trim()) setAnalyst(analyst);
+    if (gKey.trim()) setGoogleMapsApiKey(gKey);
+    if (mtKey.trim()) setTileKey('maptiler', mtKey);
+    if (choice === 'google') {
       await setMapProvider('google');
     } else {
-      setStep('google-key');
+      setTileStyle(choice);
+      await setMapProvider('osm');
     }
   };
 
-  const continueWithGoogle = async () => {
-    const trimmed = apiKey.trim();
-    if (trimmed) setGoogleMapsApiKey(trimmed);
-    await setMapProvider('google');
+  const next = () => {
+    if (step === 1 && !needsKey) setStep(3);
+    else setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  };
+  const back = () => {
+    if (step === 3 && !needsKey) setStep(1);
+    else setStep((s) => Math.max(s - 1, 0));
   };
 
   return (
     <div className="welcome">
-      <div className="welcome-topbar">
-        <ThemeToggle />
-      </div>
-
-      <div className="welcome-content">
-        <div className="welcome-brand">
-          <div className="welcome-logo">
-            <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="11" cy="11" r="7" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
+      <aside className="welcome-side">
+        <BrandMark size="lg" showWord={false} />
+        <div className="welcome-side-text">
+          <div className="welcome-word">
+            <span className="w1">OSINT</span> <span className="w2">CASE</span>
           </div>
-          <h1 className="welcome-title">Hoş geldiniz</h1>
-          <p className="welcome-sub">
-            Harita sağlayıcısını seçin. Sonradan Harita sekmesindeki dişli
-            simgesinden değiştirebilirsiniz.
-          </p>
+          <p>{t('Soruşturma ve istihbarat analiz masası')}</p>
+          <ul className="welcome-facts mono">
+            <li>{t('Sunucusuz · veriler cihazdan çıkmaz')}</li>
+            <li>{t('AES-256-GCM dosya şifreleme')}</li>
+            <li>{t('SHA-256 delil bütünlüğü')}</li>
+          </ul>
+        </div>
+      </aside>
+
+      <main className="welcome-main">
+        <div className="welcome-top">
+          <ol className="stepper">
+            {STEPS.map((s, i) => (
+              <li
+                key={s}
+                className={`${i === step ? 'current' : ''} ${i < step ? 'done' : ''} ${
+                  i === 2 && !needsKey ? 'skipped' : ''
+                }`}
+              >
+                <span className="stepper-no mono">{String(i + 1).padStart(2, '0')}</span>
+                {t(s)}
+              </li>
+            ))}
+          </ol>
+          <ThemeToggle />
         </div>
 
-        {step === 'choose' && (
-          <div className="welcome-cards">
-            <button
-              type="button"
-              className="welcome-card"
-              onClick={pickOSM}
-            >
-              <div className="welcome-card-icon">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <path d="M2 12h20M12 2a15.3 15.3 0 0 1 0 20M12 2a15.3 15.3 0 0 0 0 20" />
-                </svg>
+        <div className="welcome-panel">
+          {step === 0 && (
+            <>
+              <div className="modal-kicker">{t('Kurulum')} · 01</div>
+              <h1>{t('Dil seçin')}</h1>
+              <p className="welcome-lead">{t('Arayüz ve raporlar bu dilde olur. Sonradan Ayarlar’dan değiştirilebilir.')}</p>
+              <div className="choice-grid two">
+                {LANGUAGES.map((l) => (
+                  <button
+                    key={l.key}
+                    type="button"
+                    className={`choice-card ${lang === l.key ? 'active' : ''}`}
+                    onClick={() => setLang(l.key)}
+                  >
+                    <span className="choice-big mono">{l.short}</span>
+                    <b>{l.label}</b>
+                  </button>
+                ))}
               </div>
-              <div className="welcome-card-title">OpenStreetMap</div>
-              <div className="welcome-card-desc">
-                Ücretsiz, kayıt gerektirmez. Hemen çalışır.
-              </div>
-            </button>
+            </>
+          )}
 
-            <button
-              type="button"
-              className="welcome-card"
-              onClick={pickGoogle}
-            >
-              <div className="welcome-card-icon">
-                <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 10c0 7-8 12-8 12s-8-5-8-12a8 8 0 0 1 16 0z" />
-                  <circle cx="12" cy="10" r="3" />
-                </svg>
+          {step === 1 && (
+            <>
+              <div className="modal-kicker">{t('Kurulum')} · 02</div>
+              <h1>{t('Harita katmanı')}</h1>
+              <p className="welcome-lead">{t('Konumlar bu harita üzerinde gösterilir. Anahtarsız seçenekler hemen çalışır.')}</p>
+              <div className="choice-grid">
+                {options.map((o) => (
+                  <button
+                    key={o.key}
+                    type="button"
+                    className={`choice-card ${choice === o.key ? 'active' : ''}`}
+                    onClick={() => setChoice(o.key)}
+                  >
+                    <div className="choice-head">
+                      <b>{o.label}</b>
+                      {o.recommended && <span className="tag-rec">{t('Önerilen')}</span>}
+                      {o.needsKey && <span className="tag-key">{t('API gerekir')}</span>}
+                    </div>
+                    <span className="choice-desc">{o.desc}</span>
+                  </button>
+                ))}
               </div>
-              <div className="welcome-card-title">Google Maps</div>
-              <div className="welcome-card-desc">
-                Daha zengin yer bilgisi (puan, saat, telefon).{' '}
-                {hasExistingKey ? 'Anahtar zaten tanımlı.' : 'API anahtarı gerekir.'}
-              </div>
-              <span className="welcome-card-tag">
-                {hasExistingKey ? 'Anahtar bulundu' : 'Önerilen'}
-              </span>
-            </button>
-          </div>
-        )}
+            </>
+          )}
 
-        {step === 'google-key' && (
-          <form
-            className="welcome-key-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              continueWithGoogle();
-            }}
-          >
-            <div className="field">
-              <label htmlFor="welcome-api-key">
-                Google Maps API anahtarı{' '}
-                <span className="welcome-optional">(isteğe bağlı)</span>
-              </label>
-              <input
-                id="welcome-api-key"
-                type="password"
-                autoFocus
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                placeholder="AIzaSy…"
-              />
-              <p className="welcome-help">
-                İsterseniz şimdilik atlayın; anahtarı daha sonra Harita
-                sekmesine yapıştırabilirsiniz. Anahtar bu cihazda kalır.
+          {step === 2 && (
+            <>
+              <div className="modal-kicker">{t('Kurulum')} · 03</div>
+              <h1>{t('API anahtarı')}</h1>
+              <p className="welcome-lead">
+                {t('İsterseniz şimdi girin, isterseniz atlayın. Anahtar yalnızca bu tarayıcıda saklanır.')}
               </p>
-            </div>
-            <div className="welcome-key-actions">
-              <button
-                type="button"
-                className="btn btn-ghost"
-                onClick={() => setStep('choose')}
-              >
-                Geri
-              </button>
-              <button type="submit" className="btn btn-primary">
-                {apiKey.trim() ? 'Kaydet ve devam et' : 'Şimdilik atla'}
-              </button>
-            </div>
-          </form>
-        )}
-      </div>
+              {needsKey === 'google' && (
+                <div className="field">
+                  <label htmlFor="wz-g">{t('Google Maps JavaScript API anahtarı')}</label>
+                  <input
+                    id="wz-g"
+                    type="password"
+                    autoFocus
+                    value={gKey}
+                    onChange={(e) => setGKey(e.target.value)}
+                    placeholder={googleMapsApiKey ? t('Anahtar zaten tanımlı') : 'AIza…'}
+                  />
+                </div>
+              )}
+              {needsKey === 'maptiler' && (
+                <div className="field">
+                  <label htmlFor="wz-mt">{t('MapTiler API anahtarı')}</label>
+                  <input
+                    id="wz-mt"
+                    type="password"
+                    autoFocus
+                    value={mtKey}
+                    onChange={(e) => setMtKey(e.target.value)}
+                  />
+                </div>
+              )}
+              <p className="set-hint">
+                {t('Anahtar girilmezse harita ücretsiz CARTO katmanıyla açılır.')}
+              </p>
+            </>
+          )}
 
-      <div className="welcome-footer">
-        Yalnızca yerel · Veriler bu cihazdan çıkmaz
-      </div>
+          {step === 3 && (
+            <>
+              <div className="modal-kicker">{t('Kurulum')} · 04</div>
+              <h1>{t('Analist')}</h1>
+              <p className="welcome-lead">
+                {t('Bu cihazda çalışan analistin adı. İşlem kaydına ve delil teslim zincirine otomatik yazılır.')}
+              </p>
+              <div className="field">
+                <label htmlFor="wz-an">{t('Ad soyad / sicil no')}</label>
+                <input
+                  id="wz-an"
+                  autoFocus
+                  value={analyst}
+                  onChange={(e) => setAnalystDraft(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && finish()}
+                />
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="welcome-actions">
+          {step > 0 ? (
+            <button type="button" className="btn btn-ghost" onClick={back}>
+              {t('Geri')}
+            </button>
+          ) : (
+            <span />
+          )}
+          {step < STEPS.length - 1 ? (
+            <button type="button" className="btn btn-primary" onClick={next}>
+              {step === 2 && !gKey.trim() && !mtKey.trim() ? t('Atla') : t('Devam')} →
+            </button>
+          ) : (
+            <button type="button" className="btn btn-primary" onClick={finish}>
+              {t('Başla')} →
+            </button>
+          )}
+        </div>
+        <div className="welcome-footer">{t('Yalnızca yerel · Veriler bu cihazdan çıkmaz')}</div>
+      </main>
     </div>
   );
 }

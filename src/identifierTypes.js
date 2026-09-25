@@ -19,6 +19,7 @@
  *   - primary:     true ise liste etiketi olarak kullanılır ve zorunludur
  */
 import { SUBJECT_ROLES, THREAT_LEVELS } from './caseModel.js';
+import { localizeRegistry } from './i18n/index.jsx';
 
 export const CATEGORIES = {
   personal: { label: 'Kişi', order: 1 },
@@ -40,8 +41,8 @@ export const IDENTIFIER_TYPES = {
   subject: {
     label: 'Şahıs',
     category: 'personal',
-    glyph: 'ŞH',
-    color: '#8c9a4f',
+    glyph: 'S',
+    color: '#d32f2f',
     fields: [
       { key: 'fullName', label: 'Ad soyad', type: 'text', primary: true },
       { key: 'role', label: 'Dosyadaki rolü', type: 'select', options: SUBJECT_ROLES },
@@ -58,7 +59,7 @@ export const IDENTIFIER_TYPES = {
   name: {
     label: 'İsim',
     category: 'personal',
-    glyph: 'İS',
+    glyph: 'N',
     color: '#3B82F6',
     fields: [
       { key: 'fullName', label: 'Ad soyad', type: 'text', primary: true },
@@ -70,7 +71,7 @@ export const IDENTIFIER_TYPES = {
   family: {
     label: 'Aile üyesi',
     category: 'personal',
-    glyph: 'AÜ',
+    glyph: 'FM',
     color: '#F59E0B',
     fields: [
       { key: 'name', label: 'Ad', type: 'text', primary: true },
@@ -97,7 +98,7 @@ export const IDENTIFIER_TYPES = {
   organization: {
     label: 'Kuruluş / örgüt',
     category: 'personal',
-    glyph: 'KR',
+    glyph: 'OR',
     color: '#64748B',
     fields: [
       { key: 'name', label: 'Ad', type: 'text', primary: true },
@@ -110,7 +111,7 @@ export const IDENTIFIER_TYPES = {
   document: {
     label: 'Kimlik belgesi',
     category: 'personal',
-    glyph: 'KB',
+    glyph: 'ID',
     color: '#0F766E',
     fields: [
       { key: 'number', label: 'Belge no', type: 'text', primary: true },
@@ -316,7 +317,7 @@ export const IDENTIFIER_TYPES = {
   device: {
     label: 'Cihaz',
     category: 'digital',
-    glyph: 'CH',
+    glyph: 'DV',
     color: '#334155',
     fields: [
       { key: 'model', label: 'Marka / model', type: 'text', primary: true },
@@ -352,7 +353,7 @@ export const IDENTIFIER_TYPES = {
   vehicle: {
     label: 'Araç',
     category: 'vehicle',
-    glyph: 'AR',
+    glyph: 'VH',
     color: '#EF4444',
     fields: [
       { key: 'description', label: 'Tarif', type: 'text', primary: true, placeholder: '2018 Renault Clio, gri' },
@@ -376,7 +377,7 @@ export const IDENTIFIER_TYPES = {
   licensePlate: {
     label: 'Plaka',
     category: 'vehicle',
-    glyph: 'PL',
+    glyph: 'LP',
     color: '#B91C1C',
     fields: [
       { key: 'plate', label: 'Plaka', type: 'text', primary: true },
@@ -479,3 +480,5 @@ export function resolveIconSrc(
   if (fallback && BUILT_IN_ICONS[fallback]) return getBuiltInSrc(fallback, theme);
   return null;
 }
+
+localizeRegistry(IDENTIFIER_TYPES, CATEGORIES);

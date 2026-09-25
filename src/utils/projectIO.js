@@ -1,5 +1,6 @@
 import { PROJECT_SCHEMA_VERSION, defaultCaseInfo } from './createProject.js';
 import { DEFAULT_CLASSIFICATION } from '../caseModel.js';
+import { t } from '../i18n/index.jsx';
 import {
   encryptWithSession,
   isEncryptedEnvelope,
@@ -67,7 +68,7 @@ export function readProjectFile(file) {
       } catch (err) {
         reject(
           err instanceof SyntaxError
-            ? new Error('Dosya geçerli bir JSON değil.')
+            ? new Error(t('Dosya geçerli bir JSON değil.'))
             : err,
         );
       }
@@ -81,10 +82,10 @@ const arr = (v) => (Array.isArray(v) ? v : []);
 
 export function validateProject(obj) {
   if (!obj || typeof obj !== 'object') {
-    throw new Error('Dosya geçerli bir JSON nesnesi değil.');
+    throw new Error(t('Dosya geçerli bir JSON nesnesi değil.'));
   }
   if (typeof obj.name !== 'string') {
-    throw new Error('Dosyada "name" alanı eksik.');
+    throw new Error(t('Dosyada "name" alanı eksik.'));
   }
   if (
     obj.schemaVersion != null &&

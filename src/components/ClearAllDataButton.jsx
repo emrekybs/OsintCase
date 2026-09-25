@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { clearAllSavedData, CLEAR_ALL_SUMMARY } from '../utils/clearAllData.js';
 import './ClearAllDataButton.css';
+import { t } from '../i18n/index.jsx';
 
 /**
  * Destructive "wipe everything in localStorage" action. Owns its own
@@ -32,7 +33,7 @@ export default function ClearAllDataButton({ variant = 'block' }) {
     <>
       <div className={`clear-all ${variant}`}>
         {variant === 'block' && (
-          <div className="clear-all-label">Bu tarayıcıyı sıfırla</div>
+          <div className="clear-all-label">{t('Bu tarayıcıyı sıfırla')}</div>
         )}
         <button
           type="button"
@@ -42,14 +43,11 @@ export default function ClearAllDataButton({ variant = 'block' }) {
               : 'btn btn-danger clear-all-btn'
           }
           onClick={() => setConfirming(true)}
-        >
-          Tüm yerel verileri sil
-        </button>
+        >{t('Tüm yerel verileri sil')}</button>
         {variant === 'block' && (
-          <p className="clear-all-hint">
-            Ayarları, özel simgeleri ve kurtarma kayıtlarını bu tarayıcıdan
-            siler. Diskteki dosyalar etkilenmez.
-          </p>
+          <p className="clear-all-hint">{t(
+            'Ayarları, özel simgeleri ve kurtarma kayıtlarını bu tarayıcıdan siler. Diskteki dosyalar etkilenmez.'
+          )}</p>
         )}
       </div>
 
@@ -59,13 +57,11 @@ export default function ClearAllDataButton({ variant = 'block' }) {
           onClick={() => setConfirming(false)}
         >
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2>Tüm yerel veriler silinsin mi?</h2>
-            <p className="modal-sub">
-              Bu tarayıcıda uygulamaya ait her şey silinir:
-            </p>
+            <h2>{t('Tüm yerel veriler silinsin mi?')}</h2>
+            <p className="modal-sub">{t('Bu tarayıcıda uygulamaya ait her şey silinir:')}</p>
             <ul className="clear-all-list">
               {CLEAR_ALL_SUMMARY.map((line) => (
-                <li key={line}>{line}</li>
+                <li key={line}>{t(line)}</li>
               ))}
             </ul>
 
@@ -76,34 +72,27 @@ export default function ClearAllDataButton({ variant = 'block' }) {
                 onChange={(e) => setAlsoClearApiKey(e.target.checked)}
               />
               <span>
-                <strong>Google Maps API anahtarını da temizle</strong>
+                <strong>{t('Google Maps API anahtarını da temizle')}</strong>
                 <span className="clear-all-checkbox-hint">
-                  <code>public/app.config.json</code> içindeki anahtarı gizler.
-                  Dosyanın kendisine dokunmaz; kalıcı silmek için dosyayı elle
-                  kaldırın.
-                </span>
+                  <code>{t('public/app.config.json')}</code>{' '}{t(
+                    'içindeki anahtarı gizler. Dosyanın kendisine dokunmaz; kalıcı silmek için dosyayı elle kaldırın.'
+                  )}</span>
               </span>
             </label>
 
-            <p className="modal-sub">
-              Diske kaydettiğiniz dosyalar (<code>*.osint.json</code>,{' '}
-              <code>*.osint.enc.json</code>) etkilenmez.
-            </p>
+            <p className="modal-sub">{t('Diske kaydettiğiniz dosyalar (')}<code>{t('*.osint.json')}</code>,{' '}
+              <code>{t('*.osint.enc.json')}</code>{t(') etkilenmez.')}</p>
             <div className="modal-actions">
               <button
                 type="button"
                 className="btn btn-ghost"
                 onClick={() => setConfirming(false)}
-              >
-                Vazgeç
-              </button>
+              >{t('Vazgeç')}</button>
               <button
                 type="button"
                 className="btn btn-danger"
                 onClick={handleConfirm}
-              >
-                Evet, hepsini sil
-              </button>
+              >{t('Evet, hepsini sil')}</button>
             </div>
           </div>
         </div>

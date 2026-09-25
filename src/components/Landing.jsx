@@ -12,10 +12,13 @@ import {
   PRIORITIES,
   getClassification,
   suggestCaseNumber,
+  fmtDate,
 } from '../caseModel.js';
-import { BRAND } from '../brand.js';
+import { t } from '../i18n/index.jsx';
 import ThemeToggle from './ThemeToggle.jsx';
-import ClearAllDataButton from './ClearAllDataButton.jsx';
+import BrandMark from './BrandMark.jsx';
+import LangSwitch from './LangSwitch.jsx';
+import SettingsModal from './SettingsModal.jsx';
 import PasswordPrompt from './PasswordPrompt.jsx';
 import './Landing.css';
 
@@ -23,14 +26,14 @@ function relativeTime(iso) {
   if (!iso) return '';
   const ms = Date.now() - new Date(iso).getTime();
   const s = Math.floor(ms / 1000);
-  if (s < 45) return 'az önce';
+  if (s < 45) return t('az önce');
   const m = Math.floor(s / 60);
-  if (m < 60) return `${m} dk önce`;
+  if (m < 60) return t('{0} dk önce', { 0: m });
   const h = Math.floor(m / 60);
-  if (h < 24) return `${h} sa önce`;
+  if (h < 24) return t('{0} sa önce', { 0: h });
   const d = Math.floor(h / 24);
-  if (d < 7) return `${d} gün önce`;
-  return new Date(iso).toLocaleDateString('tr-TR');
+  if (d < 7) return t('{0} gün önce', { 0: d });
+  return fmtDate(iso);
 }
 
 const EMPTY_FORM = () => ({
@@ -57,6 +60,7 @@ export default function Landing() {
   const [pwRequest, setPwRequest] = useState(null);
   const [analyst, setAnalystState] = useState(getAnalyst());
   const [editingAnalyst, setEditingAnalyst] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const fileInputRef = useRef(null);
 
   const refresh = useCallback(() => {
@@ -71,9 +75,8 @@ export default function Landing() {
     setError('');
     if (entry.encrypted) {
       setPwRequest({
-        title: 'Şifreli kurtarma kaydı',
-        subtitle:
-          'Bu kurtarma kaydı dosya parolasıyla şifrelenmiş. Devam etmek için parolayı girin.',
+        title: t('Şifreli kurtarma kaydı'),
+        subtitle: t('Bu kurtarma kaydı dosya parolasıyla şifrelenmiş. Devam etmek için parolayı girin.'),
         submit: (pw) => openProjectFromSnapshot(entry, pw),
       });
       return;
@@ -81,13 +84,13 @@ export default function Landing() {
     try {
       await openProjectFromSnapshot(entry);
     } catch (err) {
-      setError(`Kayıt açılamadı: ${err.message}`);
+      setError(t('Kayıt açılamadı: {0}', { 0: err.message }));
     }
   };
 
   const handleRemoveRecent = async (e, id) => {
     e.stopPropagation();
-    if (!confirm('Bu kurtarma kaydı bu tarayıcıdan silinsin mi? Diskteki dosyalar etkilenmez.'))
+    if (!confirm(t('Bu kurtarma kaydı bu tarayıcıdan silinsin mi? Diskteki dosyalar etkilenmez.')))
       return;
     setRecents(await removeRecent(id));
   };
@@ -97,7 +100,7 @@ export default function Landing() {
   const handleCreate = (e) => {
     e.preventDefault();
     if (!form.name.trim()) {
-      setError('Dosya adı zorunlu.');
+      setError(t('Dosya adı zorunlu.'));
       return;
     }
     if (form.investigator.trim() && !getAnalyst()) setAnalyst(form.investigator);
@@ -117,13 +120,13 @@ export default function Landing() {
       const res = await openProjectFromFile(file);
       if (res?.needsPassword) {
         setPwRequest({
-          title: 'Şifreli dosya',
-          subtitle: `${file.name} parolayla şifrelenmiş.`,
+          title: t('Şifreli dosya'),
+          subtitle: t('{0} parolayla şifrelenmiş.', { 0: file.name }),
           submit: (pw) => openEncryptedFile(res.envelope, pw, file.name),
         });
       }
     } catch (err) {
-      setError(`Dosya açılamadı: ${err.message}`);
+      setError(t('Dosya açılamadı: {0}', { 0: err.message }));
     }
   };
 
@@ -135,143 +138,172 @@ export default function Landing() {
 
   return (
     <div className="landing">
-      <div className="landing-topbar">
-        <div className="landing-analyst">
-          <span className="landing-analyst-label">Analist</span>
-          {editingAnalyst ? (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                setAnalyst(analyst);
-                setEditingAnalyst(false);
-              }}
-            >
-              <input
-                autoFocus
-                value={analyst}
-                onChange={(e) => setAnalystState(e.target.value)}
-                onBlur={() => {
+      <aside className="landing-side">
+        <BrandMark size="lg" showWord={false} />
+        <div className="landing-side-word">
+          <span className="w1">OSINT</span> <span className="w2">CASE</span>
+        </div>
+        <p className="landing-side-tag">{t('Soruşturma ve istihbarat analiz masası')}</p>
+        <div className="landing-side-foot mono">
+          <span>AES-256-GCM</span>
+          <span>SHA-256</span>
+          <span>{t('YEREL')}</span>
+        </div>
+      </aside>
+
+      <section className="landing-main">
+        <header className="landing-topbar">
+          <div className="landing-analyst">
+            <span className="landing-analyst-label">{t('Analist')}</span>
+            {editingAnalyst ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
                   setAnalyst(analyst);
                   setEditingAnalyst(false);
                 }}
-                placeholder="Ad soyad / sicil"
-              />
-            </form>
-          ) : (
-            <button type="button" className="landing-analyst-name" onClick={() => setEditingAnalyst(true)}>
-              {analyst || 'tanımlanmadı — düzenle'}
+              >
+                <input
+                  autoFocus
+                  value={analyst}
+                  onChange={(e) => setAnalystState(e.target.value)}
+                  onBlur={() => {
+                    setAnalyst(analyst);
+                    setEditingAnalyst(false);
+                  }}
+                  placeholder={t('Ad soyad / sicil no')}
+                />
+              </form>
+            ) : (
+              <button type="button" className="landing-analyst-name" onClick={() => setEditingAnalyst(true)}>
+                {analyst || t('tanımlanmadı — düzenle')}
+              </button>
+            )}
+          </div>
+          <div className="landing-top-right">
+            <LangSwitch />
+            <button type="button" className="icon-btn" onClick={() => setShowSettings(true)} title={t('Ayarlar')} aria-label={t('Ayarlar')}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
             </button>
-          )}
-        </div>
-        <ThemeToggle />
-      </div>
-
-      <div className="landing-content">
-        <div className="landing-brand">
-          <div className="landing-logo">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="square">
-              <rect x="3" y="3" width="18" height="18" />
-              <path d="M3 9h18M9 9v12" />
-              <circle cx="15" cy="15" r="2.2" />
-            </svg>
+            <ThemeToggle />
           </div>
-          <h1 className="landing-title">{BRAND.title}</h1>
-          <p className="landing-tagline">{BRAND.tagline}</p>
-        </div>
+        </header>
 
-        <div className="landing-actions">
-          <button className="btn btn-primary landing-cta" onClick={openNew}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-            Yeni dosya
-          </button>
-          <button className="btn btn-secondary landing-cta" onClick={handleOpenClick}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-            Dosya aç
-          </button>
-        </div>
+        <div className="landing-body">
+          <div className="modal-kicker">{t('Dosyalar')}</div>
+          <h1 className="landing-title">{t('Soruşturma dosyaları')}</h1>
 
-        {recents.length > 0 && (
+          <div className="landing-tiles">
+            <button className="landing-tile primary" onClick={openNew}>
+              <span className="tile-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square"><path d="M12 5v14M5 12h14" /></svg>
+              </span>
+              <span className="tile-text">
+                <b>{t('Yeni dosya')}</b>
+                <span>{t('Künye, gizlilik derecesi ve hedefle yeni soruşturma aç')}</span>
+              </span>
+            </button>
+            <button className="landing-tile" onClick={handleOpenClick}>
+              <span className="tile-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
+              </span>
+              <span className="tile-text">
+                <b>{t('Dosya aç')}</b>
+                <span>{t('.osint.json ya da şifreli .osint.enc.json')}</span>
+              </span>
+            </button>
+          </div>
+
           <div className="landing-recents">
-            <div className="landing-recents-header">Kaldığın yerden devam et</div>
-            <ul className="landing-recents-list">
-              {recents.map((r) => {
-                const unsaved = hasUnsavedChanges(r);
-                const cls = r.classification ? getClassification(r.classification) : null;
-                return (
-                  <li key={r.id}>
-                    <button
-                      type="button"
-                      className="landing-recent-item"
-                      onClick={() => handleResume(r)}
-                      title={r.encrypted ? 'Şifreli kayıt — parola gerekir' : `${r.name} dosyasını aç`}
-                    >
-                      <div className={`landing-recent-icon ${r.encrypted ? 'locked' : ''}`}>
-                        {r.encrypted ? (
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="11" width="16" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-                        ) : (
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>
-                        )}
-                      </div>
-                      <div className="landing-recent-body">
-                        <div className="landing-recent-name">
-                          {r.caseNumber && <span className="mono landing-recent-no">{r.caseNumber}</span>}
-                          {r.name}
-                        </div>
-                        <div className="landing-recent-meta">
-                          {cls && (
-                            <span className="mini-class" style={{ background: cls.color, color: cls.text }}>
-                              {cls.label}
-                            </span>
-                          )}
-                          Düzenleme {relativeTime(r.snapshotAt)}
-                          {unsaved && <span className="landing-recent-unsaved">· kaydedilmedi</span>}
-                          {!r.encrypted && <span className="landing-recent-plain">· şifresiz</span>}
-                        </div>
-                      </div>
-                      <span
-                        className="landing-recent-remove"
-                        role="button"
-                        tabIndex={0}
-                        aria-label="Kurtarma kaydını sil"
-                        title="Kurtarma kaydını sil"
-                        onClick={(e) => handleRemoveRecent(e, r.id)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter' || e.key === ' ') handleRemoveRecent(e, r.id);
-                        }}
+            <div className="landing-recents-header">
+              <span>{t('Kaldığın yerden devam et')}</span>
+              <span className="count-pill">{recents.length}</span>
+            </div>
+            {recents.length === 0 ? (
+              <div className="landing-recents-empty">
+                {t('Henüz kayıt yok. Açtığınız dosyalar kaydetmeseniz bile burada görünür.')}
+              </div>
+            ) : (
+              <ul className="landing-recents-list">
+                {recents.map((r) => {
+                  const unsaved = hasUnsavedChanges(r);
+                  const cls = r.classification ? getClassification(r.classification) : null;
+                  return (
+                    <li key={r.id}>
+                      <button
+                        type="button"
+                        className="landing-recent-item"
+                        onClick={() => handleResume(r)}
+                        title={r.encrypted ? t('Şifreli kayıt — parola gerekir') : r.name}
                       >
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
-                      </span>
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
+                        <div className={`landing-recent-icon ${r.encrypted ? 'locked' : ''}`}>
+                          {r.encrypted ? (
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="11" width="16" height="10" rx="1" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>
+                          ) : (
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><path d="M14 3v6h6" /></svg>
+                          )}
+                        </div>
+                        <div className="landing-recent-body">
+                          <div className="landing-recent-name">
+                            {r.caseNumber && <span className="mono landing-recent-no">{r.caseNumber}</span>}
+                            {r.encrypted ? t('Şifreli dosya') : r.name}
+                          </div>
+                          <div className="landing-recent-meta">
+                            {t('Düzenleme')} {relativeTime(r.snapshotAt)}
+                            {unsaved && <span className="landing-recent-unsaved">· {t('kaydedilmedi')}</span>}
+                            {!r.encrypted && <span className="landing-recent-plain">· {t('şifresiz')}</span>}
+                          </div>
+                        </div>
+                        {cls && (
+                          <span className="mini-class" style={{ background: cls.color, color: cls.text }}>
+                            {cls.label}
+                          </span>
+                        )}
+                        <span
+                          className="landing-recent-remove"
+                          role="button"
+                          tabIndex={0}
+                          aria-label={t('Kurtarma kaydını sil')}
+                          title={t('Kurtarma kaydını sil')}
+                          onClick={(e) => handleRemoveRecent(e, r.id)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') handleRemoveRecent(e, r.id);
+                          }}
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
-        )}
 
-        {error && !showNew && <div className="landing-error">{error}</div>}
+          {error && !showNew && <div className="landing-error">{error}</div>}
 
-        {/* display:none kullanılmıyor: Firefox görünmeyen input için dosya
-            seçiciyi açmıyor. */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/json,.json"
-          onChange={handleFileChosen}
-          style={{
-            position: 'absolute',
-            width: 1,
-            height: 1,
-            opacity: 0,
-            pointerEvents: 'none',
-            overflow: 'hidden',
-          }}
-        />
-      </div>
+          {/* display:none kullanılmıyor: Firefox görünmeyen input için dosya
+              seçiciyi açmıyor. */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="application/json,.json"
+            onChange={handleFileChosen}
+            style={{
+              position: 'absolute',
+              width: 1,
+              height: 1,
+              opacity: 0,
+              pointerEvents: 'none',
+              overflow: 'hidden',
+            }}
+          />
+        </div>
 
-      <div className="landing-footer">
-        Yalnızca yerel · Veriler bu cihazdan çıkmaz · <ClearAllDataButton variant="inline" />
-      </div>
+        <footer className="landing-footer">
+          {t('Yalnızca yerel · Veriler bu cihazdan çıkmaz')}
+        </footer>
+      </section>
 
       {showNew && (
         <div className="modal-backdrop" onMouseDown={() => setShowNew(false)}>
@@ -280,29 +312,29 @@ export default function Landing() {
             onMouseDown={(e) => e.stopPropagation()}
             onSubmit={handleCreate}
           >
-            <div className="modal-kicker">Yeni kayıt</div>
-            <h2>Soruşturma dosyası aç</h2>
-            <p className="modal-sub">Künye bilgileri sonradan da düzenlenebilir.</p>
+            <div className="modal-kicker">{t('Yeni kayıt')}</div>
+            <h2>{t('Soruşturma dosyası aç')}</h2>
+            <p className="modal-sub">{t('Künye bilgileri sonradan da düzenlenebilir.')}</p>
 
             <div className="field-row">
               <div className="field grow2">
-                <label htmlFor="project-name">Dosya adı</label>
+                <label htmlFor="project-name">{t('Dosya adı')}</label>
                 <input
                   id="project-name"
                   autoFocus
                   value={form.name}
                   onChange={set('name')}
-                  placeholder="ör. Kuzey Hattı Operasyonu"
+                  placeholder={t('ör. Kuzey Hattı Operasyonu')}
                 />
               </div>
               <div className="field">
-                <label htmlFor="case-no">Dosya no</label>
+                <label htmlFor="case-no">{t('Dosya no')}</label>
                 <input id="case-no" className="mono" value={form.caseNumber} onChange={set('caseNumber')} />
               </div>
             </div>
 
             <div className="field">
-              <label>Gizlilik derecesi</label>
+              <label>{t('Gizlilik derecesi')}</label>
               <div className="seg-picker">
                 {CLASSIFICATIONS.map((c) => (
                   <button
@@ -325,12 +357,12 @@ export default function Landing() {
             <div className="field-row">
               <div className="field">
                 <label htmlFor="target-name">
-                  Ana hedef <span className="label-optional">(isteğe bağlı)</span>
+                  {t('Ana hedef')} <span className="label-optional">({t('isteğe bağlı')})</span>
                 </label>
-                <input id="target-name" value={form.targetName} onChange={set('targetName')} placeholder="ör. Ad Soyad / kod adı" />
+                <input id="target-name" value={form.targetName} onChange={set('targetName')} placeholder={t('ör. Ad Soyad / kod adı')} />
               </div>
               <div className="field">
-                <label htmlFor="new-prio">Öncelik</label>
+                <label htmlFor="new-prio">{t('Öncelik')}</label>
                 <select id="new-prio" value={form.priority} onChange={set('priority')}>
                   {PRIORITIES.map((p) => (
                     <option key={p.key} value={p.key}>{p.label}</option>
@@ -341,11 +373,11 @@ export default function Landing() {
 
             <div className="field-row">
               <div className="field">
-                <label htmlFor="new-inv">Soruşturmacı</label>
+                <label htmlFor="new-inv">{t('Soruşturmacı')}</label>
                 <input id="new-inv" value={form.investigator} onChange={set('investigator')} />
               </div>
               <div className="field">
-                <label htmlFor="new-unit">Birim</label>
+                <label htmlFor="new-unit">{t('Birim')}</label>
                 <input id="new-unit" value={form.unit} onChange={set('unit')} />
               </div>
             </div>
@@ -354,10 +386,10 @@ export default function Landing() {
 
             <div className="modal-actions">
               <button type="button" className="btn btn-ghost" onClick={() => setShowNew(false)}>
-                Vazgeç
+                {t('Vazgeç')}
               </button>
               <button type="submit" className="btn btn-primary">
-                Dosyayı aç
+                {t('Dosyayı aç')}
               </button>
             </div>
           </form>
@@ -374,6 +406,8 @@ export default function Landing() {
           }}
         />
       )}
+
+      {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
     </div>
   );
 }

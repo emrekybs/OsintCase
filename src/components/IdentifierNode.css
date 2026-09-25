@@ -26,8 +26,8 @@
   border-left: 3px solid var(--role-color, var(--accent));
 }
 .id-node.on-path {
-  border-color: #c9a227;
-  box-shadow: 0 0 0 2px #c9a227;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
 }
 .id-node.dimmed {
   opacity: 0.32;
@@ -71,7 +71,7 @@
 }
 
 .react-flow__edge.on-path .react-flow__edge-path {
-  stroke: #c9a227 !important;
+  stroke: var(--accent) !important;
   stroke-width: 3 !important;
 }
 .react-flow__edge.dimmed {

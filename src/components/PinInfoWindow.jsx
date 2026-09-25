@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { InfoWindow, useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
 import PinInfoCard from './PinInfoCard.jsx';
 import './PinInfoWindow.css';
+import { t } from '../i18n/index.jsx';
 
 /**
  * Floating card shown when a pin marker is clicked in Google mode.
@@ -60,7 +61,9 @@ export default function PinInfoWindow({ pin, index, onClose, onEdit }) {
     pin.label?.trim() ||
     placeDetails?.name ||
     pin.address?.trim() ||
-    `Konum ${index}`;
+    t('Konum {0}', {
+      '0': index
+    });
   const address = pin.address?.trim() || placeDetails?.formatted_address || '';
 
   const googleMapsUrl =
@@ -85,12 +88,12 @@ export default function PinInfoWindow({ pin, index, onClose, onEdit }) {
         displayLabel={displayLabel}
         address={address}
         externalUrl={googleMapsUrl}
-        externalLabel="Google Haritalar'da aç"
+        externalLabel={t('Google Haritalar\'da aç')}
         onClose={onClose}
         onEdit={onEdit}
       >
         {loading && (
-          <div className="pin-info-loading">Yer bilgisi yükleniyor…</div>
+          <div className="pin-info-loading">{t('Yer bilgisi yükleniyor…')}</div>
         )}
 
         {placeDetails && (
@@ -122,7 +125,7 @@ export default function PinInfoWindow({ pin, index, onClose, onEdit }) {
                   }`}
                 >
                   <span className="status-dot" />
-                  {isOpenNow ? 'Şu an açık' : 'Şu an kapalı'}
+                  {isOpenNow ? t('Şu an açık') : t('Şu an kapalı')}
                 </span>
               </div>
             )}
@@ -152,9 +155,7 @@ export default function PinInfoWindow({ pin, index, onClose, onEdit }) {
         )}
 
         {placesUnavailable && pin.placeId && (
-          <div className="pin-info-section pin-info-muted small">
-            Google yer bilgisi alınamadı.
-          </div>
+          <div className="pin-info-section pin-info-muted small">{t('Google yer bilgisi alınamadı.')}</div>
         )}
       </PinInfoCard>
     </InfoWindow>

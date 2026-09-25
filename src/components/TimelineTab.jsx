@@ -7,6 +7,7 @@ import { AdmiraltyTag } from './IdentifierNode.jsx';
 import IdentifierBadge from './IdentifierBadge.jsx';
 import EventModal from './EventModal.jsx';
 import './TimelineTab.css';
+import { t } from '../i18n/index.jsx';
 
 const KINDS = ['event', 'pin', 'sighting', 'evidence'];
 
@@ -88,46 +89,43 @@ export default function TimelineTab() {
     <div className="timeline-tab">
       <aside className="timeline-side">
         <div className="sidebar-header">
-          <h3>Kronoloji</h3>
-          <button className="btn btn-primary btn-sm" onClick={() => setModal({ initial: null })}>
-            + Olay
-          </button>
+          <h3>{t('Kronoloji')}</h3>
+          <button className="btn btn-primary btn-sm" onClick={() => setModal({ initial: null })}>{t('+ Olay')}</button>
         </div>
         <div className="timeline-filters">
           <input
             type="search"
-            placeholder="Ara…"
+            placeholder={t('Ara…')}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
-          <div className="filter-label">Kaynak</div>
+          <div className="filter-label">{t('Kaynak')}</div>
           <div className="kind-toggles">
             {KINDS.map((k) => (
               <label key={k} className="check-row compact">
                 <input type="checkbox" checked={kinds.has(k)} onChange={() => toggleKind(k)} />
-                <span>{KIND_LABELS[k]}</span>
+                <span>{t(KIND_LABELS[k])}</span>
                 <span className="count-pill">{all.filter((i) => i.kind === k).length}</span>
               </label>
             ))}
           </div>
-          <div className="filter-label">Tarih aralığı</div>
+          <div className="filter-label">{t('Tarih aralığı')}</div>
           <div className="field-row tight">
-            <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} aria-label="Başlangıç" />
-            <input type="date" value={to} onChange={(e) => setTo(e.target.value)} aria-label="Bitiş" />
+            <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} aria-label={t('Başlangıç')} />
+            <input type="date" value={to} onChange={(e) => setTo(e.target.value)} aria-label={t('Bitiş')} />
           </div>
-          <div className="filter-label">Kişi / tanımlayıcı</div>
+          <div className="filter-label">{t('Kişi / tanımlayıcı')}</div>
           <select value={focusIdent} onChange={(e) => setFocusIdent(e.target.value)}>
-            <option value="">Tümü</option>
+            <option value="">{t('Tümü')}</option>
             {(project.identifiers ?? []).map((i) => (
               <option key={i.id} value={i.id}>{getDisplayLabel(i)}</option>
             ))}
           </select>
           {span && (
             <div className="timeline-span mono">
-              {fmtShortDate(span.first)} → {fmtShortDate(span.last)}
+              {fmtShortDate(span.first)}→ {fmtShortDate(span.last)}
               <br />
-              {items.length} / {all.length} kayıt
-            </div>
+              {items.length}/ {all.length}{' '}{t('kayıt')}</div>
           )}
         </div>
       </aside>
@@ -135,18 +133,15 @@ export default function TimelineTab() {
       <div className="timeline-main">
         {all.length === 0 ? (
           <div className="timeline-empty">
-            <h3>Kronoloji boş</h3>
-            <p>
-              Olay ekleyin ya da Harita sekmesinde konumlara ziyaret tarihi / görülme kaydı girin.
-              Deliller de elde edilme tarihleriyle burada görünür.
-            </p>
-            <button className="btn btn-primary" onClick={() => setModal({ initial: null })}>
-              İlk olayı ekle
-            </button>
+            <h3>{t('Kronoloji boş')}</h3>
+            <p>{t(
+              'Olay ekleyin ya da Harita sekmesinde konumlara ziyaret tarihi / görülme kaydı girin. Deliller de elde edilme tarihleriyle burada görünür.'
+            )}</p>
+            <button className="btn btn-primary" onClick={() => setModal({ initial: null })}>{t('İlk olayı ekle')}</button>
           </div>
         ) : items.length === 0 ? (
           <div className="timeline-empty">
-            <p>Filtreyle eşleşen kayıt yok.</p>
+            <p>{t('Filtreyle eşleşen kayıt yok.')}</p>
           </div>
         ) : (
           <div className="timeline">
@@ -168,8 +163,8 @@ export default function TimelineTab() {
                           <span className="tl-cat" style={{ color: it.color }}>
                             {it.category}
                           </span>
-                          {it.kind !== 'event' && KIND_LABELS[it.kind] !== it.category && (
-                            <span className="tl-kind">{KIND_LABELS[it.kind]}</span>
+                          {it.kind !== 'event' && t(KIND_LABELS[it.kind]) !== it.category && (
+                            <span className="tl-kind">{t(KIND_LABELS[it.kind])}</span>
                           )}
                           <AdmiraltyTag reliability={it.reliability} />
                         </div>
@@ -208,7 +203,7 @@ export default function TimelineTab() {
                                     onKeyDown={(e) => e.key === 'Enter' && navigateToPin(id)}
                                   >
                                     <span className="tl-pin-no mono">{entry.i + 1}</span>
-                                    {entry.p.label || entry.p.address || 'Konum'}
+                                    {entry.p.label || entry.p.address || t('Konum')}
                                   </span>
                                 );
                               })}

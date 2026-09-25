@@ -94,7 +94,7 @@ export function buildGraphSvg(project, { theme = 'light', highlight = null, bann
       const p2 = center(b);
       const conf = findOption(LINK_CONFIDENCE, c.confidence) ?? LINK_CONFIDENCE[0];
       const on = hiEdges?.has(c.id);
-      const stroke = on ? '#c9a227' : pal.edge;
+      const stroke = on ? '#d32f2f' : pal.edge;
       const dash = conf.dash ? ` stroke-dasharray="${conf.dash}"` : '';
       let label = '';
       if (c.label) {
@@ -116,7 +116,7 @@ export function buildGraphSvg(project, { theme = 'light', highlight = null, bann
       const role =
         i.type === 'subject' ? findOption(SUBJECT_ROLES, i.fields?.role) : null;
       const on = hiNodes?.has(i.id);
-      const border = on ? '#c9a227' : role ? role.color : pal.border;
+      const border = on ? '#d32f2f' : role ? role.color : pal.border;
       const rel = i.reliability;
       const code =
         rel && (rel.source || rel.info) ? `${rel.source || '?'}${rel.info || '?'}` : '';

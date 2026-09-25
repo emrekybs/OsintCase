@@ -26,9 +26,11 @@ import {
   pinWeights,
 } from '../utils/mapUtils.js';
 import PinInfoCard from './PinInfoCard.jsx';
-import ClearAllDataButton from './ClearAllDataButton.jsx';
+import SettingsModal from './SettingsModal.jsx';
+import { DEFAULT_TILE_STYLE, TILE_STYLES, resolveTileStyle } from '../mapTiles.js';
 import './MapTab.css';
 import './MapTabOSM.css';
+import { t } from '../i18n/index.jsx';
 
 const DEFAULT_CENTER = [20, 0];
 const DEFAULT_ZOOM = 2;
@@ -36,11 +38,13 @@ const DEFAULT_ZOOM = 2;
 const DOUBLE_CLICK_MS = 300;
 
 function pinDisplayLabel(pin) {
-  return pin.label?.trim() || pin.address?.trim() || 'Adsız konum';
+  return pin.label?.trim() || pin.address?.trim() || t('Adsız konum');
 }
 
 function pinSecondaryLabel(pin) {
-  const extra = pin.sightings?.length ? ` · ${pin.sightings.length} görülme` : '';
+  const extra = pin.sightings?.length ? ' · ' + t('{0} görülme', {
+    '0': pin.sightings.length
+  }) + '' : '';
   if (pin.label && pin.address) return pin.address + extra;
   return `${pin.lat.toFixed(4)}, ${pin.lng.toFixed(4)}${extra}`;
 }
@@ -67,7 +71,11 @@ export default function MapTabOSM({ visible = true }) {
   const { project, addPin, updatePin, deletePin, updateMapDisplay } =
     useProject();
   const { theme } = useTheme();
-  const { mapProvider, setMapProvider } = useAppConfig();
+  const { tileStyle, tileKeys, setTileStyle } = useAppConfig();
+  const tiles = useMemo(
+    () => resolveTileStyle(tileStyle ?? DEFAULT_TILE_STYLE, tileKeys),
+    [tileStyle, tileKeys],
+  );
   const { hoveredIdentifierId, focus, consumeFocus } = useNavigation();
   const [showSettings, setShowSettings] = useState(false);
   const pins = useMemo(() => project?.locations ?? [], [project?.locations]);
@@ -195,12 +203,12 @@ export default function MapTabOSM({ visible = true }) {
     <div className="map-tab">
       <aside className="map-sidebar">
         <div className="sidebar-header">
-          <h3>Konumlar <span className="count-pill">{pins.length}</span></h3>
+          <h3>{t('Konumlar')}{' '}<span className="count-pill">{pins.length}</span></h3>
           <button
             className="icon-btn"
             onClick={() => setShowSettings(true)}
-            title="Harita ayarları"
-            aria-label="Harita ayarları"
+            title={t('Harita ayarları')}
+            aria-label={t('Harita ayarları')}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="3" />
@@ -221,27 +229,21 @@ export default function MapTabOSM({ visible = true }) {
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="3 3">
               <line x1="3" y1="20" x2="21" y2="4" />
-            </svg>
-            Rotayı çiz
-          </button>
+            </svg>{t('Rotayı çiz')}</button>
           <button
             type="button"
             className={`map-connect-toggle ${mapDisplay.showRadius !== false ? 'active' : ''}`}
             onClick={() => updateMapDisplay({ showRadius: mapDisplay.showRadius === false })}
-            title="Konumlara girilen yarıçap halkalarını göster"
+            title={t('Konumlara girilen yarıçap halkalarını göster')}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" strokeDasharray="3 3"/><circle cx="12" cy="12" r="2"/></svg>
-            Yarıçap halkaları
-          </button>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" strokeDasharray="3 3"/><circle cx="12" cy="12" r="2"/></svg>{t('Yarıçap halkaları')}</button>
           <button
             type="button"
             className={`map-connect-toggle ${mapDisplay.showDensity ? 'active' : ''}`}
             onClick={() => updateMapDisplay({ showDensity: !mapDisplay.showDensity })}
-            title="Görülme, ziyaret ve olay sayısına göre yoğunluk (yaşam örüntüsü)"
+            title={t('Görülme, ziyaret ve olay sayısına göre yoğunluk (yaşam örüntüsü)')}
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity="0.8"><circle cx="9" cy="10" r="6" opacity="0.35"/><circle cx="15" cy="14" r="5" opacity="0.5"/><circle cx="14" cy="9" r="2.5"/></svg>
-            Yoğunluk
-          </button>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity="0.8"><circle cx="9" cy="10" r="6" opacity="0.35"/><circle cx="15" cy="14" r="5" opacity="0.5"/><circle cx="14" cy="9" r="2.5"/></svg>{t('Yoğunluk')}</button>
           {mapDisplay.showPinConnections && (
             <div className="map-connect-colors">
               {Object.values(PIN_COLORS).map((c) => {
@@ -257,7 +259,9 @@ export default function MapTabOSM({ visible = true }) {
                     onClick={() =>
                       updateMapDisplay({ pinConnectionColor: c.bg })
                     }
-                    aria-label={`Çizgi rengi: ${c.name}`}
+                    aria-label={t('Çizgi rengi: {0}', {
+                      '0': c.name
+                    })}
                     title={c.name}
                   />
                 );
@@ -266,10 +270,33 @@ export default function MapTabOSM({ visible = true }) {
           )}
         </div>
 
+        <div className="map-layer-select">
+          <label htmlFor="osm-layer">{t('Katman')}</label>
+          <select
+            id="osm-layer"
+            value={tiles.key}
+            onChange={(e) => {
+              const st = TILE_STYLES[e.target.value];
+              if (st?.needsKey && !tileKeys[st.needsKey]) {
+                setShowSettings(true);
+                return;
+              }
+              setTileStyle(e.target.value);
+            }}
+          >
+            {Object.entries(TILE_STYLES).map(([k, st]) => (
+              <option key={k} value={k}>
+                {st.label}
+                {st.needsKey && !tileKeys[st.needsKey] ? ` (${t('API gerekir')})` : ''}
+              </option>
+            ))}
+          </select>
+        </div>
+
         {pins.length === 0 ? (
           <div className="empty-state">
-            <p>Henüz konum yok.</p>
-            <p className="empty-hint">Haritada herhangi bir yere tıklayarak konum ekleyin.</p>
+            <p>{t('Henüz konum yok.')}</p>
+            <p className="empty-hint">{t('Haritada herhangi bir yere tıklayarak konum ekleyin.')}</p>
           </div>
         ) : (
           <ul className="pin-list">
@@ -331,8 +358,8 @@ export default function MapTabOSM({ visible = true }) {
                         deletePin(pin.id);
                       }
                     }}
-                    aria-label="Konumu sil"
-                    title="Konumu sil"
+                    aria-label={t('Konumu sil')}
+                    title={t('Konumu sil')}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
@@ -350,13 +377,17 @@ export default function MapTabOSM({ visible = true }) {
           center={initialCenter}
           zoom={initialZoom}
           minZoom={2}
-          maxZoom={19}
+          maxZoom={20}
           worldCopyJump
           className="osm-map-container"
         >
           <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            key={tiles.key}
+            attribution={tiles.attribution}
+            url={tiles.url}
+            subdomains={tiles.subdomains ?? 'abc'}
+            maxZoom={tiles.maxZoom ?? 19}
+            detectRetina={false}
           />
           <ClickToPin onClick={handleMapClick} disabled={!!editingPin} />
           <PanController pendingPanRef={pendingPanRef} />
@@ -424,11 +455,13 @@ export default function MapTabOSM({ visible = true }) {
                 displayLabel={
                   selectedPin.label?.trim() ||
                   selectedPin.address?.trim() ||
-                  `Konum ${selectedPinIndex}`
+                  t('Konum {0}', {
+                    '0': selectedPinIndex
+                  })
                 }
                 address={selectedPin.address?.trim() || ''}
                 externalUrl={`https://www.openstreetmap.org/?mlat=${selectedPin.lat}&mlon=${selectedPin.lng}#map=17/${selectedPin.lat}/${selectedPin.lng}`}
-                externalLabel="OpenStreetMap'te aç"
+                externalLabel={t('OpenStreetMap\'te aç')}
                 onClose={() => setSelectedPinId(null)}
                 onEdit={() => {
                   setSelectedPinId(null);
@@ -474,55 +507,7 @@ export default function MapTabOSM({ visible = true }) {
         )}
 
         {showSettings && (
-          <div
-            className="map-settings-overlay"
-            onClick={() => setShowSettings(false)}
-          >
-            <div
-              className="map-settings-panel"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="map-settings">
-                <div className="modal-header">
-                  <h2>Harita ayarları</h2>
-                  <button
-                    type="button"
-                    className="icon-btn"
-                    onClick={() => setShowSettings(false)}
-                    aria-label="Kapat"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
-                  </button>
-                </div>
-
-                <div className="settings-current">
-                  <div className="settings-row">
-                    <span className="settings-label">Harita sağlayıcısı</span>
-                    <span className="settings-value">OpenStreetMap</span>
-                  </div>
-                  <p className="settings-hint">
-                    OpenStreetMap karoları ve Nominatim araması kullanılıyor;
-                    API anahtarı gerekmez. Harita karoları ve adres araması
-                    için internet bağlantısı gerekir.
-                  </p>
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={async () => {
-                      await setMapProvider('google');
-                      setShowSettings(false);
-                    }}
-                  >
-                    Google Maps'e geç
-                  </button>
-                </div>
-
-                <hr className="settings-divider" />
-
-                <ClearAllDataButton />
-              </div>
-            </div>
-          </div>
+          <SettingsModal initialSection="map" onClose={() => setShowSettings(false)} />
         )}
       </div>
     </div>
@@ -703,7 +688,7 @@ function NominatimSearch({ onSelect }) {
         type="text"
         autoComplete="off"
         spellCheck="false"
-        placeholder="OpenStreetMap'te ara…"
+        placeholder={t('OpenStreetMap\'te ara…')}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => results.length && setOpen(true)}
@@ -714,7 +699,7 @@ function NominatimSearch({ onSelect }) {
           type="button"
           className="map-searchbox-clear"
           onClick={() => setQuery('')}
-          title="Temizle"
+          title={t('Temizle')}
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M18 6 6 18M6 6l12 12" />
@@ -724,7 +709,7 @@ function NominatimSearch({ onSelect }) {
       {open && (results.length > 0 || loading) && (
         <ul className="osm-search-results">
           {loading && results.length === 0 && (
-            <li className="osm-search-loading">Aranıyor…</li>
+            <li className="osm-search-loading">{t('Aranıyor…')}</li>
           )}
           {results.map((r) => (
             <li key={r.place_id}>

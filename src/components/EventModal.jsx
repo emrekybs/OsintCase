@@ -13,6 +13,7 @@ import {
 import { getPinColor } from '../pinColors.js';
 import IdentifierBadge from './IdentifierBadge.jsx';
 import LinkPicker from './LinkPicker.jsx';
+import { t } from '../i18n/index.jsx';
 
 /** Kronolojiye olay ekleme / düzenleme. */
 export default function EventModal({ initial, onClose, onSave, onDelete }) {
@@ -57,7 +58,7 @@ export default function EventModal({ initial, onClose, onSave, onDelete }) {
         badge: <IdentifierBadge typeKey={i.type} customIconId={i.customIconId} size="sm" />,
         label: getDisplayLabel(i),
         secondary: getTypeDef(i.type).label,
-        group: CATEGORIES[getTypeDef(i.type).category]?.label ?? 'Diğer',
+        group: CATEGORIES[getTypeDef(i.type).category]?.label ?? t('Diğer'),
       })),
     [identifiers],
   );
@@ -72,7 +73,9 @@ export default function EventModal({ initial, onClose, onSave, onDelete }) {
               {idx + 1}
             </span>
           ),
-          label: p.label?.trim() || p.address?.trim() || `Konum ${idx + 1}`,
+          label: p.label?.trim() || p.address?.trim() || t('Konum {0}', {
+            '0': idx + 1
+          }),
           secondary: `${p.lat.toFixed(4)}, ${p.lng.toFixed(4)}`,
         };
       }),
@@ -94,7 +97,7 @@ export default function EventModal({ initial, onClose, onSave, onDelete }) {
   const submit = (e) => {
     e.preventDefault();
     if (!draft.title.trim()) {
-      setError('Başlık zorunlu.');
+      setError(t('Başlık zorunlu.'));
       return;
     }
     onSave({
@@ -110,7 +113,7 @@ export default function EventModal({ initial, onClose, onSave, onDelete }) {
       <span className="link-chip-body static">
         <span className="link-chip-text">{label}</span>
       </span>
-      <button type="button" className="link-chip-remove" onClick={onRemove} aria-label="Kaldır">
+      <button type="button" className="link-chip-remove" onClick={onRemove} aria-label={t('Kaldır')}>
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
     </span>
@@ -121,10 +124,10 @@ export default function EventModal({ initial, onClose, onSave, onDelete }) {
       <form className="modal modal-wide" onMouseDown={(e) => e.stopPropagation()} onSubmit={submit}>
         <div className="modal-header">
           <div>
-            <div className="modal-kicker">Kronoloji</div>
-            <h2>{initial?.id ? 'Olayı düzenle' : 'Yeni olay'}</h2>
+            <div className="modal-kicker">{t('Kronoloji')}</div>
+            <h2>{initial?.id ? t('Olayı düzenle') : t('Yeni olay')}</h2>
           </div>
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="Kapat">
+          <button type="button" className="icon-btn" onClick={onClose} aria-label={t('Kapat')}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
         </div>
@@ -133,15 +136,15 @@ export default function EventModal({ initial, onClose, onSave, onDelete }) {
           {error && <div className="form-error">{error}</div>}
           <div className="field-row">
             <div className="field">
-              <label htmlFor="ev-date">Tarih</label>
+              <label htmlFor="ev-date">{t('Tarih')}</label>
               <input id="ev-date" type="date" value={draft.date} onChange={(e) => set('date', e.target.value)} />
             </div>
             <div className="field">
-              <label htmlFor="ev-time">Saat</label>
+              <label htmlFor="ev-time">{t('Saat')}</label>
               <input id="ev-time" type="time" value={draft.time} onChange={(e) => set('time', e.target.value)} />
             </div>
             <div className="field">
-              <label htmlFor="ev-cat">Tür</label>
+              <label htmlFor="ev-cat">{t('Tür')}</label>
               <select id="ev-cat" value={draft.category} onChange={(e) => set('category', e.target.value)}>
                 {EVENT_CATEGORIES.map((c) => (
                   <option key={c.key} value={c.key}>{c.label}</option>
@@ -150,24 +153,24 @@ export default function EventModal({ initial, onClose, onSave, onDelete }) {
             </div>
           </div>
           <div className="field">
-            <label htmlFor="ev-title">Başlık</label>
-            <input id="ev-title" autoFocus value={draft.title} onChange={(e) => set('title', e.target.value)} placeholder="ör. Şüpheli X ile Y kafede buluştu" />
+            <label htmlFor="ev-title">{t('Başlık')}</label>
+            <input id="ev-title" autoFocus value={draft.title} onChange={(e) => set('title', e.target.value)} placeholder={t('ör. Şüpheli X ile Y kafede buluştu')} />
           </div>
           <div className="field">
-            <label htmlFor="ev-desc">Açıklama</label>
+            <label htmlFor="ev-desc">{t('Açıklama')}</label>
             <textarea id="ev-desc" rows={3} value={draft.description} onChange={(e) => set('description', e.target.value)} />
           </div>
 
           <div className="field-row">
             <div className="field">
-              <label htmlFor="ev-rel-s">Kaynak güvenilirliği</label>
+              <label htmlFor="ev-rel-s">{t('Kaynak güvenilirliği')}</label>
               <select id="ev-rel-s" value={rel.source ?? ''} onChange={(e) => set('reliability', { ...rel, source: e.target.value })}>
                 <option value="">—</option>
                 {SOURCE_RELIABILITY.map((o) => <option key={o.key} value={o.key}>{o.label}</option>)}
               </select>
             </div>
             <div className="field">
-              <label htmlFor="ev-rel-i">Bilgi doğruluğu</label>
+              <label htmlFor="ev-rel-i">{t('Bilgi doğruluğu')}</label>
               <select id="ev-rel-i" value={rel.info ?? ''} onChange={(e) => set('reliability', { ...rel, info: e.target.value })}>
                 <option value="">—</option>
                 {INFO_CREDIBILITY.map((o) => <option key={o.key} value={o.key}>{o.label}</option>)}
@@ -176,80 +179,78 @@ export default function EventModal({ initial, onClose, onSave, onDelete }) {
           </div>
 
           <div className="field">
-            <label>İlişkili tanımlayıcılar</label>
+            <label>{t('İlişkili tanımlayıcılar')}</label>
             <div className="link-chips">
               {draft.identifierIds.map((id) => {
                 const i = identifiers.find((x) => x.id === id);
                 return i ? chip(getDisplayLabel(i), () => toggleIn('identifierIds', id), id) : null;
               })}
-              <button type="button" className="link-chip-add" onClick={() => setPicker('ident')}>+ Tanımlayıcı</button>
+              <button type="button" className="link-chip-add" onClick={() => setPicker('ident')}>{t('+ Tanımlayıcı')}</button>
             </div>
           </div>
           <div className="field">
-            <label>İlişkili konumlar</label>
+            <label>{t('İlişkili konumlar')}</label>
             <div className="link-chips">
               {draft.pinIds.map((id) => {
                 const p = pins.find((x) => x.id === id);
-                return p ? chip(p.label || p.address || 'Konum', () => toggleIn('pinIds', id), id) : null;
+                return p ? chip(p.label || p.address || t('Konum'), () => toggleIn('pinIds', id), id) : null;
               })}
-              <button type="button" className="link-chip-add" onClick={() => setPicker('pin')}>+ Konum</button>
+              <button type="button" className="link-chip-add" onClick={() => setPicker('pin')}>{t('+ Konum')}</button>
             </div>
           </div>
           <div className="field">
-            <label>İlişkili deliller</label>
+            <label>{t('İlişkili deliller')}</label>
             <div className="link-chips">
               {draft.evidenceIds.map((id) => {
                 const ev = evidence.find((x) => x.id === id);
                 return ev ? chip(`${ev.number} ${ev.title || ev.fileName}`, () => toggleIn('evidenceIds', id), id) : null;
               })}
-              <button type="button" className="link-chip-add" onClick={() => setPicker('ev')}>+ Delil</button>
+              <button type="button" className="link-chip-add" onClick={() => setPicker('ev')}>{t('+ Delil')}</button>
             </div>
           </div>
         </div>
 
         <div className="modal-actions modal-actions-spread">
           {initial?.id && onDelete ? (
-            <button type="button" className="btn btn-ghost danger" onClick={onDelete}>
-              Olayı sil
-            </button>
+            <button type="button" className="btn btn-ghost danger" onClick={onDelete}>{t('Olayı sil')}</button>
           ) : (
             <span />
           )}
           <div className="modal-actions-right">
-            <button type="button" className="btn btn-ghost" onClick={onClose}>Vazgeç</button>
-            <button type="submit" className="btn btn-primary">Kaydet</button>
+            <button type="button" className="btn btn-ghost" onClick={onClose}>{t('Vazgeç')}</button>
+            <button type="submit" className="btn btn-primary">{t('Kaydet')}</button>
           </div>
         </div>
       </form>
 
       {picker === 'ident' && (
         <LinkPicker
-          title="Tanımlayıcı ilişkilendir"
+          title={t('Tanımlayıcı ilişkilendir')}
           items={identItems}
           selectedIds={new Set(draft.identifierIds)}
           onToggle={(id) => toggleIn('identifierIds', id)}
           onClose={() => setPicker(null)}
-          emptyText="Henüz tanımlayıcı yok."
+          emptyText={t('Henüz tanımlayıcı yok.')}
         />
       )}
       {picker === 'pin' && (
         <LinkPicker
-          title="Konum ilişkilendir"
+          title={t('Konum ilişkilendir')}
           items={pinItems}
           selectedIds={new Set(draft.pinIds)}
           onToggle={(id) => toggleIn('pinIds', id)}
           onClose={() => setPicker(null)}
-          emptyText="Henüz konum yok."
+          emptyText={t('Henüz konum yok.')}
         />
       )}
       {picker === 'ev' && (
         <LinkPicker
-          title="Delil ilişkilendir"
+          title={t('Delil ilişkilendir')}
           items={evItems}
           selectedIds={new Set(draft.evidenceIds)}
           onToggle={(id) => toggleIn('evidenceIds', id)}
           onClose={() => setPicker(null)}
-          emptyText="Henüz delil yok."
+          emptyText={t('Henüz delil yok.')}
         />
       )}
     </div>

@@ -4,45 +4,146 @@
   flex-direction: column;
   background: var(--bg-0);
 }
+.pv-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
 
-.project-topbar {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
+/* ---- Sol navigasyon şeridi ------------------------------------------------ */
+.rail {
+  width: var(--rail-w);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: #080808;
+  border-right: 1px solid #1f1f1f;
+  padding: 10px 0;
+  color: #8a8a8a;
+}
+:root[data-theme='light'] .rail {
+  background: #111111;
+}
+.rail-brand {
+  display: flex;
+  justify-content: center;
+  padding: 2px 0 14px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid #1f1f1f;
+}
+.rail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.rail-spacer {
+  flex: 1;
+}
+.rail-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 4px;
+  padding: 9px 4px 8px;
+  color: #8a8a8a;
+  border-left: 3px solid transparent;
+}
+.rail-btn:hover {
+  color: #f1f1f1;
+  background: #141414;
+}
+.rail-btn.active {
+  color: #ffffff;
+  background: #161616;
+  border-left-color: #d32f2f;
+}
+.rail-btn.active svg {
+  color: #e53935;
+}
+.rail-label {
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+}
+.rail-count {
+  position: absolute;
+  top: 5px;
+  right: 9px;
+  font-size: 9px;
+  min-width: 15px;
+  padding: 0 3px;
+  line-height: 14px;
+  text-align: center;
+  background: #262626;
+  color: #bdbdbd;
+  border-radius: 7px;
+}
+.rail-btn.active .rail-count {
+  background: #d32f2f;
+  color: #fff;
+}
+
+/* ---- Başlık ---------------------------------------------------------------- */
+.pv-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.pv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 16px;
-  padding: 8px 14px;
+  padding: 0 14px 0 0;
+  height: 56px;
+  flex-shrink: 0;
   background: var(--bg-1);
   border-bottom: 1px solid var(--border);
-  height: 58px;
-  flex-shrink: 0;
 }
-
-.topbar-left {
+.pv-case {
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  height: 100%;
+  text-align: left;
+  min-width: 0;
+  padding-right: 12px;
+}
+.pv-case:hover .pv-case-name {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 3px;
+}
+.pv-case-no {
   display: flex;
   align-items: center;
-  gap: 12px;
-  min-width: 0;
-}
-
-.project-title {
-  min-width: 0;
-  text-align: left;
-  padding: 4px 8px;
-  margin-left: -4px;
-  border-radius: var(--radius);
-}
-.project-title:hover {
-  background: var(--bg-hover);
-}
-.case-no {
+  padding: 0 14px;
+  background: var(--bg-2);
+  border-right: 1px solid var(--border);
   color: var(--accent);
-  font-size: 12px;
-  margin-right: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
-.project-meta {
+.pv-case-main {
   display: flex;
-  gap: 10px;
-  margin-top: 1px;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.pv-case-name {
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pv-case-meta {
+  display: flex;
+  gap: 12px;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -50,7 +151,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 11px;
+  font-size: 11.5px;
   color: var(--text-2);
 }
 .meta-chip .dot {
@@ -58,14 +159,17 @@
   height: 7px;
   border-radius: 50%;
 }
-.tab-count {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--text-2);
-  margin-left: 6px;
+.pv-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
 }
-.tab-button.active .tab-count {
-  color: var(--accent);
+.pv-sep {
+  width: 1px;
+  height: 22px;
+  background: var(--border);
+  margin: 0 4px;
 }
 .lock-btn {
   display: inline-flex;
@@ -90,83 +194,59 @@
   background: color-mix(in srgb, var(--warn) 10%, transparent);
 }
 
-.project-name {
-  font-weight: 600;
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.project-target {
-  font-size: 12px;
-  color: var(--text-2);
-}
-
-.tab-switcher {
-  display: inline-flex;
-  background: var(--bg-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 3px;
-  gap: 2px;
-}
-
-.tab-button {
-  padding: 6px 14px;
-  border-radius: var(--radius);
-  font-weight: 500;
-  font-size: 13px;
-  color: var(--text-1);
-  transition: background 0.15s ease, color 0.15s ease;
-}
-
-.tab-button:hover:not(.active) {
-  color: var(--text-0);
-}
-
-.tab-button.active {
-  background: var(--bg-1);
-  color: var(--text-0);
-  box-shadow: inset 0 -2px 0 var(--accent);
-}
-
-.topbar-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
+/* ---- İçerik ---------------------------------------------------------------- */
 .project-main {
   flex: 1;
   min-height: 0;
   overflow: hidden;
-  /* Stack tab panes on top of each other; only one is visible at a time
-     (via the `hidden` attribute), but both stay mounted. */
   position: relative;
 }
-
 .tab-pane {
-  /* Each tab pane fills .project-main. Using absolute positioning so the
-     hidden pane doesn't take up any layout space and the visible one
-     occupies the full area. */
   position: absolute;
   inset: 0;
   display: flex;
   min-height: 0;
 }
-
 .tab-pane > * {
   flex: 1;
   min-width: 0;
   min-height: 0;
 }
-
-/* `hidden` is the HTML attribute set in ProjectView; it normally becomes
-   display:none, which we keep — that way the inactive pane stops painting
-   and doesn't fight for layout. (MapTab's `visible` prop handles the
-   Leaflet invalidateSize call when it comes back into view.) */
 .tab-pane[hidden] {
   display: none;
 }
+
+/* ---- Durum çubuğu ------------------------------------------------------- */
+.statusbar {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 26px;
+  padding: 0 14px;
+  flex-shrink: 0;
+  background: var(--bg-1);
+  border-top: 1px solid var(--border);
+  font-size: 10.5px;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+}
+.sb-key {
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  margin-right: 4px;
+}
+.sb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.sb-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.sb-item.ok { color: var(--success); }
+.sb-item.warn { color: var(--warn); }
+.sb-spacer { flex: 1; }

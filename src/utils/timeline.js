@@ -5,6 +5,7 @@
  *   - delillerin elde edilme / kayda alınma tarihleri
  */
 import { EVENT_CATEGORIES, findOption, parseLooseDate } from '../caseModel.js';
+import { t } from '../i18n/index.jsx';
 
 export const KIND_LABELS = {
   event: 'Olay',
@@ -14,7 +15,7 @@ export const KIND_LABELS = {
 };
 
 function pinName(p, idx) {
-  return p.label?.trim() || p.address?.trim() || `Konum ${idx + 1}`;
+  return p.label?.trim() || p.address?.trim() || t('Konum {0}', { 0: idx + 1 });
 }
 
 export function buildTimeline(project) {
@@ -49,11 +50,11 @@ export function buildTimeline(project) {
         ref: p,
         date: parsed.date,
         time: parsed.time,
-        title: `${pinName(p, idx)} ziyareti`,
-        description: [p.withWho && `Birlikte: ${p.withWho}`, p.notes]
+        title: t('{0} ziyareti', { 0: pinName(p, idx) }),
+        description: [p.withWho && t('Birlikte: {0}', { 0: p.withWho }), p.notes]
           .filter(Boolean)
           .join(' · '),
-        category: 'Konum',
+        category: t('Konum'),
         color: '#2b8a9e',
         identifierIds: linked,
         pinIds: [p.id],
@@ -67,9 +68,9 @@ export function buildTimeline(project) {
         ref: p,
         date: s.date || '',
         time: s.time || '',
-        title: `${pinName(p, idx)} — görülme`,
+        title: t('{0} — görülme', { 0: pinName(p, idx) }),
         description: s.note ?? '',
-        category: 'Görülme',
+        category: t('Görülme'),
         color: '#2b8a9e',
         identifierIds: linked,
         pinIds: [p.id],
@@ -87,10 +88,10 @@ export function buildTimeline(project) {
       time: ev.acquiredAt ? '' : (ev.addedAt ?? '').slice(11, 16),
       title: `${ev.number} ${ev.title || ev.fileName}`,
       description: ev.acquiredAt
-        ? `Elde edildi${ev.source ? ` · Kaynak: ${ev.source}` : ''}`
-        : 'Kayda alındı',
-      category: 'Delil',
-      color: '#8c9a4f',
+        ? t('Elde edildi') + (ev.source ? ` · ${t('Kaynak')}: ${ev.source}` : '')
+        : t('Kayda alındı'),
+      category: t('Delil'),
+      color: '#d32f2f',
       identifierIds: ev.identifierIds ?? [],
       pinIds: ev.pinIds ?? [],
       evidenceIds: [ev.id],
@@ -111,10 +112,10 @@ const MONTHS = [
 ];
 
 export function monthKey(date) {
-  if (!date) return 'Tarihsiz';
+  if (!date) return t('Tarihsiz');
   const [y, m] = date.split('-');
   const mi = parseInt(m, 10) - 1;
-  return `${MONTHS[mi] ?? ''} ${y}`.trim();
+  return `${t(MONTHS[mi] ?? '')} ${y}`.trim();
 }
 
 export function fmtShortDate(date) {

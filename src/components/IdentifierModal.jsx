@@ -11,6 +11,7 @@ import IdentifierBadge from './IdentifierBadge.jsx';
 import IconPicker from './IconPicker.jsx';
 import LinkPicker from './LinkPicker.jsx';
 import './IdentifierModal.css';
+import { t } from '../i18n/index.jsx';
 
 function buildEmptyFields(typeKey) {
   return Object.fromEntries(
@@ -32,7 +33,7 @@ function FieldInput({ field, value, onChange, autoFocus }) {
   if (field.type === 'select') {
     return (
       <select {...common}>
-        <option value="">— seçilmedi —</option>
+        <option value="">{t('— seçilmedi —')}</option>
         {field.options.map((o) => (
           <option key={o.key} value={o.key}>
             {o.label}
@@ -229,7 +230,9 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
           label:
             p.label?.trim() ||
             p.address?.trim() ||
-            `Konum ${idx + 1}`,
+            t('Konum {0}', {
+              '0': idx + 1
+            }),
           secondary:
             p.label && p.address
               ? p.address
@@ -257,22 +260,22 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
         {stage === 'picker' ? (
           <>
             <div className="modal-header">
-              <h2>Tanımlayıcı ekle</h2>
+              <h2>{t('Tanımlayıcı ekle')}</h2>
               <button
                 type="button"
                 className="icon-btn"
                 onClick={onClose}
-                aria-label="Kapat"
+                aria-label={t('Kapat')}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
               </button>
             </div>
-            <p className="modal-sub">Bu bilgi için kategori ve tür seçin.</p>
+            <p className="modal-sub">{t('Bu bilgi için kategori ve tür seçin.')}</p>
 
             <input
               type="text"
               autoFocus
-              placeholder="Tür ara…"
+              placeholder={t('Tür ara…')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="type-search"
@@ -280,7 +283,7 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
 
             <div className="type-picker">
               {filteredCategories.length === 0 ? (
-                <div className="empty-state">"{search}" ile eşleşen tür yok.</div>
+                <div className="empty-state">"{search}{t('" ile eşleşen tür yok.')}</div>
               ) : (
                 filteredCategories.map((cat) => (
                   <section key={cat.key} className="type-category">
@@ -315,8 +318,8 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                       setStage('picker');
                       setError('');
                     }}
-                    aria-label="Tür seçimine dön"
-                    title="Geri"
+                    aria-label={t('Tür seçimine dön')}
+                    title={t('Geri')}
                   >
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18 9 12l6-6"/></svg>
                   </button>
@@ -325,8 +328,8 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                   type="button"
                   className="form-title-icon"
                   onClick={() => setIconPickerOpen(true)}
-                  title="Simgeyi değiştir"
-                  aria-label="Simgeyi değiştir"
+                  title={t('Simgeyi değiştir')}
+                  aria-label={t('Simgeyi değiştir')}
                 >
                   <IdentifierBadge
                     typeKey={typeKey}
@@ -338,14 +341,14 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                   </span>
                 </button>
                 <h2>
-                  {def.label} · {editing ? 'düzenle' : 'yeni'}
+                  {def.label} · {editing ? t('düzenle') : 'yeni'}
                 </h2>
               </div>
               <button
                 type="button"
                 className="icon-btn"
                 onClick={onClose}
-                aria-label="Kapat"
+                aria-label={t('Kapat')}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
               </button>
@@ -368,29 +371,29 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                 </div>
               ))}
               <fieldset className="reliability-box">
-                <legend>Kaynak değerlendirmesi (Admiralty)</legend>
+                <legend>{t('Kaynak değerlendirmesi (Admiralty)')}</legend>
                 <div className="field-row">
                   <div className="field">
-                    <label htmlFor="rel-source">Kaynak güvenilirliği</label>
+                    <label htmlFor="rel-source">{t('Kaynak güvenilirliği')}</label>
                     <select
                       id="rel-source"
                       value={reliability.source ?? ''}
                       onChange={(e) => setRel('source', e.target.value)}
                     >
-                      <option value="">— değerlendirilmedi —</option>
+                      <option value="">{t('— değerlendirilmedi —')}</option>
                       {SOURCE_RELIABILITY.map((o) => (
                         <option key={o.key} value={o.key}>{o.label}</option>
                       ))}
                     </select>
                   </div>
                   <div className="field">
-                    <label htmlFor="rel-info">Bilgi doğruluğu</label>
+                    <label htmlFor="rel-info">{t('Bilgi doğruluğu')}</label>
                     <select
                       id="rel-info"
                       value={reliability.info ?? ''}
                       onChange={(e) => setRel('info', e.target.value)}
                     >
-                      <option value="">— değerlendirilmedi —</option>
+                      <option value="">{t('— değerlendirilmedi —')}</option>
                       {INFO_CREDIBILITY.map((o) => (
                         <option key={o.key} value={o.key}>{o.label}</option>
                       ))}
@@ -399,16 +402,16 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                 </div>
                 <div className="field-row">
                   <div className="field grow2">
-                    <label htmlFor="rel-note">Kaynak</label>
+                    <label htmlFor="rel-note">{t('Kaynak')}</label>
                     <input
                       id="rel-note"
                       value={reliability.sourceNote ?? ''}
                       onChange={(e) => setRel('sourceNote', e.target.value)}
-                      placeholder="URL, belge, görüşme, açık kaynak adı…"
+                      placeholder={t('URL, belge, görüşme, açık kaynak adı…')}
                     />
                   </div>
                   <div className="field">
-                    <label htmlFor="rel-date">Elde edilme tarihi</label>
+                    <label htmlFor="rel-date">{t('Elde edilme tarihi')}</label>
                     <input
                       id="rel-date"
                       type="date"
@@ -420,19 +423,19 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
               </fieldset>
 
               <div className="field">
-                <label htmlFor="field-notes">Notlar</label>
+                <label htmlFor="field-notes">{t('Notlar')}</label>
                 <textarea
                   id="field-notes"
                   rows={3}
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Kayda geçmesi gereken diğer bilgiler…"
+                  placeholder={t('Kayda geçmesi gereken diğer bilgiler…')}
                 />
               </div>
 
               {editing && (
                 <div className="field">
-                  <label>İlişkili konumlar</label>
+                  <label>{t('İlişkili konumlar')}</label>
                   <div className="link-chips">
                     {stagedPins.map((p) => {
                       const c = getPinColor(p.color);
@@ -440,7 +443,9 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                       const label =
                         p.label?.trim() ||
                         p.address?.trim() ||
-                        `Konum ${idx ?? ''}`;
+                        t('Konum {0}', {
+                          '0': idx ?? ''
+                        });
                       const context = stagedLinks.get(p.id) ?? '';
                       const isExpanded = expandedChip === p.id;
                       return (
@@ -456,8 +461,10 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                             }
                             title={
                               context
-                                ? `Bağlam: ${context}`
-                                : 'Bağlam eklemek için tıklayın'
+                                ? t('Bağlam: {0}', {
+                                '0': context
+                              })
+                                : t('Bağlam eklemek için tıklayın')
                             }
                           >
                             <span
@@ -481,8 +488,8 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                             type="button"
                             className="link-chip-remove"
                             onClick={() => toggleStagedPin(p.id)}
-                            aria-label="İlişkiyi kaldır"
-                            title="İlişkiyi kaldır"
+                            aria-label={t('İlişkiyi kaldır')}
+                            title={t('İlişkiyi kaldır')}
                           >
                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
                           </button>
@@ -491,7 +498,7 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                               type="text"
                               autoFocus
                               className="link-chip-context-input"
-                              placeholder="Bağlam, ör. IG'de konum bildirmiş"
+                              placeholder={t('Bağlam, ör. IG\'de konum bildirmiş')}
                               value={context}
                               onChange={(e) =>
                                 setStagedPinContext(p.id, e.target.value)
@@ -515,20 +522,16 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                       className="link-chip-add"
                       onClick={() => setPickerOpen(true)}
                     >
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>
-                      Konum ilişkilendir
-                    </button>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12h14"/></svg>{t('Konum ilişkilendir')}</button>
                   </div>
                 </div>
               )}
             </div>
 
             <div className="modal-actions">
-              <button type="button" className="btn btn-ghost" onClick={onClose}>
-                Vazgeç
-              </button>
+              <button type="button" className="btn btn-ghost" onClick={onClose}>{t('Vazgeç')}</button>
               <button type="submit" className="btn btn-primary">
-                {editing ? 'Değişiklikleri kaydet' : 'Ekle'}
+                {editing ? t('Değişiklikleri kaydet') : t('Ekle')}
               </button>
             </div>
           </form>
@@ -536,12 +539,12 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
       </div>
       {pickerOpen && (
         <LinkPicker
-          title="Konum ilişkilendir"
+          title={t('Konum ilişkilendir')}
           items={pinPickerItems}
           selectedIds={stagedPinIdSet}
           onToggle={toggleStagedPin}
           onClose={() => setPickerOpen(false)}
-          emptyText="Henüz konum yok. Harita sekmesinden ekleyin."
+          emptyText={t('Henüz konum yok. Harita sekmesinden ekleyin.')}
         />
       )}
       {iconPickerOpen && typeKey && (

@@ -33,6 +33,7 @@ import {
 } from '../utils/graph.js';
 import { downloadGraphPng, downloadGraphSvg } from '../utils/graphExport.js';
 import './InfoTab.css';
+import { t } from '../i18n/index.jsx';
 
 const NODE_TYPES = { identifier: IdentifierNode };
 
@@ -465,26 +466,29 @@ function InfoTabInner() {
     setIdentifierPositions(positions);
     recordBatchMove(moves);
     setTimeout(() => fitView({ padding: 0.15, duration: 400 }), 60);
-    flash('Otomatik yerleşim uygulandı. Ctrl+Z ile geri alabilirsiniz.');
+    flash(t('Otomatik yerleşim uygulandı. Ctrl+Z ile geri alabilirsiniz.'));
   }, [identifiers, connections, setIdentifierPositions, recordBatchMove, fitView, flash]);
 
   const handleShortestPath = useCallback(() => {
     const sel = nodes.filter((n) => n.selected).map((n) => n.id);
     if (sel.length !== 2) {
-      flash('En kısa yol için tam olarak iki düğüm seçin (Ctrl + tıklama).');
+      flash(t('En kısa yol için tam olarak iki düğüm seçin (Ctrl + tıklama).'));
       return;
     }
     const res = shortestPath(connections, sel[0], sel[1]);
     if (!res) {
       setPathResult(null);
-      flash('Seçili iki düğüm arasında bağlantı yolu yok.');
+      flash(t('Seçili iki düğüm arasında bağlantı yolu yok.'));
       return;
     }
     setPathResult(res);
     const names = res.nodes.map((id) =>
       getDisplayLabel(identifiers.find((i) => i.id === id)),
     );
-    flash(`Yol (${res.edges.length} adım): ${names.join(' → ')}`);
+    flash(t('Yol ({0} adım): {1}', {
+      '0': res.edges.length,
+      '1': names.join(' → ')
+    }));
     logAction('En kısa yol analizi', names.join(' → '));
   }, [nodes, connections, identifiers, flash, logAction]);
 
@@ -579,10 +583,8 @@ function InfoTabInner() {
     <div className="info-tab">
       <aside className="info-sidebar">
         <div className="sidebar-header">
-          <h3>Tanımlayıcılar <span className="count-pill">{identifiers.length}</span></h3>
-          <button className="btn btn-primary btn-sm" onClick={openAdd}>
-            + Ekle
-          </button>
+          <h3>{t('Tanımlayıcılar')}{' '}<span className="count-pill">{identifiers.length}</span></h3>
+          <button className="btn btn-primary btn-sm" onClick={openAdd}>{t('+ Ekle')}</button>
         </div>
         {identifiers.length > 0 && (
           <div className="sidebar-search">
@@ -590,17 +592,16 @@ function InfoTabInner() {
               type="search"
               value={sidebarQuery}
               onChange={(e) => setSidebarQuery(e.target.value)}
-              placeholder="Filtrele…"
+              placeholder={t('Filtrele…')}
             />
           </div>
         )}
         {identifiers.length === 0 ? (
           <div className="empty-state">
-            <p>Henüz tanımlayıcı yok.</p>
-            <p className="empty-hint">
-              Şahıs, sosyal medya hesabı, telefon, e-posta, araç, IP, cüzdan
-              gibi bilgileri buradan ekleyin.
-            </p>
+            <p>{t('Henüz tanımlayıcı yok.')}</p>
+            <p className="empty-hint">{t(
+              'Şahıs, sosyal medya hesabı, telefon, e-posta, araç, IP, cüzdan gibi bilgileri buradan ekleyin.'
+            )}</p>
           </div>
         ) : (
           <ul className="identifier-list">
@@ -641,7 +642,7 @@ function InfoTabInner() {
                     className="identifier-delete"
                     onClick={(e) => handleDelete(e, id.id, display)}
                     aria-label={`${display} sil`}
-                    title="Sil"
+                    title={t('Sil')}
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
@@ -685,38 +686,31 @@ function InfoTabInner() {
         </ReactFlow>
 
         {identifiers.length > 0 && (
-          <div className="graph-toolbar" role="toolbar" aria-label="Analiz araçları">
-            <button type="button" className="tool-btn" onClick={handleAutoLayout} title="Kuvvet yönlendirmeli otomatik yerleşim">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7.3 11 16.7 6M7.3 13l9.4 5"/></svg>
-              Yerleşim
-            </button>
-            <button type="button" className={`tool-btn ${pathResult ? 'active' : ''}`} onClick={pathResult ? clearPath : handleShortestPath} title="Seçili iki düğüm arasındaki en kısa yolu bul">
+          <div className="graph-toolbar" role="toolbar" aria-label={t('Analiz araçları')}>
+            <button type="button" className="tool-btn" onClick={handleAutoLayout} title={t('Kuvvet yönlendirmeli otomatik yerleşim')}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7.3 11 16.7 6M7.3 13l9.4 5"/></svg>{t('Yerleşim')}</button>
+            <button type="button" className={`tool-btn ${pathResult ? 'active' : ''}`} onClick={pathResult ? clearPath : handleShortestPath} title={t('Seçili iki düğüm arasındaki en kısa yolu bul')}>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="5" r="2.5"/><path d="M7 17c4-1 3-9 10-10" strokeDasharray="3 3"/></svg>
-              {pathResult ? 'Yolu temizle' : 'En kısa yol'}
+              {pathResult ? 'Yolu temizle' : t('En kısa yol')}
             </button>
-            <button type="button" className={`tool-btn ${showDegree ? 'active' : ''}`} onClick={() => setShowDegree((v) => !v)} title="Her düğümün bağlantı sayısını göster">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg>
-              Merkezilik
-            </button>
-            <button type="button" className="tool-btn" onClick={() => fitView({ padding: 0.15, duration: 300 })} title="Tümünü ekrana sığdır">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
-              Sığdır
-            </button>
+            <button type="button" className={`tool-btn ${showDegree ? 'active' : ''}`} onClick={() => setShowDegree((v) => !v)} title={t('Her düğümün bağlantı sayısını göster')}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg>{t('Merkezilik')}</button>
+            <button type="button" className="tool-btn" onClick={() => fitView({ padding: 0.15, duration: 300 })} title={t('Tümünü ekrana sığdır')}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>{t('Sığdır')}</button>
             <span className="tool-sep" />
-            <button type="button" className="tool-btn" onClick={() => handleExport('png')} title="PNG olarak dışa aktar">PNG</button>
-            <button type="button" className="tool-btn" onClick={() => handleExport('svg')} title="SVG olarak dışa aktar">SVG</button>
+            <button type="button" className="tool-btn" onClick={() => handleExport('png')} title={t('PNG olarak dışa aktar')}>{t('PNG')}</button>
+            <button type="button" className="tool-btn" onClick={() => handleExport('svg')} title={t('SVG olarak dışa aktar')}>{t('SVG')}</button>
           </div>
         )}
 
         {stats && (
           <div className="graph-stats mono">
-            <span>{stats.nodes} düğüm</span>
-            <span>{stats.edges} bağlantı</span>
-            <span>{stats.clusters} küme</span>
+            <span>{stats.nodes}{' '}{t('düğüm')}</span>
+            <span>{stats.edges}{' '}{t('bağlantı')}</span>
+            <span>{stats.clusters}{' '}{t('küme')}</span>
             {stats.top && stats.top.d > 0 && (
-              <span title="En çok bağlantısı olan düğüm">
-                merkez: {getDisplayLabel(stats.top.i)} ({stats.top.d})
-              </span>
+              <span title={t('En çok bağlantısı olan düğüm')}>{t('merkez:')}{' '}{getDisplayLabel(stats.top.i)}({stats.top.d})
+                              </span>
             )}
           </div>
         )}
@@ -724,7 +718,7 @@ function InfoTabInner() {
         {toolMsg && (
           <div className="graph-toast" role="status">
             <span>{toolMsg}</span>
-            <button type="button" className="icon-btn" onClick={() => setToolMsg('')} aria-label="Kapat">
+            <button type="button" className="icon-btn" onClick={() => setToolMsg('')} aria-label={t('Kapat')}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
             </button>
           </div>
@@ -732,33 +726,30 @@ function InfoTabInner() {
 
         {identifiers.length === 0 && (
           <div className="canvas-hint">
-            <h3>Boş çalışma alanı</h3>
-            <p>
-              Soldan tanımlayıcı ekleyin ya da tuvale <strong>sağ tıklayın</strong>.
-              Eklenenler sürüklenip bağlanabilen düğümler olarak görünür.
-            </p>
+            <h3>{t('Boş çalışma alanı')}</h3>
+            <p>{t('Soldan tanımlayıcı ekleyin ya da tuvale')}{' '}<strong>{t('sağ tıklayın')}</strong>{t('. Eklenenler sürüklenip bağlanabilen düğümler olarak görünür.')}</p>
             <p className="canvas-hint-tips">
-              <strong>Tutamacı sürükleyin</strong>: başka düğüme bırakırsanız
-              bağlanır, boşluğa bırakırsanız yeni düğüm açılır.<br />
-              <strong>Çift tıklama</strong>: düğümü ya da bağlantıyı düzenler.<br />
-              <strong>Seçip</strong> <kbd>Delete</kbd> / <kbd>Backspace</kbd>: siler.
-            </p>
+              <strong>{t('Tutamacı sürükleyin')}</strong>{t(
+              ': başka düğüme bırakırsanız bağlanır, boşluğa bırakırsanız yeni düğüm açılır.'
+            )}<br />
+              <strong>{t('Çift tıklama')}</strong>{t(': düğümü ya da bağlantıyı düzenler.')}<br />
+              <strong>{t('Seçip')}</strong> <kbd>{t('Delete')}</kbd> / <kbd>{t('Backspace')}</kbd>{t(': siler.')}</p>
           </div>
         )}
 
         {identifiers.length > 0 && (
           <div className="canvas-tips" aria-hidden="true">
-            <span><kbd>Tutamaç</kbd> → yeni düğüm</span>
+            <span><kbd>{t('Tutamaç')}</kbd>{' '}{t('→ yeni düğüm')}</span>
             <span className="canvas-tips-sep">·</span>
-            <span><kbd>Sağ tık</kbd> menü</span>
+            <span><kbd>{t('Sağ tık')}</kbd>{' '}{t('menü')}</span>
             <span className="canvas-tips-sep">·</span>
-            <span><kbd>Çift tık</kbd> düzenle</span>
+            <span><kbd>{t('Çift tık')}</kbd>{' '}{t('düzenle')}</span>
             <span className="canvas-tips-sep">·</span>
-            <span><kbd>Ctrl+D</kbd> çoğalt</span>
+            <span><kbd>{t('Ctrl+D')}</kbd>{' '}{t('çoğalt')}</span>
             <span className="canvas-tips-sep">·</span>
-            <span><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd></span>
+            <span><kbd>{t('Ctrl+Z')}</kbd> / <kbd>{t('Ctrl+Y')}</kbd></span>
             <span className="canvas-tips-sep">·</span>
-            <span><kbd>Del</kbd> sil</span>
+            <span><kbd>{t('Del')}</kbd>{' '}{t('sil')}</span>
           </div>
         )}
       </div>
@@ -782,7 +773,7 @@ function InfoTabInner() {
             setEdgeModal(null);
           }}
           onDelete={() => {
-            if (!confirm('Bu bağlantı silinsin mi? Ctrl+Z ile geri alabilirsiniz.')) return;
+            if (!confirm(t('Bu bağlantı silinsin mi? Ctrl+Z ile geri alabilirsiniz.'))) return;
             deleteConnection(edgeModal.id);
             recordBatchDeleteEdges([edgeModal]);
             setEdgeModal(null);

@@ -6,6 +6,7 @@ import {
   PRIORITIES,
   fmtDateTime,
 } from '../caseModel.js';
+import { t } from '../i18n/index.jsx';
 
 /** Dosya künyesi: ad, dosya no, gizlilik, durum, öncelik, soruşturmacı, özet. */
 export default function CaseInfoModal({ onClose }) {
@@ -63,10 +64,10 @@ export default function CaseInfoModal({ onClose }) {
       >
         <div className="modal-header">
           <div>
-            <div className="modal-kicker">Künye</div>
-            <h2>Dosya bilgileri</h2>
+            <div className="modal-kicker">{t('Künye')}</div>
+            <h2>{t('Dosya bilgileri')}</h2>
           </div>
-          <button type="button" className="icon-btn" onClick={onClose} aria-label="Kapat">
+          <button type="button" className="icon-btn" onClick={onClose} aria-label={t('Kapat')}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
         </div>
@@ -74,17 +75,17 @@ export default function CaseInfoModal({ onClose }) {
         <div className="form-scroll">
           <div className="field-row">
             <div className="field grow2">
-              <label htmlFor="ci-name">Dosya adı</label>
+              <label htmlFor="ci-name">{t('Dosya adı')}</label>
               <input id="ci-name" value={draft.name} onChange={set('name')} />
             </div>
             <div className="field">
-              <label htmlFor="ci-no">Dosya no</label>
+              <label htmlFor="ci-no">{t('Dosya no')}</label>
               <input id="ci-no" className="mono" value={draft.caseNumber} onChange={set('caseNumber')} />
             </div>
           </div>
 
           <div className="field">
-            <label>Gizlilik derecesi</label>
+            <label>{t('Gizlilik derecesi')}</label>
             <div className="seg-picker">
               {CLASSIFICATIONS.map((c) => (
                 <button
@@ -106,7 +107,7 @@ export default function CaseInfoModal({ onClose }) {
 
           <div className="field-row">
             <div className="field">
-              <label htmlFor="ci-status">Durum</label>
+              <label htmlFor="ci-status">{t('Durum')}</label>
               <select id="ci-status" value={draft.status} onChange={set('status')}>
                 {CASE_STATUSES.map((s) => (
                   <option key={s.key} value={s.key}>{s.label}</option>
@@ -114,7 +115,7 @@ export default function CaseInfoModal({ onClose }) {
               </select>
             </div>
             <div className="field">
-              <label htmlFor="ci-prio">Öncelik</label>
+              <label htmlFor="ci-prio">{t('Öncelik')}</label>
               <select id="ci-prio" value={draft.priority} onChange={set('priority')}>
                 {PRIORITIES.map((s) => (
                   <option key={s.key} value={s.key}>{s.label}</option>
@@ -122,67 +123,62 @@ export default function CaseInfoModal({ onClose }) {
               </select>
             </div>
             <div className="field">
-              <label htmlFor="ci-opened">Açılış tarihi</label>
+              <label htmlFor="ci-opened">{t('Açılış tarihi')}</label>
               <input id="ci-opened" type="date" value={draft.openedAt} onChange={set('openedAt')} />
             </div>
           </div>
 
           <div className="field-row">
             <div className="field">
-              <label htmlFor="ci-inv">Soruşturmacı / sorumlu</label>
+              <label htmlFor="ci-inv">{t('Soruşturmacı / sorumlu')}</label>
               <input id="ci-inv" value={draft.investigator} onChange={set('investigator')} />
             </div>
             <div className="field">
-              <label htmlFor="ci-unit">Birim</label>
+              <label htmlFor="ci-unit">{t('Birim')}</label>
               <input id="ci-unit" value={draft.unit} onChange={set('unit')} />
             </div>
           </div>
 
           <div className="field">
-            <label htmlFor="ci-legal">Hukuki dayanak / yetki belgesi</label>
+            <label htmlFor="ci-legal">{t('Hukuki dayanak / yetki belgesi')}</label>
             <input
               id="ci-legal"
               value={draft.legalBasis}
               onChange={set('legalBasis')}
-              placeholder="ör. Savcılık yazısı no, görev emri, sözleşme no"
+              placeholder={t('ör. Savcılık yazısı no, görev emri, sözleşme no')}
             />
           </div>
 
           <div className="field-row">
             <div className="field">
-              <label htmlFor="ci-target">Ana hedef</label>
+              <label htmlFor="ci-target">{t('Ana hedef')}</label>
               <input id="ci-target" value={draft.targetName} onChange={set('targetName')} />
             </div>
           </div>
           <div className="field">
-            <label htmlFor="ci-target-notes">Hedef notları</label>
+            <label htmlFor="ci-target-notes">{t('Hedef notları')}</label>
             <textarea id="ci-target-notes" rows={2} value={draft.targetNotes} onChange={set('targetNotes')} />
           </div>
 
           <div className="field">
-            <label htmlFor="ci-summary">Dosya özeti</label>
+            <label htmlFor="ci-summary">{t('Dosya özeti')}</label>
             <textarea
               id="ci-summary"
               rows={4}
               value={draft.summary}
               onChange={set('summary')}
-              placeholder="Soruşturmanın konusu, kapsamı ve mevcut değerlendirme…"
+              placeholder={t('Soruşturmanın konusu, kapsamı ve mevcut değerlendirme…')}
             />
           </div>
 
-          <div className="meta-line mono">
-            Oluşturma {fmtDateTime(project.createdAt)} · Son değişiklik {fmtDateTime(project.updatedAt)} · ID{' '}
+          <div className="meta-line mono">{t('Oluşturma')}{' '}{fmtDateTime(project.createdAt)}{' '}{t('· Son değişiklik')}{' '}{fmtDateTime(project.updatedAt)}{' '}{t('· ID')}{' '}
             {project.id.slice(0, 8)}
           </div>
         </div>
 
         <div className="modal-actions">
-          <button type="button" className="btn btn-ghost" onClick={onClose}>
-            Vazgeç
-          </button>
-          <button type="submit" className="btn btn-primary">
-            Kaydet
-          </button>
+          <button type="button" className="btn btn-ghost" onClick={onClose}>{t('Vazgeç')}</button>
+          <button type="submit" className="btn btn-primary">{t('Kaydet')}</button>
         </div>
       </form>
     </div>

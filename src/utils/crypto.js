@@ -9,6 +9,8 @@
  * motorunda yapılır.
  */
 
+import { t } from '../i18n/index.jsx';
+
 export const ENVELOPE_FORMAT = 'osint-case-encrypted';
 export const ENVELOPE_VERSION = 1;
 export const PBKDF2_ITERATIONS = 600000;
@@ -134,7 +136,7 @@ export async function decryptWithSession(session, envelope) {
     );
     return JSON.parse(dec.decode(pt));
   } catch {
-    const err = new Error('Parola hatalı ya da dosya bozulmuş.');
+    const err = new Error(t('Parola hatalı ya da dosya bozulmuş.'));
     err.code = 'WRONG_PASSWORD';
     throw err;
   }

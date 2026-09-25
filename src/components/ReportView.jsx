@@ -26,6 +26,7 @@ import { sha256Hex } from '../utils/crypto.js';
 import { getAnalyst } from '../utils/analyst.js';
 import { getPinColor } from '../pinColors.js';
 import './ReportView.css';
+import { t } from '../i18n/index.jsx';
 
 const SECTIONS = [
   { key: 'summary', label: 'Künye ve özet' },
@@ -115,7 +116,7 @@ function LocationSketch({ pins, connect }) {
       </g>
       <g transform={`translate(${W - 24}, 28)`}>
         <path d="M0 -14 L6 4 L0 0 L-6 4 Z" fill="#333" />
-        <text x="0" y="16" fontSize="10" textAnchor="middle" fill="#333">K</text>
+        <text x="0" y="16" fontSize="10" textAnchor="middle" fill="#333">{t('K')}</text>
       </g>
     </svg>
   );
@@ -173,7 +174,7 @@ export default function ReportView({ onClose }) {
     }
     logAction(
       'Rapor oluşturuldu',
-      `${SECTIONS.filter((s) => on(s.key)).map((s) => s.label).join(', ')} · parmak izi ${fingerprint.slice(0, 16)}…`,
+      `${SECTIONS.filter((s) => on(s.key)).map((s) => t(s.label)).join(', ')} · parmak izi ${fingerprint.slice(0, 16)}…`,
     );
     // Tarayıcı PDF dosya adını sayfa başlığından alır.
     const prevTitle = document.title;
@@ -191,7 +192,7 @@ export default function ReportView({ onClose }) {
     sectionNo += 1;
     return (
       <h2 className="rp-h2">
-        <span className="rp-no">{sectionNo}.</span> {title}
+        <span className="rp-no">{sectionNo}.</span> {t(title)}
       </h2>
     );
   };
@@ -209,20 +210,20 @@ export default function ReportView({ onClose }) {
     <div className="report-overlay">
       <div className="report-toolbar no-print">
         <div className="report-toolbar-left">
-          <strong>Rapor önizleme</strong>
-          <span className="dim">Yazdır penceresinde “PDF olarak kaydet” seçin.</span>
+          <strong>{t('Rapor önizleme')}</strong>
+          <span className="dim">{t('Yazdır penceresinde “PDF olarak kaydet” seçin.')}</span>
         </div>
         <div className="report-sections">
           {SECTIONS.map((s) => (
             <label key={s.key} className="check-row compact">
               <input type="checkbox" checked={on(s.key)} onChange={() => toggle(s.key)} />
-              <span>{s.label}</span>
+              <span>{t(s.label)}</span>
             </label>
           ))}
         </div>
         <div className="report-toolbar-right">
-          <button className="btn btn-ghost" onClick={onClose}>Kapat</button>
-          <button className="btn btn-primary" onClick={handlePrint}>Yazdır / PDF</button>
+          <button className="btn btn-ghost" onClick={onClose}>{t('Kapat')}</button>
+          <button className="btn btn-primary" onClick={handlePrint}>{t('Yazdır / PDF')}</button>
         </div>
       </div>
 
@@ -254,46 +255,46 @@ export default function ReportView({ onClose }) {
                 <td className="rp-body">
 
           <header className="rp-cover">
-            <div className="rp-kicker">İSTİHBARAT / SORUŞTURMA RAPORU</div>
+            <div className="rp-kicker">{t('İSTİHBARAT / SORUŞTURMA RAPORU')}</div>
             <h1>{project.name}</h1>
             <table className="rp-kv">
               <tbody>
-                <tr><th>Dosya no</th><td className="mono">{ci.caseNumber || '—'}</td><th>Gizlilik</th><td><b>{cls.label}</b></td></tr>
-                <tr><th>Durum</th><td>{findOption(CASE_STATUSES, ci.status)?.label ?? '—'}</td><th>Öncelik</th><td>{findOption(PRIORITIES, ci.priority)?.label ?? '—'}</td></tr>
-                <tr><th>Soruşturmacı</th><td>{ci.investigator || '—'}</td><th>Birim</th><td>{ci.unit || '—'}</td></tr>
-                <tr><th>Açılış</th><td>{ci.openedAt ? fmtDate(ci.openedAt) : fmtDate(project.createdAt)}</td><th>Ana hedef</th><td>{project.target?.name || '—'}</td></tr>
-                <tr><th>Hukuki dayanak</th><td colSpan={3}>{ci.legalBasis || '—'}</td></tr>
-                <tr><th>Rapor tarihi</th><td className="mono">{fmtDateTime(generatedAt)}</td><th>Hazırlayan</th><td>{analyst}</td></tr>
-                <tr><th>Dosya parmak izi</th><td colSpan={3} className="mono small">SHA-256 {fingerprint || '…'}</td></tr>
+                <tr><th>{t('Dosya no')}</th><td className="mono">{ci.caseNumber || '—'}</td><th>{t('Gizlilik')}</th><td><b>{cls.label}</b></td></tr>
+                <tr><th>{t('Durum')}</th><td>{findOption(CASE_STATUSES, ci.status)?.label ?? '—'}</td><th>{t('Öncelik')}</th><td>{findOption(PRIORITIES, ci.priority)?.label ?? '—'}</td></tr>
+                <tr><th>{t('Soruşturmacı')}</th><td>{ci.investigator || '—'}</td><th>{t('Birim')}</th><td>{ci.unit || '—'}</td></tr>
+                <tr><th>{t('Açılış')}</th><td>{ci.openedAt ? fmtDate(ci.openedAt) : fmtDate(project.createdAt)}</td><th>{t('Ana hedef')}</th><td>{project.target?.name || '—'}</td></tr>
+                <tr><th>{t('Hukuki dayanak')}</th><td colSpan={3}>{ci.legalBasis || '—'}</td></tr>
+                <tr><th>{t('Rapor tarihi')}</th><td className="mono">{fmtDateTime(generatedAt)}</td><th>{t('Hazırlayan')}</th><td>{analyst}</td></tr>
+                <tr><th>{t('Dosya parmak izi')}</th><td colSpan={3} className="mono small">{t('SHA-256')}{' '}{fingerprint || '…'}</td></tr>
               </tbody>
             </table>
             <div className="rp-counts">
-              <span><b>{subjects.length}</b> şahıs</span>
-              <span><b>{idents.length}</b> tanımlayıcı</span>
-              <span><b>{conns.length}</b> bağlantı</span>
-              <span><b>{pins.length}</b> konum</span>
-              <span><b>{timeline.length}</b> kronoloji kaydı</span>
-              <span><b>{evidence.length}</b> delil</span>
+              <span><b>{subjects.length}</b>{' '}{t('şahıs')}</span>
+              <span><b>{idents.length}</b>{' '}{t('tanımlayıcı')}</span>
+              <span><b>{conns.length}</b>{' '}{t('bağlantı')}</span>
+              <span><b>{pins.length}</b>{' '}{t('konum')}</span>
+              <span><b>{timeline.length}</b>{' '}{t('kronoloji kaydı')}</span>
+              <span><b>{evidence.length}</b>{' '}{t('delil')}</span>
             </div>
           </header>
 
           {on('summary') && (
             <section className="rp-section">
               {H('Dosya özeti')}
-              <p className="rp-text">{ci.summary || <i className="dim">Özet girilmemiş.</i>}</p>
+              <p className="rp-text">{ci.summary || <i className="dim">{t('Özet girilmemiş.')}</i>}</p>
               {project.target?.notes && (
                 <>
-                  <h3 className="rp-h3">Hedef notları</h3>
+                  <h3 className="rp-h3">{t('Hedef notları')}</h3>
                   <p className="rp-text">{project.target.notes}</p>
                 </>
               )}
-              <h3 className="rp-h3">Analist değerlendirmesi</h3>
+              <h3 className="rp-h3">{t('Analist değerlendirmesi')}</h3>
               <textarea
                 className="rp-assessment no-print"
                 rows={5}
                 value={assessment}
                 onChange={(e) => setAssessment(e.target.value)}
-                placeholder="Sonuç, değerlendirme ve öneriler (rapora basılır)…"
+                placeholder={t('Sonuç, değerlendirme ve öneriler (rapora basılır)…')}
               />
               <p className="rp-text print-only">{assessment || '—'}</p>
             </section>
@@ -304,7 +305,7 @@ export default function ReportView({ onClose }) {
               {H('Şahıslar')}
               <table className="rp-table">
                 <thead>
-                  <tr><th>Ad soyad</th><th>Rol</th><th>Tehdit</th><th>Kod adı</th><th>Doğum</th><th>Uyruk</th><th>Değ.</th></tr>
+                  <tr><th>{t('Ad soyad')}</th><th>{t('Rol')}</th><th>{t('Tehdit')}</th><th>{t('Kod adı')}</th><th>{t('Doğum')}</th><th>{t('Uyruk')}</th><th>{t('Değ.')}</th></tr>
                 </thead>
                 <tbody>
                   {subjects.map((s) => {
@@ -332,7 +333,7 @@ export default function ReportView({ onClose }) {
               {H('Tanımlayıcılar')}
               <table className="rp-table">
                 <thead>
-                  <tr><th>Tür</th><th>Değer</th><th>Ayrıntı</th><th>Kaynak</th><th>Değ.</th></tr>
+                  <tr><th>{t('Tür')}</th><th>{t('Değer')}</th><th>{t('Ayrıntı')}</th><th>{t('Kaynak')}</th><th>{t('Değ.')}</th></tr>
                 </thead>
                 <tbody>
                   {others.map((i) => (
@@ -353,10 +354,9 @@ export default function ReportView({ onClose }) {
             <section className="rp-section rp-break-avoid">
               {H('Bağlantı ağı şeması')}
               <div className="rp-graph" dangerouslySetInnerHTML={{ __html: graph.svg }} />
-              <p className="small dim">
-                Düz çizgi: kesin · kesikli: muhtemel · noktalı: şüpheli/teyitsiz. Köşeli parantezdeki kod
-                kaynak değerlendirmesidir.
-              </p>
+              <p className="small dim">{t(
+                'Düz çizgi: kesin · kesikli: muhtemel · noktalı: şüpheli/teyitsiz. Köşeli parantezdeki kod kaynak değerlendirmesidir.'
+              )}</p>
             </section>
           )}
 
@@ -364,7 +364,7 @@ export default function ReportView({ onClose }) {
             <section className="rp-section">
               {H('Bağlantı listesi')}
               <table className="rp-table">
-                <thead><tr><th>#</th><th>Taraf A</th><th>İlişki</th><th>Taraf B</th><th>Teyit</th></tr></thead>
+                <thead><tr><th>#</th><th>{t('Taraf A')}</th><th>{t('İlişki')}</th><th>{t('Taraf B')}</th><th>{t('Teyit')}</th></tr></thead>
                 <tbody>
                   {conns.map((c, n) => (
                     <tr key={c.id}>
@@ -372,7 +372,7 @@ export default function ReportView({ onClose }) {
                       <td>{getDisplayLabel(identById.get(c.source))}</td>
                       <td>{c.label || '—'}{c.note && <div className="small dim">{c.note}</div>}</td>
                       <td>{getDisplayLabel(identById.get(c.target))}</td>
-                      <td>{findOption(LINK_CONFIDENCE, c.confidence)?.label ?? 'Kesin (doğrulandı)'}</td>
+                      <td>{findOption(LINK_CONFIDENCE, c.confidence)?.label ?? t('Kesin (doğrulandı)')}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -385,7 +385,7 @@ export default function ReportView({ onClose }) {
               {H('Konumlar')}
               <LocationSketch pins={pins} connect={project.mapDisplay?.showPinConnections} />
               <table className="rp-table">
-                <thead><tr><th>#</th><th>Ad / adres</th><th>Koordinat</th><th>Ziyaret</th><th>İlişkili</th></tr></thead>
+                <thead><tr><th>#</th><th>{t('Ad / adres')}</th><th>{t('Koordinat')}</th><th>{t('Ziyaret')}</th><th>{t('İlişkili')}</th></tr></thead>
                 <tbody>
                   {pins.map((p, idx) => {
                     const linked = (project.pinLinks ?? [])
@@ -399,8 +399,8 @@ export default function ReportView({ onClose }) {
                       <tr key={p.id}>
                         <td className="mono">{idx + 1}</td>
                         <td><b>{p.label || '—'}</b>{p.address && <div className="small dim">{p.address}</div>}{p.notes && <div className="small">{p.notes}</div>}</td>
-                        <td className="mono small nowrap">{p.lat.toFixed(6)}<br />{p.lng.toFixed(6)}{p.radius > 0 && <div className="dim">r = {p.radius} m</div>}</td>
-                        <td className="small">{p.visitedAt || '—'}{(p.sightings?.length ?? 0) > 0 && <div className="dim">{p.sightings.length} görülme kaydı</div>}</td>
+                        <td className="mono small nowrap">{p.lat.toFixed(6)}<br />{p.lng.toFixed(6)}{p.radius > 0 && <div className="dim">{t('r =')}{' '}{p.radius}{' '}{t('m')}</div>}</td>
+                        <td className="small">{p.visitedAt || '—'}{(p.sightings?.length ?? 0) > 0 && <div className="dim">{p.sightings.length}{' '}{t('görülme kaydı')}</div>}</td>
                         <td className="small">{linked.join(', ') || '—'}</td>
                       </tr>
                     );
@@ -414,7 +414,7 @@ export default function ReportView({ onClose }) {
             <section className="rp-section">
               {H('Kronoloji')}
               <table className="rp-table">
-                <thead><tr><th>Tarih</th><th>Tür</th><th>Olay</th><th>İlgili</th><th>Değ.</th></tr></thead>
+                <thead><tr><th>{t('Tarih')}</th><th>{t('Tür')}</th><th>{t('Olay')}</th><th>{t('İlgili')}</th><th>{t('Değ.')}</th></tr></thead>
                 <tbody>
                   {timeline.map((t) => (
                     <tr key={t.id}>
@@ -434,17 +434,17 @@ export default function ReportView({ onClose }) {
             <section className="rp-section">
               {H('Deliller')}
               <table className="rp-table">
-                <thead><tr><th>No</th><th>Delil</th><th>SHA-256</th><th>Kayıt</th><th>Doğrulama</th></tr></thead>
+                <thead><tr><th>{t('No')}</th><th>{t('Delil')}</th><th>{t('SHA-256')}</th><th>{t('Kayıt')}</th><th>{t('Doğrulama')}</th></tr></thead>
                 <tbody>
                   {evidence.map((e) => {
                     const v = (e.verifications ?? []).slice(-1)[0];
                     return (
                       <tr key={e.id}>
                         <td className="mono nowrap">{e.number}</td>
-                        <td><b>{e.title || e.fileName}</b><div className="small dim">{e.fileName} · {fmtBytes(e.size)}</div>{e.source && <div className="small">Kaynak: {e.source}</div>}</td>
+                        <td><b>{e.title || e.fileName}</b><div className="small dim">{e.fileName} · {fmtBytes(e.size)}</div>{e.source && <div className="small">{t('Kaynak:')}{' '}{e.source}</div>}</td>
                         <td className="mono hash">{e.sha256}</td>
                         <td className="small">{fmtDateTime(e.addedAt)}<div className="dim">{e.addedBy}</div></td>
-                        <td className="small">{v ? `${v.ok ? 'Eşleşti' : 'EŞLEŞMEDİ'} · ${fmtDateTime(v.ts)}` : '—'}</td>
+                        <td className="small">{v ? `${v.ok ? t('Eşleşti') : t('EŞLEŞMEDİ')} · ${fmtDateTime(v.ts)}` : '—'}</td>
                       </tr>
                     );
                   })}
@@ -452,16 +452,16 @@ export default function ReportView({ onClose }) {
               </table>
               {evidence.some((e) => (e.custody?.length ?? 0) > 1) && (
                 <>
-                  <h3 className="rp-h3">Teslim zinciri</h3>
+                  <h3 className="rp-h3">{t('Teslim zinciri')}</h3>
                   <table className="rp-table">
-                    <thead><tr><th>No</th><th>Zaman</th><th>İşlem</th><th>Kişi</th><th>Not</th></tr></thead>
+                    <thead><tr><th>{t('No')}</th><th>{t('Zaman')}</th><th>{t('İşlem')}</th><th>{t('Kişi')}</th><th>{t('Not')}</th></tr></thead>
                     <tbody>
                       {evidence.flatMap((e) =>
                         (e.custody ?? []).map((c) => (
                           <tr key={c.id}>
                             <td className="mono">{e.number}</td>
                             <td className="mono small nowrap">{fmtDateTime(c.ts)}</td>
-                            <td>{c.action}</td>
+                            <td>{t(c.action)}</td>
                             <td>{c.person}</td>
                             <td className="small">{c.note}</td>
                           </tr>
@@ -490,14 +490,14 @@ export default function ReportView({ onClose }) {
             <section className="rp-section">
               {H('İşlem kaydı')}
               <table className="rp-table">
-                <thead><tr><th>#</th><th>Zaman</th><th>Analist</th><th>İşlem</th><th>Ayrıntı</th></tr></thead>
+                <thead><tr><th>#</th><th>{t('Zaman')}</th><th>{t('Analist')}</th><th>{t('İşlem')}</th><th>{t('Ayrıntı')}</th></tr></thead>
                 <tbody>
                   {log.map((l, n) => (
                     <tr key={l.id}>
                       <td className="mono dim">{n + 1}</td>
                       <td className="mono small nowrap">{fmtDateTime(l.ts)}</td>
                       <td className="small">{l.analyst}</td>
-                      <td className="small nowrap">{l.action}</td>
+                      <td className="small nowrap">{t(l.action)}</td>
                       <td className="small">{l.detail}</td>
                     </tr>
                   ))}
@@ -511,7 +511,7 @@ export default function ReportView({ onClose }) {
               {H('Değerlendirme cetveli (NATO Admiralty)')}
               <div className="rp-legend">
                 <table className="rp-table">
-                  <thead><tr><th colSpan={2}>Kaynak güvenilirliği</th></tr></thead>
+                  <thead><tr><th colSpan={2}>{t('Kaynak güvenilirliği')}</th></tr></thead>
                   <tbody>
                     {SOURCE_RELIABILITY.map((o) => {
                       const [code, ...rest] = o.label.split(' — ');
@@ -520,7 +520,7 @@ export default function ReportView({ onClose }) {
                   </tbody>
                 </table>
                 <table className="rp-table">
-                  <thead><tr><th colSpan={2}>Bilgi doğruluğu</th></tr></thead>
+                  <thead><tr><th colSpan={2}>{t('Bilgi doğruluğu')}</th></tr></thead>
                   <tbody>
                     {INFO_CREDIBILITY.map((o) => {
                       const [code, ...rest] = o.label.split(' — ');
@@ -533,14 +533,14 @@ export default function ReportView({ onClose }) {
           )}
 
           <footer className="rp-end">
-            <div>— Rapor sonu —</div>
+            <div>{t('— Rapor sonu —')}</div>
             <div className="rp-sign">
               <div>
-                <span>Hazırlayan</span>
+                <span>{t('Hazırlayan')}</span>
                 <b>{analyst}</b>
               </div>
               <div>
-                <span>İmza</span>
+                <span>{t('İmza')}</span>
                 <b>&nbsp;</b>
               </div>
             </div>

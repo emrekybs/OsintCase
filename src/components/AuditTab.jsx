@@ -4,6 +4,7 @@ import { fmtDateTime } from '../caseModel.js';
 import { sha256Hex } from '../utils/crypto.js';
 import { triggerDownload } from '../utils/projectIO.js';
 import './AuditTab.css';
+import { t } from '../i18n/index.jsx';
 
 function csvCell(v) {
   const s = String(v ?? '');
@@ -43,9 +44,9 @@ export default function AuditTab() {
 
   const exportCsv = () => {
     const lines = [
-      ['Sıra', 'Zaman (ISO)', 'Analist', 'İşlem', 'Ayrıntı'].join(';'),
+      ['Sıra', 'Zaman (ISO)', 'Analist', 'İşlem', 'Ayrıntı'].map((h) => t(h)).join(';'),
       ...log.map((l, i) =>
-        [i + 1, l.ts, l.analyst, l.action, l.detail].map(csvCell).join(';'),
+        [i + 1, l.ts, l.analyst, t(l.action), l.detail].map(csvCell).join(';'),
       ),
     ];
     const name = (project.caseInfo?.caseNumber || project.name || 'dosya').replace(/[^\w-]+/g, '_');
@@ -60,32 +61,30 @@ export default function AuditTab() {
     <div className="audit-tab">
       <div className="audit-head">
         <div>
-          <div className="modal-kicker">İşlem kaydı</div>
-          <h2>{log.length} kayıt</h2>
-          <div className="audit-digest mono" title="Kaydın tamamının SHA-256 özeti. Rapora yazılır; sonradan değişiklik olup olmadığını karşılaştırmak için kullanılır.">
-            Özet: {digest ? `${digest.slice(0, 32)}…` : '…'}
+          <div className="modal-kicker">{t('İşlem kaydı')}</div>
+          <h2>{log.length}{' '}{t('kayıt')}</h2>
+          <div className="audit-digest mono" title={t(
+            'Kaydın tamamının SHA-256 özeti. Rapora yazılır; sonradan değişiklik olup olmadığını karşılaştırmak için kullanılır.'
+          )}>{t('Özet:')}{' '}{digest ? `${digest.slice(0, 32)}…` : '…'}
           </div>
         </div>
         <div className="audit-controls">
-          <input type="search" placeholder="İşlem ya da ayrıntı ara…" value={query} onChange={(e) => setQuery(e.target.value)} />
+          <input type="search" placeholder={t('İşlem ya da ayrıntı ara…')} value={query} onChange={(e) => setQuery(e.target.value)} />
           <select value={analyst} onChange={(e) => setAnalyst(e.target.value)}>
-            <option value="">Tüm analistler</option>
+            <option value="">{t('Tüm analistler')}</option>
             {analysts.map((a) => (
               <option key={a} value={a}>{a}</option>
             ))}
           </select>
-          <button className="btn btn-secondary btn-sm" onClick={exportCsv} disabled={log.length === 0}>
-            CSV indir
-          </button>
+          <button className="btn btn-secondary btn-sm" onClick={exportCsv} disabled={log.length === 0}>{t('CSV indir')}</button>
         </div>
       </div>
 
       {log.length === 0 ? (
         <div className="timeline-empty">
-          <p>
-            Bu dosyada henüz işlem kaydı yok. (Eski sürümle oluşturulmuş dosyalarda kayıt, açıldığı andan
-            itibaren başlar.)
-          </p>
+          <p>{t(
+            'Bu dosyada henüz işlem kaydı yok. (Eski sürümle oluşturulmuş dosyalarda kayıt, açıldığı andan itibaren başlar.)'
+          )}</p>
         </div>
       ) : (
         <div className="audit-table-wrap">
@@ -93,10 +92,10 @@ export default function AuditTab() {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Zaman</th>
-                <th>Analist</th>
-                <th>İşlem</th>
-                <th>Ayrıntı</th>
+                <th>{t('Zaman')}</th>
+                <th>{t('Analist')}</th>
+                <th>{t('İşlem')}</th>
+                <th>{t('Ayrıntı')}</th>
               </tr>
             </thead>
             <tbody>
@@ -108,7 +107,7 @@ export default function AuditTab() {
                     <td className="mono dim">{idx}</td>
                     <td className="mono nowrap">{fmtDateTime(l.ts)}</td>
                     <td className="nowrap">{l.analyst}</td>
-                    <td className="nowrap">{l.action}</td>
+                    <td className="nowrap">{t(l.action)}</td>
                     <td className="wrap">{l.detail}</td>
                   </tr>
                 );
