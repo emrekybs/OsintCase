@@ -68,7 +68,7 @@ export function buildTimeline(project) {
         ref: p,
         date: s.date || '',
         time: s.time || '',
-        title: t('{0} — görülme', { 0: pinName(p, idx) }),
+        title: t('Görülme: {0}', { 0: pinName(p, idx) }),
         description: s.note ?? '',
         category: t('Görülme'),
         color: '#2b8a9e',

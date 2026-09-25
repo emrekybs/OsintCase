@@ -22,7 +22,7 @@
   width: 54px;
   height: 54px;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+  background: var(--accent);
   color: #fff;
   display: inline-flex;
   align-items: center;

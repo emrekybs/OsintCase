@@ -12,20 +12,10 @@
   justify-content: center;
   gap: 26px;
   padding: 40px;
-  background:
-    linear-gradient(var(--grid) 1px, transparent 1px) 0 0 / 28px 28px,
-    linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 28px 28px,
-    #070707;
+  background: #080808;
   border-right: 1px solid var(--border);
   color: #f1f1f1;
   overflow: hidden;
-}
-.welcome-side::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-left: 4px solid var(--accent);
-  pointer-events: none;
 }
 .welcome-side .brandmark-lg .brandmark-logo {
   width: min(320px, 70%);
@@ -42,18 +32,6 @@
 .welcome-side-text p {
   color: #9a9a9a;
   margin: 6px 0 18px;
-}
-.welcome-facts {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  font-size: 11px;
-  color: #8a8a8a;
-  line-height: 2;
-}
-.welcome-facts li::before {
-  content: '▸ ';
-  color: #d32f2f;
 }
 
 .welcome-main {
@@ -138,15 +116,6 @@
 .choice-card.active {
   border-color: var(--accent);
   background: var(--accent-soft);
-}
-.choice-card.active::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 3px;
-  height: 100%;
-  background: var(--accent);
 }
 .choice-big {
   font-size: 30px;

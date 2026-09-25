@@ -33,7 +33,7 @@ function FieldInput({ field, value, onChange, autoFocus }) {
   if (field.type === 'select') {
     return (
       <select {...common}>
-        <option value="">{t('— seçilmedi —')}</option>
+        <option value="">{t('Seçilmedi')}</option>
         {field.options.map((o) => (
           <option key={o.key} value={o.key}>
             {o.label}
@@ -380,7 +380,7 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                       value={reliability.source ?? ''}
                       onChange={(e) => setRel('source', e.target.value)}
                     >
-                      <option value="">{t('— değerlendirilmedi —')}</option>
+                      <option value="">{t('Değerlendirilmedi')}</option>
                       {SOURCE_RELIABILITY.map((o) => (
                         <option key={o.key} value={o.key}>{o.label}</option>
                       ))}
@@ -393,7 +393,7 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                       value={reliability.info ?? ''}
                       onChange={(e) => setRel('info', e.target.value)}
                     >
-                      <option value="">{t('— değerlendirilmedi —')}</option>
+                      <option value="">{t('Değerlendirilmedi')}</option>
                       {INFO_CREDIBILITY.map((o) => (
                         <option key={o.key} value={o.key}>{o.label}</option>
                       ))}

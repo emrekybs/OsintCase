@@ -141,6 +141,11 @@ export default function Landing() {
       <aside className="landing-side">
         <BrandMark size="lg" showWord={false} />
         <p className="landing-side-tag">{t('Soruşturma ve istihbarat analiz masası')}</p>
+        <ul className="side-facts">
+          <li>{t('Sunucusuz, veriler bu cihazdan çıkmaz')}</li>
+          <li>{t('AES-256-GCM dosya şifreleme')}</li>
+          <li>{t('SHA-256 delil bütünlüğü')}</li>
+        </ul>
       </aside>
 
       <section className="landing-main">
@@ -168,7 +173,7 @@ export default function Landing() {
               </form>
             ) : (
               <button type="button" className="landing-analyst-name" onClick={() => setEditingAnalyst(true)}>
-                {analyst || t('tanımlanmadı — düzenle')}
+                {analyst || t('Tanımlanmadı (düzenlemek için tıklayın)')}
               </button>
             )}
           </div>
@@ -219,7 +224,7 @@ export default function Landing() {
                         type="button"
                         className="landing-recent-item"
                         onClick={() => handleResume(r)}
-                        title={r.encrypted ? t('Şifreli kayıt — parola gerekir') : r.name}
+                        title={r.encrypted ? t('Şifreli kayıt, parola gerekir') : r.name}
                       >
                         <div className="landing-recent-body">
                           <div className="landing-recent-name">

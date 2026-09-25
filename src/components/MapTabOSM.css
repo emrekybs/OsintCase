@@ -249,13 +249,13 @@
   padding: 10px 12px 10px 14px;
   background: var(--bg-1);
   border: 1px solid var(--border-strong);
-  border-left: 3px solid var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 60%, transparent);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
   font-size: 13px;
 }
 .tile-alert.info {
-  border-left-color: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 60%, transparent);
 }
 .tile-alert > div {
   display: flex;
