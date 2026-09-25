@@ -73,4 +73,4 @@ No server, analytics or telemetry is used. Case data and evidence remain on the 
 
 ## License
 
-GPL-3.0
+[GPL-3.0](LICENSE)
