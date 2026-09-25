@@ -60,7 +60,7 @@ export default function PinInfoWindow({ pin, index, onClose, onEdit }) {
     pin.label?.trim() ||
     placeDetails?.name ||
     pin.address?.trim() ||
-    `Pin ${index}`;
+    `Konum ${index}`;
   const address = pin.address?.trim() || placeDetails?.formatted_address || '';
 
   const googleMapsUrl =
@@ -85,12 +85,12 @@ export default function PinInfoWindow({ pin, index, onClose, onEdit }) {
         displayLabel={displayLabel}
         address={address}
         externalUrl={googleMapsUrl}
-        externalLabel="Open in Google Maps"
+        externalLabel="Google Haritalar'da aç"
         onClose={onClose}
         onEdit={onEdit}
       >
         {loading && (
-          <div className="pin-info-loading">Loading place info…</div>
+          <div className="pin-info-loading">Yer bilgisi yükleniyor…</div>
         )}
 
         {placeDetails && (
@@ -122,7 +122,7 @@ export default function PinInfoWindow({ pin, index, onClose, onEdit }) {
                   }`}
                 >
                   <span className="status-dot" />
-                  {isOpenNow ? 'Open now' : 'Closed now'}
+                  {isOpenNow ? 'Şu an açık' : 'Şu an kapalı'}
                 </span>
               </div>
             )}
@@ -153,7 +153,7 @@ export default function PinInfoWindow({ pin, index, onClose, onEdit }) {
 
         {placesUnavailable && pin.placeId && (
           <div className="pin-info-section pin-info-muted small">
-            Google place details unavailable.
+            Google yer bilgisi alınamadı.
           </div>
         )}
       </PinInfoCard>

@@ -1,52 +1,140 @@
 /**
- * Definitions for every built-in identifier type plus the "custom" catch-all.
+ * Yerleşik tanımlayıcı türleri ve "özel" genel tür.
  *
- * Each type declares:
- *   - label:    human-readable name shown in the picker and badges
- *   - category: groups types in the picker (see CATEGORIES below)
- *   - glyph:    2-character abbreviation rendered inside the colored badge
- *   - color:    badge background color
- *   - fields:   array of field descriptors rendered as form inputs
+ * Her tür şunları tanımlar:
+ *   - label:    seçicide ve rozetlerde görünen ad
+ *   - category: seçicide gruplama (bkz. CATEGORIES)
+ *   - glyph:    renkli rozette gösterilen 1-2 karakter
+ *   - color:    rozet arka planı
+ *   - fields:   form alanları
  *
- * Field descriptor shape:
- *   - key:         unique key inside identifier.fields
- *   - label:       form label
- *   - type:        'text' | 'textarea' | 'url' | 'email' | 'tel' | 'number' | 'date'
- *   - placeholder: optional input placeholder
- *   - primary:     when true, this field's value is used as the list display label
- *                  and is required when saving
+ * Alan tanımı:
+ *   - key:         identifier.fields içindeki anahtar (DEĞİŞTİRMEYİN — eski
+ *                  dosyalarla uyumluluk bu anahtarlara bağlı)
+ *   - label:       form etiketi
+ *   - type:        'text' | 'textarea' | 'url' | 'email' | 'tel' | 'number' |
+ *                  'date' | 'select'
+ *   - options:     select için [{ key, label }]
+ *   - placeholder: isteğe bağlı
+ *   - primary:     true ise liste etiketi olarak kullanılır ve zorunludur
  */
+import { SUBJECT_ROLES, THREAT_LEVELS } from './caseModel.js';
 
 export const CATEGORIES = {
-  social: { label: 'Social Media', order: 1 },
-  contact: { label: 'Contact', order: 2 },
-  personal: { label: 'Personal', order: 3 },
-  vehicle: { label: 'Vehicle', order: 4 },
-  other: { label: 'Other', order: 5 },
+  personal: { label: 'Kişi', order: 1 },
+  social: { label: 'Sosyal Medya', order: 2 },
+  contact: { label: 'İletişim', order: 3 },
+  digital: { label: 'Dijital / Teknik', order: 4 },
+  finance: { label: 'Finans', order: 5 },
+  vehicle: { label: 'Araç', order: 6 },
+  other: { label: 'Diğer', order: 7 },
 };
 
 const socialNumericFields = [
-  { key: 'followers', label: 'Followers', type: 'number' },
-  { key: 'following', label: 'Following', type: 'number' },
-  { key: 'posts', label: 'Posts', type: 'number' },
+  { key: 'followers', label: 'Takipçi', type: 'number' },
+  { key: 'following', label: 'Takip edilen', type: 'number' },
+  { key: 'posts', label: 'Gönderi', type: 'number' },
 ];
 
 export const IDENTIFIER_TYPES = {
+  subject: {
+    label: 'Şahıs',
+    category: 'personal',
+    glyph: 'ŞH',
+    color: '#8c9a4f',
+    fields: [
+      { key: 'fullName', label: 'Ad soyad', type: 'text', primary: true },
+      { key: 'role', label: 'Dosyadaki rolü', type: 'select', options: SUBJECT_ROLES },
+      { key: 'threat', label: 'Tehdit seviyesi', type: 'select', options: THREAT_LEVELS },
+      { key: 'aliases', label: 'Kod adı / takma adlar', type: 'text' },
+      { key: 'dob', label: 'Doğum tarihi', type: 'date' },
+      { key: 'birthPlace', label: 'Doğum yeri', type: 'text' },
+      { key: 'nationality', label: 'Uyruk', type: 'text' },
+      { key: 'idNumber', label: 'Kimlik / pasaport no', type: 'text' },
+      { key: 'occupation', label: 'Meslek / görev', type: 'text' },
+      { key: 'description', label: 'Eşkal / tarif', type: 'textarea' },
+    ],
+  },
+  name: {
+    label: 'İsim',
+    category: 'personal',
+    glyph: 'İS',
+    color: '#3B82F6',
+    fields: [
+      { key: 'fullName', label: 'Ad soyad', type: 'text', primary: true },
+      { key: 'aliases', label: 'Takma adlar', type: 'text' },
+      { key: 'dob', label: 'Doğum tarihi', type: 'date' },
+      { key: 'gender', label: 'Cinsiyet', type: 'text' },
+    ],
+  },
+  family: {
+    label: 'Aile üyesi',
+    category: 'personal',
+    glyph: 'AÜ',
+    color: '#F59E0B',
+    fields: [
+      { key: 'name', label: 'Ad', type: 'text', primary: true },
+      { key: 'relation', label: 'Yakınlık', type: 'text', placeholder: 'Eş, anne, kardeş…' },
+      { key: 'dob', label: 'Doğum tarihi', type: 'date' },
+      { key: 'contact', label: 'İletişim', type: 'text' },
+    ],
+  },
+  address: {
+    label: 'Adres',
+    category: 'personal',
+    glyph: 'AD',
+    color: '#10B981',
+    fields: [
+      { key: 'line1', label: 'Adres', type: 'text', primary: true },
+      { key: 'line2', label: 'Daire / kapı no', type: 'text' },
+      { key: 'city', label: 'İlçe / şehir', type: 'text' },
+      { key: 'region', label: 'İl / bölge', type: 'text' },
+      { key: 'postal', label: 'Posta kodu', type: 'text' },
+      { key: 'country', label: 'Ülke', type: 'text' },
+      { key: 'context', label: 'Niteliği', type: 'text', placeholder: 'İkamet, iş yeri, eski adres…' },
+    ],
+  },
+  organization: {
+    label: 'Kuruluş / örgüt',
+    category: 'personal',
+    glyph: 'KR',
+    color: '#64748B',
+    fields: [
+      { key: 'name', label: 'Ad', type: 'text', primary: true },
+      { key: 'kind', label: 'Türü', type: 'text', placeholder: 'Şirket, dernek, grup…' },
+      { key: 'registryNo', label: 'Sicil / vergi no', type: 'text' },
+      { key: 'country', label: 'Ülke', type: 'text' },
+      { key: 'website', label: 'Web sitesi', type: 'url' },
+    ],
+  },
+  document: {
+    label: 'Kimlik belgesi',
+    category: 'personal',
+    glyph: 'KB',
+    color: '#0F766E',
+    fields: [
+      { key: 'number', label: 'Belge no', type: 'text', primary: true },
+      { key: 'docType', label: 'Belge türü', type: 'text', placeholder: 'Pasaport, kimlik, ehliyet…' },
+      { key: 'issuer', label: 'Veren makam / ülke', type: 'text' },
+      { key: 'validUntil', label: 'Geçerlilik', type: 'date' },
+    ],
+  },
+
   instagram: {
     label: 'Instagram',
     category: 'social',
     glyph: 'IG',
     color: '#E1306C',
     fields: [
-      { key: 'username', label: 'Username', type: 'text', primary: true, placeholder: '@username' },
-      { key: 'profileUrl', label: 'Profile URL', type: 'url' },
-      { key: 'displayName', label: 'Display name', type: 'text' },
-      { key: 'email', label: 'Linked email', type: 'email' },
-      { key: 'phone', label: 'Linked phone', type: 'tel' },
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: '@kullanici' },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
+      { key: 'email', label: 'Bağlı e-posta', type: 'email' },
+      { key: 'phone', label: 'Bağlı telefon', type: 'tel' },
       ...socialNumericFields,
-      { key: 'videos', label: 'Videos', type: 'number' },
-      { key: 'taggedPhotos', label: 'Tagged photos', type: 'number' },
-      { key: 'bio', label: 'Bio', type: 'textarea' },
+      { key: 'videos', label: 'Video', type: 'number' },
+      { key: 'taggedPhotos', label: 'Etiketli fotoğraf', type: 'number' },
+      { key: 'bio', label: 'Biyografi', type: 'textarea' },
     ],
   },
   facebook: {
@@ -55,12 +143,12 @@ export const IDENTIFIER_TYPES = {
     glyph: 'FB',
     color: '#1877F2',
     fields: [
-      { key: 'username', label: 'Username or handle', type: 'text', primary: true },
-      { key: 'profileUrl', label: 'Profile URL', type: 'url' },
-      { key: 'displayName', label: 'Display name', type: 'text' },
-      { key: 'email', label: 'Linked email', type: 'email' },
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
+      { key: 'email', label: 'Bağlı e-posta', type: 'email' },
       ...socialNumericFields,
-      { key: 'bio', label: 'Bio', type: 'textarea' },
+      { key: 'bio', label: 'Biyografi', type: 'textarea' },
     ],
   },
   twitter: {
@@ -69,11 +157,11 @@ export const IDENTIFIER_TYPES = {
     glyph: 'X',
     color: '#1d1d1f',
     fields: [
-      { key: 'username', label: 'Username', type: 'text', primary: true, placeholder: '@handle' },
-      { key: 'profileUrl', label: 'Profile URL', type: 'url' },
-      { key: 'displayName', label: 'Display name', type: 'text' },
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: '@kullanici' },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
       ...socialNumericFields,
-      { key: 'bio', label: 'Bio', type: 'textarea' },
+      { key: 'bio', label: 'Biyografi', type: 'textarea' },
     ],
   },
   youtube: {
@@ -82,12 +170,12 @@ export const IDENTIFIER_TYPES = {
     glyph: 'YT',
     color: '#FF0000',
     fields: [
-      { key: 'channelName', label: 'Channel name', type: 'text', primary: true },
-      { key: 'channelUrl', label: 'Channel URL', type: 'url' },
-      { key: 'handle', label: 'Handle', type: 'text', placeholder: '@handle' },
-      { key: 'subscribers', label: 'Subscribers', type: 'number' },
-      { key: 'videos', label: 'Videos', type: 'number' },
-      { key: 'bio', label: 'About', type: 'textarea' },
+      { key: 'channelName', label: 'Kanal adı', type: 'text', primary: true },
+      { key: 'channelUrl', label: 'Kanal URL', type: 'url' },
+      { key: 'handle', label: 'Kullanıcı adı', type: 'text', placeholder: '@kanal' },
+      { key: 'subscribers', label: 'Abone', type: 'number' },
+      { key: 'videos', label: 'Video', type: 'number' },
+      { key: 'bio', label: 'Hakkında', type: 'textarea' },
     ],
   },
   tiktok: {
@@ -96,12 +184,12 @@ export const IDENTIFIER_TYPES = {
     glyph: 'TT',
     color: '#000000',
     fields: [
-      { key: 'username', label: 'Username', type: 'text', primary: true, placeholder: '@username' },
-      { key: 'profileUrl', label: 'Profile URL', type: 'url' },
-      { key: 'displayName', label: 'Display name', type: 'text' },
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: '@kullanici' },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
       ...socialNumericFields,
-      { key: 'likes', label: 'Likes', type: 'number' },
-      { key: 'bio', label: 'Bio', type: 'textarea' },
+      { key: 'likes', label: 'Beğeni', type: 'number' },
+      { key: 'bio', label: 'Biyografi', type: 'textarea' },
     ],
   },
   linkedin: {
@@ -110,13 +198,13 @@ export const IDENTIFIER_TYPES = {
     glyph: 'LI',
     color: '#0A66C2',
     fields: [
-      { key: 'fullName', label: 'Full name', type: 'text', primary: true },
-      { key: 'profileUrl', label: 'Profile URL', type: 'url' },
-      { key: 'headline', label: 'Headline', type: 'text' },
-      { key: 'company', label: 'Current company', type: 'text' },
-      { key: 'role', label: 'Current role', type: 'text' },
-      { key: 'location', label: 'Location', type: 'text' },
-      { key: 'connections', label: 'Connections', type: 'number' },
+      { key: 'fullName', label: 'Ad soyad', type: 'text', primary: true },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
+      { key: 'headline', label: 'Başlık', type: 'text' },
+      { key: 'company', label: 'Şirket', type: 'text' },
+      { key: 'role', label: 'Pozisyon', type: 'text' },
+      { key: 'location', label: 'Konum', type: 'text' },
+      { key: 'connections', label: 'Bağlantı sayısı', type: 'number' },
     ],
   },
   snapchat: {
@@ -125,8 +213,8 @@ export const IDENTIFIER_TYPES = {
     glyph: 'SC',
     color: '#FFFC00',
     fields: [
-      { key: 'username', label: 'Username', type: 'text', primary: true },
-      { key: 'displayName', label: 'Display name', type: 'text' },
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
       { key: 'snapcode', label: 'Snapcode URL', type: 'url' },
     ],
   },
@@ -136,10 +224,10 @@ export const IDENTIFIER_TYPES = {
     glyph: 'RD',
     color: '#FF4500',
     fields: [
-      { key: 'username', label: 'Username', type: 'text', primary: true, placeholder: 'u/username' },
-      { key: 'profileUrl', label: 'Profile URL', type: 'url' },
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: 'u/kullanici' },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
       { key: 'karma', label: 'Karma', type: 'number' },
-      { key: 'accountAge', label: 'Account age', type: 'text', placeholder: 'e.g. 4 yrs' },
+      { key: 'accountAge', label: 'Hesap yaşı', type: 'text', placeholder: 'ör. 4 yıl' },
     ],
   },
   discord: {
@@ -148,9 +236,9 @@ export const IDENTIFIER_TYPES = {
     glyph: 'DC',
     color: '#5865F2',
     fields: [
-      { key: 'username', label: 'Username', type: 'text', primary: true },
-      { key: 'displayName', label: 'Display name', type: 'text' },
-      { key: 'userId', label: 'User ID', type: 'text' },
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
+      { key: 'userId', label: 'Kullanıcı ID', type: 'text' },
     ],
   },
   telegram: {
@@ -159,121 +247,153 @@ export const IDENTIFIER_TYPES = {
     glyph: 'TG',
     color: '#2AABEE',
     fields: [
-      { key: 'username', label: 'Username', type: 'text', primary: true, placeholder: '@username' },
-      { key: 'phone', label: 'Linked phone', type: 'tel' },
-      { key: 'displayName', label: 'Display name', type: 'text' },
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: '@kullanici' },
+      { key: 'phone', label: 'Bağlı telefon', type: 'tel' },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
+    ],
+  },
+  username: {
+    label: 'Kullanıcı adı (genel)',
+    category: 'social',
+    glyph: '@U',
+    color: '#475569',
+    fields: [
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true },
+      { key: 'platform', label: 'Platform / forum', type: 'text' },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
     ],
   },
 
   email: {
-    label: 'Email',
+    label: 'E-posta',
     category: 'contact',
     glyph: '@',
     color: '#7C4DFF',
     fields: [
-      { key: 'address', label: 'Email address', type: 'email', primary: true, placeholder: 'name@example.com' },
-      { key: 'provider', label: 'Provider', type: 'text', placeholder: 'Gmail, Outlook, ProtonMail…' },
-      { key: 'context', label: 'Context', type: 'text', placeholder: 'Work, personal, throwaway…' },
+      { key: 'address', label: 'E-posta adresi', type: 'email', primary: true, placeholder: 'ad@ornek.com' },
+      { key: 'provider', label: 'Sağlayıcı', type: 'text', placeholder: 'Gmail, Outlook, ProtonMail…' },
+      { key: 'context', label: 'Kullanım', type: 'text', placeholder: 'İş, kişisel, tek kullanımlık…' },
     ],
   },
   phone: {
-    label: 'Phone',
+    label: 'Telefon',
     category: 'contact',
     glyph: '☎',
     color: '#0EA5A0',
     fields: [
-      { key: 'number', label: 'Phone number', type: 'tel', primary: true, placeholder: '+1 555 555 5555' },
-      { key: 'carrier', label: 'Carrier', type: 'text' },
-      { key: 'lineType', label: 'Line type', type: 'text', placeholder: 'Mobile, landline, VoIP…' },
-      { key: 'country', label: 'Country', type: 'text' },
+      { key: 'number', label: 'Telefon numarası', type: 'tel', primary: true, placeholder: '+90 5xx xxx xx xx' },
+      { key: 'carrier', label: 'Operatör', type: 'text' },
+      { key: 'lineType', label: 'Hat türü', type: 'text', placeholder: 'Mobil, sabit, VoIP…' },
+      { key: 'imei', label: 'IMEI', type: 'text' },
+      { key: 'country', label: 'Ülke', type: 'text' },
     ],
   },
 
-  name: {
-    label: 'Name',
-    category: 'personal',
-    glyph: 'N',
-    color: '#3B82F6',
+  ip: {
+    label: 'IP adresi',
+    category: 'digital',
+    glyph: 'IP',
+    color: '#2563EB',
     fields: [
-      { key: 'fullName', label: 'Full name', type: 'text', primary: true },
-      { key: 'aliases', label: 'Aliases / nicknames', type: 'text' },
-      { key: 'dob', label: 'Date of birth', type: 'date' },
-      { key: 'gender', label: 'Gender', type: 'text' },
+      { key: 'ip', label: 'IP adresi', type: 'text', primary: true, placeholder: '203.0.113.7' },
+      { key: 'asn', label: 'ASN / sağlayıcı', type: 'text' },
+      { key: 'geo', label: 'Konum bilgisi', type: 'text' },
+      { key: 'seenAt', label: 'Görüldüğü tarih', type: 'date' },
     ],
   },
-  address: {
-    label: 'Address',
-    category: 'personal',
-    glyph: 'AD',
-    color: '#10B981',
+  domain: {
+    label: 'Alan adı',
+    category: 'digital',
+    glyph: 'DN',
+    color: '#1D4ED8',
     fields: [
-      { key: 'line1', label: 'Address', type: 'text', primary: true },
-      { key: 'line2', label: 'Apt / Unit', type: 'text' },
-      { key: 'city', label: 'City', type: 'text' },
-      { key: 'region', label: 'State / Region', type: 'text' },
-      { key: 'postal', label: 'Postal code', type: 'text' },
-      { key: 'country', label: 'Country', type: 'text' },
-      { key: 'context', label: 'Context', type: 'text', placeholder: 'Home, work, previous…' },
+      { key: 'domain', label: 'Alan adı', type: 'text', primary: true, placeholder: 'ornek.com' },
+      { key: 'registrar', label: 'Kayıt firması', type: 'text' },
+      { key: 'registered', label: 'Kayıt tarihi', type: 'date' },
+      { key: 'hosting', label: 'Barındırma / IP', type: 'text' },
     ],
   },
-  family: {
-    label: 'Family member',
-    category: 'personal',
-    glyph: 'FM',
-    color: '#F59E0B',
+  device: {
+    label: 'Cihaz',
+    category: 'digital',
+    glyph: 'CH',
+    color: '#334155',
     fields: [
-      { key: 'name', label: 'Name', type: 'text', primary: true },
-      { key: 'relation', label: 'Relation', type: 'text', placeholder: 'Spouse, parent, sibling…' },
-      { key: 'dob', label: 'Date of birth', type: 'date' },
-      { key: 'contact', label: 'Contact', type: 'text' },
+      { key: 'model', label: 'Marka / model', type: 'text', primary: true },
+      { key: 'serial', label: 'Seri no', type: 'text' },
+      { key: 'imei', label: 'IMEI', type: 'text' },
+      { key: 'mac', label: 'MAC adresi', type: 'text' },
+    ],
+  },
+
+  wallet: {
+    label: 'Kripto cüzdan',
+    category: 'finance',
+    glyph: '₿',
+    color: '#B45309',
+    fields: [
+      { key: 'address', label: 'Cüzdan adresi', type: 'text', primary: true },
+      { key: 'chain', label: 'Ağ', type: 'text', placeholder: 'BTC, ETH, TRON…' },
+      { key: 'exchange', label: 'Borsa / servis', type: 'text' },
+    ],
+  },
+  bankAccount: {
+    label: 'Banka hesabı',
+    category: 'finance',
+    glyph: '₺',
+    color: '#15803D',
+    fields: [
+      { key: 'iban', label: 'IBAN / hesap no', type: 'text', primary: true },
+      { key: 'bank', label: 'Banka', type: 'text' },
+      { key: 'holder', label: 'Hesap sahibi', type: 'text' },
     ],
   },
 
   vehicle: {
-    label: 'Vehicle',
+    label: 'Araç',
     category: 'vehicle',
-    glyph: 'CR',
+    glyph: 'AR',
     color: '#EF4444',
     fields: [
-      { key: 'description', label: 'Description', type: 'text', primary: true, placeholder: '2018 Honda Civic, silver' },
-      { key: 'make', label: 'Make', type: 'text' },
+      { key: 'description', label: 'Tarif', type: 'text', primary: true, placeholder: '2018 Renault Clio, gri' },
+      { key: 'make', label: 'Marka', type: 'text' },
       { key: 'model', label: 'Model', type: 'text' },
-      { key: 'year', label: 'Year', type: 'number' },
-      { key: 'color', label: 'Color', type: 'text' },
-      { key: 'owner', label: 'Registered owner', type: 'text' },
+      { key: 'year', label: 'Yıl', type: 'number' },
+      { key: 'color', label: 'Renk', type: 'text' },
+      { key: 'owner', label: 'Ruhsat sahibi', type: 'text' },
     ],
   },
   vin: {
-    label: 'VIN',
+    label: 'Şasi no (VIN)',
     category: 'vehicle',
     glyph: 'VN',
     color: '#DC2626',
     fields: [
-      { key: 'vin', label: 'VIN', type: 'text', primary: true, placeholder: '17 characters' },
-      { key: 'vehicleDescription', label: 'Vehicle description', type: 'text' },
+      { key: 'vin', label: 'Şasi no', type: 'text', primary: true, placeholder: '17 karakter' },
+      { key: 'vehicleDescription', label: 'Araç tarifi', type: 'text' },
     ],
   },
   licensePlate: {
-    label: 'License plate',
+    label: 'Plaka',
     category: 'vehicle',
-    glyph: 'LP',
+    glyph: 'PL',
     color: '#B91C1C',
     fields: [
-      { key: 'plate', label: 'Plate', type: 'text', primary: true },
-      { key: 'region', label: 'State / Region', type: 'text' },
-      { key: 'country', label: 'Country', type: 'text' },
-      { key: 'vehicleDescription', label: 'Vehicle description', type: 'text' },
+      { key: 'plate', label: 'Plaka', type: 'text', primary: true },
+      { key: 'region', label: 'İl / bölge', type: 'text' },
+      { key: 'country', label: 'Ülke', type: 'text' },
+      { key: 'vehicleDescription', label: 'Araç tarifi', type: 'text' },
     ],
   },
 
   custom: {
-    label: 'Custom',
+    label: 'Özel',
     category: 'other',
     glyph: '*',
     color: '#6B7280',
     fields: [
-      { key: 'title', label: 'Title', type: 'text', primary: true, placeholder: 'What is this identifier?' },
-      { key: 'value', label: 'Value', type: 'text' },
+      { key: 'title', label: 'Başlık', type: 'text', primary: true, placeholder: 'Bu tanımlayıcı nedir?' },
+      { key: 'value', label: 'Değer', type: 'text' },
       { key: 'url', label: 'URL', type: 'url' },
     ],
   },
@@ -304,6 +424,15 @@ export function getPrimaryFieldKey(typeKey) {
   return def.fields.find((f) => f.primary)?.key ?? def.fields[0]?.key;
 }
 
+/** Bir alan değerini okunur metne çevirir (select için etiket). */
+export function formatFieldValue(field, value) {
+  if (value == null || value === '') return '';
+  if (field?.type === 'select') {
+    return field.options?.find((o) => o.key === value)?.label ?? String(value);
+  }
+  return String(value);
+}
+
 export function getDisplayLabel(identifier) {
   if (!identifier) return '';
   const primaryKey = getPrimaryFieldKey(identifier.type);
@@ -318,23 +447,21 @@ export function getSecondaryLabel(identifier) {
   const primaryKey = getPrimaryFieldKey(identifier.type);
   for (const field of def.fields) {
     if (field.key === primaryKey) continue;
+    // Şahıs için rol/tehdit ayrı rozetlerle gösteriliyor.
+    if (identifier.type === 'subject' && field.type === 'select') continue;
     const value = identifier.fields?.[field.key];
-    if (value && String(value).trim()) return String(value);
+    if (value && String(value).trim()) return formatFieldValue(field, value);
   }
   return '';
 }
 
 /**
- * Resolve which image (if any) to use for a given identifier/type.
+ * Hangi görselin (varsa) kullanılacağını çözer.
  *
- * Resolution order:
- *   1. Explicit customIconId on the identifier (overrides the type default)
- *      - May reference a built-in icon ('instagram', 'snapchat', …)
- *        OR a user-uploaded icon stored in CustomIconsContext.
- *   2. Type default (TYPE_DEFAULT_ICON lookup)
- *   3. null → caller should render the colored glyph badge instead.
- *
- * For built-in icons, the variant (light/dark) is picked from getBuiltInSrc.
+ * Sıra:
+ *   1. Tanımlayıcıdaki customIconId (tür varsayılanını ezer)
+ *   2. Tür varsayılanı (TYPE_DEFAULT_ICON)
+ *   3. null → çağıran renkli harf rozeti çizer
  */
 export function resolveIconSrc(
   { typeKey, customIconId },

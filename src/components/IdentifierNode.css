@@ -1,7 +1,8 @@
 .id-node {
+  position: relative;
   background: var(--bg-1);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--radius-lg);
   padding: 10px 12px;
   min-width: 200px;
   max-width: 260px;
@@ -18,7 +19,71 @@
 
 .id-node.selected {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-sm);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-sm);
+}
+
+.id-node.subject {
+  border-left: 3px solid var(--role-color, var(--accent));
+}
+.id-node.on-path {
+  border-color: #c9a227;
+  box-shadow: 0 0 0 2px #c9a227;
+}
+.id-node.dimmed {
+  opacity: 0.32;
+}
+.id-node-chips {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.node-chip {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0 5px;
+  border: 1px solid;
+  border-radius: 2px;
+  line-height: 15px;
+}
+.node-chip.solid {
+  color: #fff;
+  border-color: transparent;
+}
+.id-node-degree {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-flow__edge.on-path .react-flow__edge-path {
+  stroke: #c9a227 !important;
+  stroke-width: 3 !important;
+}
+.react-flow__edge.dimmed {
+  opacity: 0.25;
+}
+.react-flow__edge-textbg {
+  fill: var(--bg-1);
+}
+.react-flow__edge-text {
+  fill: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: 10px;
 }
 
 .id-node-body {
@@ -27,10 +92,14 @@
 }
 
 .id-node-type {
-  font-size: 10px;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   color: var(--text-2);
 }
 
@@ -114,7 +183,7 @@
 .react-flow__controls {
   background: var(--bg-1);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
@@ -135,6 +204,6 @@
 .react-flow__minimap {
   background: var(--bg-2);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   overflow: hidden;
 }

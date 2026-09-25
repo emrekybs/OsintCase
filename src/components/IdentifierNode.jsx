@@ -5,6 +5,12 @@ import {
   getDisplayLabel,
   getSecondaryLabel,
 } from '../identifierTypes.js';
+import {
+  SUBJECT_ROLES,
+  THREAT_LEVELS,
+  admiraltyTone,
+  findOption,
+} from '../caseModel.js';
 import './IdentifierNode.css';
 
 const SIDES = [
@@ -14,14 +20,46 @@ const SIDES = [
   { position: Position.Left, id: 'left' },
 ];
 
+export function AdmiraltyTag({ reliability, size = 'sm' }) {
+  if (!reliability || (!reliability.source && !reliability.info)) return null;
+  const tone = admiraltyTone(reliability.source, reliability.info);
+  const code = `${reliability.source || '?'}${reliability.info || '?'}`;
+  return (
+    <span
+      className={`admiralty-tag tone-${tone} ${size}`}
+      title={`Kaynak güvenilirliği ${reliability.source || '?'} · Bilgi doğruluğu ${reliability.info || '?'}${
+        reliability.sourceNote ? ` · ${reliability.sourceNote}` : ''
+      }`}
+    >
+      {code}
+    </span>
+  );
+}
+
 export default function IdentifierNode({ data, selected }) {
   const identifier = data.identifier;
   const def = getTypeDef(identifier.type);
   const display = getDisplayLabel(identifier);
   const secondary = getSecondaryLabel(identifier);
+  const isSubject = identifier.type === 'subject';
+  const role = isSubject ? findOption(SUBJECT_ROLES, identifier.fields?.role) : null;
+  const threat = isSubject ? findOption(THREAT_LEVELS, identifier.fields?.threat) : null;
+
+  const cls = [
+    'id-node',
+    selected ? 'selected' : '',
+    isSubject ? 'subject' : '',
+    data.highlight === 'path' ? 'on-path' : '',
+    data.highlight === 'dim' ? 'dimmed' : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <div className={`id-node ${selected ? 'selected' : ''}`}>
+    <div
+      className={cls}
+      style={role ? { '--role-color': role.color } : undefined}
+    >
       {SIDES.map(({ position, id }) => (
         <Handle
           key={id}
@@ -37,10 +75,32 @@ export default function IdentifierNode({ data, selected }) {
         size="md"
       />
       <div className="id-node-body">
-        <div className="id-node-type">{def.label}</div>
+        <div className="id-node-type">
+          <span>{def.label}</span>
+          <AdmiraltyTag reliability={identifier.reliability} />
+        </div>
         <div className="id-node-label">{display}</div>
         {secondary && <div className="id-node-secondary">{secondary}</div>}
+        {(role || threat) && (
+          <div className="id-node-chips">
+            {role && (
+              <span className="node-chip" style={{ borderColor: role.color, color: role.color }}>
+                {role.label}
+              </span>
+            )}
+            {threat && threat.key !== 'yok' && (
+              <span className="node-chip solid" style={{ background: threat.color }}>
+                Tehdit: {threat.label}
+              </span>
+            )}
+          </div>
+        )}
       </div>
+      {data.showDegree && (
+        <span className="id-node-degree" title="Bağlantı sayısı">
+          {data.degree}
+        </span>
+      )}
     </div>
   );
 }

@@ -11,7 +11,7 @@
   max-height: 420px;
   background: var(--bg-1);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
   display: flex;
   flex-direction: column;
@@ -51,7 +51,7 @@
   gap: 8px;
   width: 100%;
   padding: 6px 8px;
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: transparent;
   border: 1px solid transparent;
   text-align: left;

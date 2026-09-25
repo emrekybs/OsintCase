@@ -1,34 +1,75 @@
-import { PROJECT_SCHEMA_VERSION } from './createProject.js';
+import { PROJECT_SCHEMA_VERSION, defaultCaseInfo } from './createProject.js';
+import { DEFAULT_CLASSIFICATION } from '../caseModel.js';
+import {
+  encryptWithSession,
+  isEncryptedEnvelope,
+} from './crypto.js';
 
-export function downloadProject(project) {
-  const stamped = { ...project, updatedAt: new Date().toISOString() };
-  const blob = new Blob([JSON.stringify(stamped, null, 2)], {
-    type: 'application/json',
-  });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  const safeName = (stamped.name || 'project')
+function safeFileName(name) {
+  return (name || 'dosya')
+    .normalize('NFKD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/ı/g, 'i')
     .replace(/[^a-z0-9-_]+/gi, '_')
     .toLowerCase();
+}
+
+export function triggerDownload(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
   a.href = url;
-  a.download = `${safeName}.osint.json`;
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/**
+ * Dosyayı indirir. `session` verilirse AES-256-GCM ile şifreli zarf olarak
+ * (<ad>.osint.enc.json) kaydeder; yoksa düz JSON (<ad>.osint.json).
+ */
+export async function downloadProject(project, { session } = {}) {
+  const stamped = { ...project, updatedAt: new Date().toISOString() };
+  const base = safeFileName(stamped.name);
+  if (session) {
+    const envelope = await encryptWithSession(session, stamped);
+    triggerDownload(
+      new Blob([JSON.stringify(envelope)], { type: 'application/json' }),
+      `${base}.osint.enc.json`,
+    );
+  } else {
+    triggerDownload(
+      new Blob([JSON.stringify(stamped, null, 2)], {
+        type: 'application/json',
+      }),
+      `${base}.osint.json`,
+    );
+  }
   return stamped;
 }
 
-export function readProjectFromFile(file) {
+/**
+ * Dosyayı okur. Şifreliyse { encrypted: true, envelope } döner (parola
+ * sorulması çağıranın işi); değilse { encrypted: false, project }.
+ */
+export function readProjectFile(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => {
       try {
         const parsed = JSON.parse(reader.result);
-        const validated = validateProject(parsed);
-        resolve(validated);
+        if (isEncryptedEnvelope(parsed)) {
+          resolve({ encrypted: true, envelope: parsed });
+          return;
+        }
+        resolve({ encrypted: false, project: validateProject(parsed) });
       } catch (err) {
-        reject(err);
+        reject(
+          err instanceof SyntaxError
+            ? new Error('Dosya geçerli bir JSON değil.')
+            : err,
+        );
       }
     };
     reader.onerror = () => reject(reader.error);
@@ -36,17 +77,21 @@ export function readProjectFromFile(file) {
   });
 }
 
-function validateProject(obj) {
+const arr = (v) => (Array.isArray(v) ? v : []);
+
+export function validateProject(obj) {
   if (!obj || typeof obj !== 'object') {
-    throw new Error('Project file is not a valid JSON object.');
+    throw new Error('Dosya geçerli bir JSON nesnesi değil.');
   }
   if (typeof obj.name !== 'string') {
-    throw new Error('Project file is missing a "name".');
+    throw new Error('Dosyada "name" alanı eksik.');
   }
-  if (obj.schemaVersion !== PROJECT_SCHEMA_VERSION) {
-    // Soft accept for now; future migrations can branch here.
+  if (
+    obj.schemaVersion != null &&
+    obj.schemaVersion > PROJECT_SCHEMA_VERSION
+  ) {
     console.warn(
-      `Project schemaVersion ${obj.schemaVersion} differs from current ${PROJECT_SCHEMA_VERSION}.`,
+      `Dosya şema sürümü (${obj.schemaVersion}) bu uygulamadan (${PROJECT_SCHEMA_VERSION}) yeni.`,
     );
   }
   return {
@@ -55,20 +100,30 @@ function validateProject(obj) {
     name: obj.name,
     createdAt: obj.createdAt || new Date().toISOString(),
     updatedAt: obj.updatedAt || new Date().toISOString(),
+    classification:
+      typeof obj.classification === 'string'
+        ? obj.classification
+        : DEFAULT_CLASSIFICATION,
+    caseInfo: { ...defaultCaseInfo(), openedAt: '', ...(obj.caseInfo ?? {}) },
     target: {
       name: obj.target?.name ?? '',
       notes: obj.target?.notes ?? '',
     },
-    identifiers: Array.isArray(obj.identifiers) ? obj.identifiers : [],
-    connections: Array.isArray(obj.connections) ? obj.connections : [],
-    locations: Array.isArray(obj.locations) ? obj.locations : [],
-    pinLinks: Array.isArray(obj.pinLinks) ? obj.pinLinks : [],
+    identifiers: arr(obj.identifiers),
+    connections: arr(obj.connections),
+    locations: arr(obj.locations),
+    pinLinks: arr(obj.pinLinks),
+    events: arr(obj.events),
+    evidence: arr(obj.evidence),
+    auditLog: arr(obj.auditLog),
     mapDisplay: {
       showPinConnections: !!obj.mapDisplay?.showPinConnections,
       pinConnectionColor:
         typeof obj.mapDisplay?.pinConnectionColor === 'string'
           ? obj.mapDisplay.pinConnectionColor
           : '#ef4444',
+      showRadius: obj.mapDisplay?.showRadius !== false,
+      showDensity: !!obj.mapDisplay?.showDensity,
     },
   };
 }

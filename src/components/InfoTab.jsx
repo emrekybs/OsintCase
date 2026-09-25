@@ -21,8 +21,17 @@ import {
 } from '../identifierTypes.js';
 import IdentifierBadge from './IdentifierBadge.jsx';
 import IdentifierModal from './IdentifierModal.jsx';
-import IdentifierNode from './IdentifierNode.jsx';
+import IdentifierNode, { AdmiraltyTag } from './IdentifierNode.jsx';
 import NodeCreationMenu from './NodeCreationMenu.jsx';
+import EdgeModal from './EdgeModal.jsx';
+import { LINK_CONFIDENCE, findOption } from '../caseModel.js';
+import {
+  componentCount,
+  degreeMap,
+  forceLayout,
+  shortestPath,
+} from '../utils/graph.js';
+import { downloadGraphPng, downloadGraphSvg } from '../utils/graphExport.js';
 import './InfoTab.css';
 
 const NODE_TYPES = { identifier: IdentifierNode };
@@ -54,7 +63,10 @@ function InfoTabInner() {
     updateIdentifier,
     deleteIdentifier,
     addConnection,
+    updateConnection,
     deleteConnection,
+    setIdentifierPositions,
+    logAction,
   } = useProject();
   const { theme } = useTheme();
   const { setHoveredIdentifierId, focus, consumeFocus } = useNavigation();
@@ -64,6 +76,7 @@ function InfoTabInner() {
     recordDelete,
     recordBatchDelete,
     recordMove,
+    recordBatchMove,
     recordCreateEdge,
     recordBatchDeleteEdges,
     recordCreateNodeWithEdge,
@@ -86,7 +99,25 @@ function InfoTabInner() {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [menuState, setMenuState] = useState(null);
-  const { screenToFlowPosition } = useReactFlow();
+  const { screenToFlowPosition, fitView } = useReactFlow();
+  const [edgeModal, setEdgeModal] = useState(null);
+  const [pathResult, setPathResult] = useState(null);
+  const [showDegree, setShowDegree] = useState(false);
+  const [toolMsg, setToolMsg] = useState('');
+  const [sidebarQuery, setSidebarQuery] = useState('');
+
+  const degrees = useMemo(
+    () => degreeMap(identifiers, connections),
+    [identifiers, connections],
+  );
+  const pathNodeSet = useMemo(
+    () => (pathResult ? new Set(pathResult.nodes) : null),
+    [pathResult],
+  );
+  const pathEdgeSet = useMemo(
+    () => (pathResult ? new Set(pathResult.edges) : null),
+    [pathResult],
+  );
   const [focusedIdentifierId, setFocusedIdentifierId] = useState(null);
   const sidebarRowRefs = useRef(new Map());
 
@@ -119,12 +150,21 @@ function InfoTabInner() {
           type: 'identifier',
           position:
             id.position ?? existing?.position ?? { x: 60, y: 60 },
-          data: { identifier: id },
+          data: {
+            identifier: id,
+            degree: degrees.get(id.id) ?? 0,
+            showDegree,
+            highlight: pathNodeSet
+              ? pathNodeSet.has(id.id)
+                ? 'path'
+                : 'dim'
+              : null,
+          },
           selected: existing?.selected ?? false,
         };
       });
     });
-  }, [identifiers]);
+  }, [identifiers, degrees, showDegree, pathNodeSet]);
 
   // Edges mirror project connections exactly. Dedupe by id defensively in
   // case older project state ended up with duplicate connection records.
@@ -134,17 +174,27 @@ function InfoTabInner() {
     for (const c of connections) {
       if (seen.has(c.id)) continue;
       seen.add(c.id);
+      const conf = findOption(LINK_CONFIDENCE, c.confidence);
+      const onPath = pathEdgeSet?.has(c.id);
       deduped.push({
         id: c.id,
         source: c.source,
         target: c.target,
         sourceHandle: c.sourceHandle ?? undefined,
         targetHandle: c.targetHandle ?? undefined,
-        label: c.label,
+        label: c.label || undefined,
+        className: [
+          `conf-${c.confidence ?? 'kesin'}`,
+          onPath ? 'on-path' : '',
+          pathEdgeSet && !onPath ? 'dimmed' : '',
+        ]
+          .filter(Boolean)
+          .join(' '),
+        style: conf?.dash ? { strokeDasharray: conf.dash } : undefined,
       });
     }
     setEdges(deduped);
-  }, [connections]);
+  }, [connections, pathEdgeSet]);
 
   const onNodesChange = useCallback(
     (changes) => {
@@ -338,6 +388,7 @@ function InfoTabInner() {
         fields: payload.fields,
         notes: payload.notes,
         customIconId: payload.customIconId ?? null,
+        reliability: payload.reliability ?? null,
       });
     } else {
       const created = addIdentifier(payload);
@@ -348,7 +399,7 @@ function InfoTabInner() {
 
   const handleDelete = (e, id, label) => {
     e.stopPropagation();
-    if (!confirm(`Delete "${label}"? You can press Ctrl+Z to restore.`)) return;
+    if (!confirm(`"${label}" silinsin mi? Ctrl+Z ile geri alabilirsiniz.`)) return;
     const ident = (project?.identifiers ?? []).find((i) => i.id === id);
     const conns = (project?.connections ?? []).filter(
       (c) => c.source === id || c.target === id,
@@ -397,6 +448,102 @@ function InfoTabInner() {
     return true;
   }, [nodes, identifiers, bulkAddIdentifiers, cloneRecordsWithOffset, recordBatchCreate]);
 
+
+  // ---- Analiz araçları -------------------------------------------------------
+  const flash = useCallback((msg) => {
+    setToolMsg(msg);
+  }, []);
+
+  const handleAutoLayout = useCallback(() => {
+    if (identifiers.length < 2) return;
+    const positions = forceLayout(identifiers, connections);
+    const moves = identifiers.map((i) => ({
+      id: i.id,
+      from: i.position ? { ...i.position } : null,
+      to: positions[i.id],
+    }));
+    setIdentifierPositions(positions);
+    recordBatchMove(moves);
+    setTimeout(() => fitView({ padding: 0.15, duration: 400 }), 60);
+    flash('Otomatik yerleşim uygulandı. Ctrl+Z ile geri alabilirsiniz.');
+  }, [identifiers, connections, setIdentifierPositions, recordBatchMove, fitView, flash]);
+
+  const handleShortestPath = useCallback(() => {
+    const sel = nodes.filter((n) => n.selected).map((n) => n.id);
+    if (sel.length !== 2) {
+      flash('En kısa yol için tam olarak iki düğüm seçin (Ctrl + tıklama).');
+      return;
+    }
+    const res = shortestPath(connections, sel[0], sel[1]);
+    if (!res) {
+      setPathResult(null);
+      flash('Seçili iki düğüm arasında bağlantı yolu yok.');
+      return;
+    }
+    setPathResult(res);
+    const names = res.nodes.map((id) =>
+      getDisplayLabel(identifiers.find((i) => i.id === id)),
+    );
+    flash(`Yol (${res.edges.length} adım): ${names.join(' → ')}`);
+    logAction('En kısa yol analizi', names.join(' → '));
+  }, [nodes, connections, identifiers, flash, logAction]);
+
+  const clearPath = useCallback(() => {
+    setPathResult(null);
+    setToolMsg('');
+  }, []);
+
+  const handleExport = useCallback(
+    async (kind) => {
+      if (!project) return;
+      const opts = { theme: 'light', highlight: pathResult };
+      const ok =
+        kind === 'png'
+          ? await downloadGraphPng(project, opts)
+          : downloadGraphSvg(project, opts);
+      if (ok) logAction('Bağlantı ağı dışa aktarıldı', kind.toUpperCase());
+    },
+    [project, pathResult, logAction],
+  );
+
+  const onEdgeDoubleClick = useCallback(
+    (_e, edge) => {
+      const c = connections.find((x) => x.id === edge.id);
+      if (c) setEdgeModal(c);
+    },
+    [connections],
+  );
+
+  const stats = useMemo(() => {
+    if (identifiers.length === 0) return null;
+    let top = null;
+    for (const i of identifiers) {
+      const d = degrees.get(i.id) ?? 0;
+      if (!top || d > top.d) top = { i, d };
+    }
+    return {
+      nodes: identifiers.length,
+      edges: connections.length,
+      clusters: componentCount(identifiers, connections),
+      top,
+    };
+  }, [identifiers, connections, degrees]);
+
+  const filteredIdentifiers = useMemo(() => {
+    const q = sidebarQuery.trim().toLocaleLowerCase('tr');
+    if (!q) return identifiers;
+    return identifiers.filter((i) => {
+      const hay = [
+        getTypeDef(i.type).label,
+        ...Object.values(i.fields ?? {}),
+        i.notes,
+      ]
+        .join(' ')
+        .toLocaleLowerCase('tr');
+      return hay.includes(q);
+    });
+  }, [identifiers, sidebarQuery]);
+
   // ---- Keyboard shortcuts ----------------------------------------------------
   useEffect(() => {
     const handler = (e) => {
@@ -404,7 +551,8 @@ function InfoTabInner() {
       const el = document.activeElement;
       const tag = el?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || el?.isContentEditable) return;
-      if (modalState || menuState) return;
+      if (modalState || menuState || edgeModal) return;
+      if (e.key === 'Escape' && pathResult) { clearPath(); return; }
       const meta = e.metaKey || e.ctrlKey;
       if (!meta) return;
       const k = e.key.toLowerCase();
@@ -424,29 +572,39 @@ function InfoTabInner() {
   }, [
     undo, redo,
     handleCopySelected, handlePaste, handleDuplicateSelected,
-    modalState, menuState,
+    modalState, menuState, edgeModal, pathResult, clearPath,
   ]);
 
   return (
     <div className="info-tab">
       <aside className="info-sidebar">
         <div className="sidebar-header">
-          <h3>Identifiers</h3>
+          <h3>Tanımlayıcılar <span className="count-pill">{identifiers.length}</span></h3>
           <button className="btn btn-primary btn-sm" onClick={openAdd}>
-            + Add
+            + Ekle
           </button>
         </div>
+        {identifiers.length > 0 && (
+          <div className="sidebar-search">
+            <input
+              type="search"
+              value={sidebarQuery}
+              onChange={(e) => setSidebarQuery(e.target.value)}
+              placeholder="Filtrele…"
+            />
+          </div>
+        )}
         {identifiers.length === 0 ? (
           <div className="empty-state">
-            <p>No identifiers yet.</p>
+            <p>Henüz tanımlayıcı yok.</p>
             <p className="empty-hint">
-              Add social profiles, phones, emails, names, vehicles, and custom
-              fields here.
+              Şahıs, sosyal medya hesabı, telefon, e-posta, araç, IP, cüzdan
+              gibi bilgileri buradan ekleyin.
             </p>
           </div>
         ) : (
           <ul className="identifier-list">
-            {identifiers.map((id) => {
+            {filteredIdentifiers.map((id) => {
               const def = getTypeDef(id.type);
               const display = getDisplayLabel(id);
               const secondary = getSecondaryLabel(id);
@@ -469,7 +627,10 @@ function InfoTabInner() {
                     size="md"
                   />
                   <div className="identifier-body">
-                    <div className="identifier-type">{def.label}</div>
+                    <div className="identifier-type">
+                      {def.label}
+                      <AdmiraltyTag reliability={id.reliability} />
+                    </div>
                     <div className="identifier-label">{display}</div>
                     {secondary && (
                       <div className="identifier-secondary">{secondary}</div>
@@ -479,8 +640,8 @@ function InfoTabInner() {
                     type="button"
                     className="identifier-delete"
                     onClick={(e) => handleDelete(e, id.id, display)}
-                    aria-label={`Delete ${display}`}
-                    title="Delete"
+                    aria-label={`${display} sil`}
+                    title="Sil"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
@@ -505,6 +666,8 @@ function InfoTabInner() {
           onNodeDragStart={onNodeDragStart}
           onNodeDragStop={onNodeDragStop}
           onNodeDoubleClick={onNodeDoubleClick}
+          onEdgeDoubleClick={onEdgeDoubleClick}
+          onPaneClick={() => pathResult && clearPath()}
           onPaneContextMenu={onPaneContextMenu}
           connectionMode="loose"
           defaultEdgeOptions={DEFAULT_EDGE_OPTIONS}
@@ -521,35 +684,81 @@ function InfoTabInner() {
           <MiniMap pannable zoomable />
         </ReactFlow>
 
+        {identifiers.length > 0 && (
+          <div className="graph-toolbar" role="toolbar" aria-label="Analiz araçları">
+            <button type="button" className="tool-btn" onClick={handleAutoLayout} title="Kuvvet yönlendirmeli otomatik yerleşim">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7.3 11 16.7 6M7.3 13l9.4 5"/></svg>
+              Yerleşim
+            </button>
+            <button type="button" className={`tool-btn ${pathResult ? 'active' : ''}`} onClick={pathResult ? clearPath : handleShortestPath} title="Seçili iki düğüm arasındaki en kısa yolu bul">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="5" r="2.5"/><path d="M7 17c4-1 3-9 10-10" strokeDasharray="3 3"/></svg>
+              {pathResult ? 'Yolu temizle' : 'En kısa yol'}
+            </button>
+            <button type="button" className={`tool-btn ${showDegree ? 'active' : ''}`} onClick={() => setShowDegree((v) => !v)} title="Her düğümün bağlantı sayısını göster">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M12 3v6M12 15v6M3 12h6M15 12h6"/></svg>
+              Merkezilik
+            </button>
+            <button type="button" className="tool-btn" onClick={() => fitView({ padding: 0.15, duration: 300 })} title="Tümünü ekrana sığdır">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+              Sığdır
+            </button>
+            <span className="tool-sep" />
+            <button type="button" className="tool-btn" onClick={() => handleExport('png')} title="PNG olarak dışa aktar">PNG</button>
+            <button type="button" className="tool-btn" onClick={() => handleExport('svg')} title="SVG olarak dışa aktar">SVG</button>
+          </div>
+        )}
+
+        {stats && (
+          <div className="graph-stats mono">
+            <span>{stats.nodes} düğüm</span>
+            <span>{stats.edges} bağlantı</span>
+            <span>{stats.clusters} küme</span>
+            {stats.top && stats.top.d > 0 && (
+              <span title="En çok bağlantısı olan düğüm">
+                merkez: {getDisplayLabel(stats.top.i)} ({stats.top.d})
+              </span>
+            )}
+          </div>
+        )}
+
+        {toolMsg && (
+          <div className="graph-toast" role="status">
+            <span>{toolMsg}</span>
+            <button type="button" className="icon-btn" onClick={() => setToolMsg('')} aria-label="Kapat">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        )}
+
         {identifiers.length === 0 && (
           <div className="canvas-hint">
-            <h3>Empty canvas</h3>
+            <h3>Boş çalışma alanı</h3>
             <p>
-              Add identifiers from the sidebar, or <strong>right-click</strong>{' '}
-              on the canvas to add one here. They'll appear as nodes you can
-              drag and connect.
+              Soldan tanımlayıcı ekleyin ya da tuvale <strong>sağ tıklayın</strong>.
+              Eklenenler sürüklenip bağlanabilen düğümler olarak görünür.
             </p>
             <p className="canvas-hint-tips">
-              <strong>Drag a handle</strong> to another node to connect them, or
-              to empty space to add a new node.<br />
-              <strong>Double-click</strong> a node to edit.<br />
-              <strong>Select</strong> and press <kbd>Delete</kbd> /{' '}
-              <kbd>Backspace</kbd> to remove a node or edge.
+              <strong>Tutamacı sürükleyin</strong>: başka düğüme bırakırsanız
+              bağlanır, boşluğa bırakırsanız yeni düğüm açılır.<br />
+              <strong>Çift tıklama</strong>: düğümü ya da bağlantıyı düzenler.<br />
+              <strong>Seçip</strong> <kbd>Delete</kbd> / <kbd>Backspace</kbd>: siler.
             </p>
           </div>
         )}
 
         {identifiers.length > 0 && (
           <div className="canvas-tips" aria-hidden="true">
-            <span><kbd>Drag handle</kbd> → new node</span>
+            <span><kbd>Tutamaç</kbd> → yeni düğüm</span>
             <span className="canvas-tips-sep">·</span>
-            <span><kbd>Right-click</kbd> menu</span>
+            <span><kbd>Sağ tık</kbd> menü</span>
             <span className="canvas-tips-sep">·</span>
-            <span><kbd>⌘D</kbd> duplicate</span>
+            <span><kbd>Çift tık</kbd> düzenle</span>
             <span className="canvas-tips-sep">·</span>
-            <span><kbd>⌘Z</kbd> / <kbd>⌘Y</kbd></span>
+            <span><kbd>Ctrl+D</kbd> çoğalt</span>
             <span className="canvas-tips-sep">·</span>
-            <span><kbd>Del</kbd> remove</span>
+            <span><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd></span>
+            <span className="canvas-tips-sep">·</span>
+            <span><kbd>Del</kbd> sil</span>
           </div>
         )}
       </div>
@@ -559,6 +768,25 @@ function InfoTabInner() {
           initial={modalState.initial}
           onClose={closeModal}
           onSubmit={handleSubmit}
+        />
+      )}
+
+      {edgeModal && (
+        <EdgeModal
+          connection={edgeModal}
+          source={identifiers.find((i) => i.id === edgeModal.source)}
+          target={identifiers.find((i) => i.id === edgeModal.target)}
+          onClose={() => setEdgeModal(null)}
+          onSave={(patch) => {
+            updateConnection(edgeModal.id, patch);
+            setEdgeModal(null);
+          }}
+          onDelete={() => {
+            if (!confirm('Bu bağlantı silinsin mi? Ctrl+Z ile geri alabilirsiniz.')) return;
+            deleteConnection(edgeModal.id);
+            recordBatchDeleteEdges([edgeModal]);
+            setEdgeModal(null);
+          }}
         />
       )}
 

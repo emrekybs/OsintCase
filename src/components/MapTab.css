@@ -105,7 +105,7 @@
 .pac-container {
   background: var(--bg-1) !important;
   border: 1px solid var(--border) !important;
-  border-radius: 10px !important;
+  border-radius: var(--radius) !important;
   box-shadow: var(--shadow-lg) !important;
   margin-top: 6px !important;
   font-family: inherit !important;
@@ -183,7 +183,7 @@
   align-items: center;
   gap: 6px;
   padding: 5px 10px;
-  border-radius: 6px;
+  border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--bg-2);
   color: var(--text-1);
@@ -255,7 +255,7 @@
   align-items: center;
   gap: 10px;
   padding: 9px 10px;
-  border-radius: 8px;
+  border-radius: var(--radius);
   cursor: pointer;
   margin-bottom: 3px;
   position: relative;
@@ -368,7 +368,7 @@
 .pin-index {
   width: 26px;
   height: 26px;
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: var(--accent);
   color: #fff;
   font-size: 12px;
@@ -443,7 +443,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: var(--radius);
   color: var(--text-2);
   opacity: 0;
   transition: opacity 0.12s ease, background 0.12s ease, color 0.12s ease;
@@ -478,7 +478,7 @@
 .map-settings-panel {
   background: var(--bg-1);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   width: 100%;
   max-width: 560px;
@@ -506,7 +506,7 @@
   padding: 8px 12px;
   background: var(--bg-2);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-size: 13px;
 }
 
@@ -564,7 +564,7 @@
   padding: 3px;
   background: var(--bg-2);
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: var(--radius);
   gap: 2px;
 }
 
@@ -576,7 +576,7 @@
   color: var(--text-1);
   font-family: inherit;
   cursor: pointer;
-  border-radius: 7px;
+  border-radius: var(--radius);
   transition: background 0.12s ease, color 0.12s ease;
 }
 

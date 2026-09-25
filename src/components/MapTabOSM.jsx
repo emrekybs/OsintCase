@@ -4,6 +4,7 @@ import {
   TileLayer,
   Marker,
   Polyline,
+  Circle,
   Popup,
   useMap,
   useMapEvents,
@@ -17,6 +18,13 @@ import { useNavigation } from '../context/NavigationContext.jsx';
 import { getPinColor, PIN_COLORS } from '../pinColors.js';
 import { getMapIconSrc } from '../mapIcons.js';
 import PinModal from './PinModal.jsx';
+import {
+  DENSITY_COLOR,
+  RADIUS_COLOR,
+  densityOpacity,
+  densityRadius,
+  pinWeights,
+} from '../utils/mapUtils.js';
 import PinInfoCard from './PinInfoCard.jsx';
 import ClearAllDataButton from './ClearAllDataButton.jsx';
 import './MapTab.css';
@@ -28,12 +36,13 @@ const DEFAULT_ZOOM = 2;
 const DOUBLE_CLICK_MS = 300;
 
 function pinDisplayLabel(pin) {
-  return pin.label?.trim() || pin.address?.trim() || 'Unnamed pin';
+  return pin.label?.trim() || pin.address?.trim() || 'Adsız konum';
 }
 
 function pinSecondaryLabel(pin) {
-  if (pin.label && pin.address) return pin.address;
-  return `${pin.lat.toFixed(4)}, ${pin.lng.toFixed(4)}`;
+  const extra = pin.sightings?.length ? ` · ${pin.sightings.length} görülme` : '';
+  if (pin.label && pin.address) return pin.address + extra;
+  return `${pin.lat.toFixed(4)}, ${pin.lng.toFixed(4)}${extra}`;
 }
 
 /**
@@ -59,7 +68,7 @@ export default function MapTabOSM({ visible = true }) {
     useProject();
   const { theme } = useTheme();
   const { mapProvider, setMapProvider } = useAppConfig();
-  const { hoveredIdentifierId } = useNavigation();
+  const { hoveredIdentifierId, focus, consumeFocus } = useNavigation();
   const [showSettings, setShowSettings] = useState(false);
   const pins = useMemo(() => project?.locations ?? [], [project?.locations]);
   const pinLinks = useMemo(
@@ -85,6 +94,23 @@ export default function MapTabOSM({ visible = true }) {
   const [selectedPinId, setSelectedPinId] = useState(null);
   const lastMarkerClickRef = useRef({ id: null, time: 0 });
   const pendingPanRef = useRef(null);
+
+  const weights = useMemo(() => pinWeights(project), [project]);
+  const maxWeight = useMemo(
+    () => Math.max(1, ...Array.from(weights.values())),
+    [weights],
+  );
+
+  // Başka sekmeden (kronoloji, delil) bir konuma gidildiğinde odaklan.
+  useEffect(() => {
+    if (!focus || focus.kind !== 'pin') return;
+    const pin = pins.find((p) => p.id === focus.id);
+    if (pin) {
+      pendingPanRef.current = { lat: pin.lat, lng: pin.lng };
+      setSelectedPinId(pin.id);
+    }
+    consumeFocus(focus.token);
+  }, [focus, pins, consumeFocus]);
 
   const selectedPin = useMemo(
     () => pins.find((p) => p.id === selectedPinId) ?? null,
@@ -169,12 +195,12 @@ export default function MapTabOSM({ visible = true }) {
     <div className="map-tab">
       <aside className="map-sidebar">
         <div className="sidebar-header">
-          <h3>Locations</h3>
+          <h3>Konumlar <span className="count-pill">{pins.length}</span></h3>
           <button
             className="icon-btn"
             onClick={() => setShowSettings(true)}
-            title="Map settings"
-            aria-label="Map settings"
+            title="Harita ayarları"
+            aria-label="Harita ayarları"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="12" cy="12" r="3" />
@@ -196,7 +222,25 @@ export default function MapTabOSM({ visible = true }) {
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="3 3">
               <line x1="3" y1="20" x2="21" y2="4" />
             </svg>
-            Connect pins
+            Rotayı çiz
+          </button>
+          <button
+            type="button"
+            className={`map-connect-toggle ${mapDisplay.showRadius !== false ? 'active' : ''}`}
+            onClick={() => updateMapDisplay({ showRadius: mapDisplay.showRadius === false })}
+            title="Konumlara girilen yarıçap halkalarını göster"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" strokeDasharray="3 3"/><circle cx="12" cy="12" r="2"/></svg>
+            Yarıçap halkaları
+          </button>
+          <button
+            type="button"
+            className={`map-connect-toggle ${mapDisplay.showDensity ? 'active' : ''}`}
+            onClick={() => updateMapDisplay({ showDensity: !mapDisplay.showDensity })}
+            title="Görülme, ziyaret ve olay sayısına göre yoğunluk (yaşam örüntüsü)"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" opacity="0.8"><circle cx="9" cy="10" r="6" opacity="0.35"/><circle cx="15" cy="14" r="5" opacity="0.5"/><circle cx="14" cy="9" r="2.5"/></svg>
+            Yoğunluk
           </button>
           {mapDisplay.showPinConnections && (
             <div className="map-connect-colors">
@@ -213,7 +257,7 @@ export default function MapTabOSM({ visible = true }) {
                     onClick={() =>
                       updateMapDisplay({ pinConnectionColor: c.bg })
                     }
-                    aria-label={`Line color: ${c.name}`}
+                    aria-label={`Çizgi rengi: ${c.name}`}
                     title={c.name}
                   />
                 );
@@ -224,8 +268,8 @@ export default function MapTabOSM({ visible = true }) {
 
         {pins.length === 0 ? (
           <div className="empty-state">
-            <p>No pinned locations yet.</p>
-            <p className="empty-hint">Click anywhere on the map to drop a pin.</p>
+            <p>Henüz konum yok.</p>
+            <p className="empty-hint">Haritada herhangi bir yere tıklayarak konum ekleyin.</p>
           </div>
         ) : (
           <ul className="pin-list">
@@ -283,12 +327,12 @@ export default function MapTabOSM({ visible = true }) {
                     className="pin-delete"
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (confirm(`Delete "${pinDisplayLabel(pin)}"?`)) {
+                      if (confirm(`"${pinDisplayLabel(pin)}" silinsin mi?`)) {
                         deletePin(pin.id);
                       }
                     }}
-                    aria-label="Delete pin"
-                    title="Delete pin"
+                    aria-label="Konumu sil"
+                    title="Konumu sil"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
@@ -317,6 +361,41 @@ export default function MapTabOSM({ visible = true }) {
           <ClickToPin onClick={handleMapClick} disabled={!!editingPin} />
           <PanController pendingPanRef={pendingPanRef} />
           <InvalidateOnVisible visible={visible} />
+          {mapDisplay.showDensity &&
+            pins.map((p) => {
+              const w = weights.get(p.id) ?? 1;
+              return (
+                <Circle
+                  key={`d-${p.id}`}
+                  center={[p.lat, p.lng]}
+                  radius={densityRadius(w)}
+                  interactive={false}
+                  pathOptions={{
+                    stroke: false,
+                    fillColor: DENSITY_COLOR,
+                    fillOpacity: densityOpacity(w, maxWeight),
+                  }}
+                />
+              );
+            })}
+          {mapDisplay.showRadius !== false &&
+            pins
+              .filter((p) => p.radius > 0)
+              .map((p) => (
+                <Circle
+                  key={`r-${p.id}`}
+                  center={[p.lat, p.lng]}
+                  radius={Number(p.radius)}
+                  interactive={false}
+                  pathOptions={{
+                    color: RADIUS_COLOR,
+                    weight: 1.5,
+                    dashArray: '6 5',
+                    fillColor: RADIUS_COLOR,
+                    fillOpacity: 0.06,
+                  }}
+                />
+              ))}
           {pins.map((pin, idx) => (
             <PinMarker
               key={pin.id}
@@ -345,11 +424,11 @@ export default function MapTabOSM({ visible = true }) {
                 displayLabel={
                   selectedPin.label?.trim() ||
                   selectedPin.address?.trim() ||
-                  `Pin ${selectedPinIndex}`
+                  `Konum ${selectedPinIndex}`
                 }
                 address={selectedPin.address?.trim() || ''}
                 externalUrl={`https://www.openstreetmap.org/?mlat=${selectedPin.lat}&mlon=${selectedPin.lng}#map=17/${selectedPin.lat}/${selectedPin.lng}`}
-                externalLabel="Open in OpenStreetMap"
+                externalLabel="OpenStreetMap'te aç"
                 onClose={() => setSelectedPinId(null)}
                 onEdit={() => {
                   setSelectedPinId(null);
@@ -405,12 +484,12 @@ export default function MapTabOSM({ visible = true }) {
             >
               <div className="map-settings">
                 <div className="modal-header">
-                  <h2>Map settings</h2>
+                  <h2>Harita ayarları</h2>
                   <button
                     type="button"
                     className="icon-btn"
                     onClick={() => setShowSettings(false)}
-                    aria-label="Close"
+                    aria-label="Kapat"
                   >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
                   </button>
@@ -418,13 +497,13 @@ export default function MapTabOSM({ visible = true }) {
 
                 <div className="settings-current">
                   <div className="settings-row">
-                    <span className="settings-label">Map provider</span>
+                    <span className="settings-label">Harita sağlayıcısı</span>
                     <span className="settings-value">OpenStreetMap</span>
                   </div>
                   <p className="settings-hint">
-                    Using OpenStreetMap tiles and Nominatim search — no API
-                    key required. Tile rendering and geocoding still need an
-                    internet connection.
+                    OpenStreetMap karoları ve Nominatim araması kullanılıyor;
+                    API anahtarı gerekmez. Harita karoları ve adres araması
+                    için internet bağlantısı gerekir.
                   </p>
                   <button
                     type="button"
@@ -434,7 +513,7 @@ export default function MapTabOSM({ visible = true }) {
                       setShowSettings(false);
                     }}
                   >
-                    Switch to Google Maps
+                    Google Maps'e geç
                   </button>
                 </div>
 
@@ -624,7 +703,7 @@ function NominatimSearch({ onSelect }) {
         type="text"
         autoComplete="off"
         spellCheck="false"
-        placeholder="Search OpenStreetMap…"
+        placeholder="OpenStreetMap'te ara…"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => results.length && setOpen(true)}
@@ -635,7 +714,7 @@ function NominatimSearch({ onSelect }) {
           type="button"
           className="map-searchbox-clear"
           onClick={() => setQuery('')}
-          title="Clear"
+          title="Temizle"
         >
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M18 6 6 18M6 6l12 12" />
@@ -645,7 +724,7 @@ function NominatimSearch({ onSelect }) {
       {open && (results.length > 0 || loading) && (
         <ul className="osm-search-results">
           {loading && results.length === 0 && (
-            <li className="osm-search-loading">Searching…</li>
+            <li className="osm-search-loading">Aranıyor…</li>
           )}
           {results.map((r) => (
             <li key={r.place_id}>

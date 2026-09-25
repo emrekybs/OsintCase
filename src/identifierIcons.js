@@ -38,6 +38,12 @@ import vinBlack from './images/node_icons/vin-black.png';
 import vinWhite from './images/node_icons/vin-white.png';
 import whatsappIcon from './images/node_icons/social.png';
 import youtubeIcon from './images/node_icons/youtube.png';
+import emailBlack from './images/node_icons/email-black.png';
+import emailWhite from './images/node_icons/email-white.png';
+import homeBlack from './images/node_icons/home-black.png';
+import homeWhite from './images/node_icons/home-white.png';
+import locationBlack from './images/node_icons/location-black.png';
+import locationWhite from './images/node_icons/location-white.png';
 
 export const BUILT_IN_ICONS = {
   instagram: { name: 'Instagram', src: instagramIcon },
@@ -54,20 +60,23 @@ export const BUILT_IN_ICONS = {
   google: { name: 'Google', src: googleIcon },
   spotify: { name: 'Spotify', src: spotifyIcon },
   whatsapp: { name: 'WhatsApp', src: whatsappIcon },
-  phone: { name: 'Phone', light: phoneDark, dark: phoneLight },
-  family: { name: 'Family', light: familyBlack, dark: familyWhite },
+  phone: { name: 'Telefon', light: phoneDark, dark: phoneLight },
+  family: { name: 'Aile', light: familyBlack, dark: familyWhite },
   familyPerson: {
-    name: 'Family (person)',
+    name: 'Aile (kişi)',
     light: familyPersonDark,
     dark: familyPersonLight,
   },
-  vehicle: { name: 'Vehicle', light: vehicleBlack, dark: vehicleWhite },
-  vin: { name: 'VIN', light: vinBlack, dark: vinWhite },
+  vehicle: { name: 'Araç', light: vehicleBlack, dark: vehicleWhite },
+  vin: { name: 'Şasi no', light: vinBlack, dark: vinWhite },
   licensePlate: {
-    name: 'License plate',
+    name: 'Plaka',
     light: licensePlateBlack,
     dark: licensePlateWhite,
   },
+  email: { name: 'E-posta', light: emailBlack, dark: emailWhite },
+  home: { name: 'Ev / adres', light: homeBlack, dark: homeWhite },
+  location: { name: 'Konum', light: locationBlack, dark: locationWhite },
 };
 
 /** When an identifier of this type has no `customIconId`, fall back to this built-in icon. */
@@ -86,6 +95,8 @@ export const TYPE_DEFAULT_ICON = {
   vehicle: 'vehicle',
   vin: 'vin',
   licensePlate: 'licensePlate',
+  email: 'email',
+  address: 'home',
 };
 
 /**

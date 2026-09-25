@@ -258,6 +258,18 @@ export function NodeHistoryProvider({ children }) {
     [pushAction],
   );
 
+  // Toplu konum değişikliği (otomatik yerleşim) — tek geri alma adımı.
+  const recordBatchMove = useCallback(
+    (moves) => {
+      const actions = (moves ?? [])
+        .filter((m) => m.from && m.to && (m.from.x !== m.to.x || m.from.y !== m.to.y))
+        .map((m) => buildMoveAction(m.id, m.from, m.to));
+      if (actions.length === 0) return;
+      pushAction(buildCompoundAction(actions));
+    },
+    [pushAction],
+  );
+
   const recordCreateEdge = useCallback(
     (connection) =>
       connection && pushAction(buildCreateEdgeAction(connection)),
@@ -345,6 +357,7 @@ export function NodeHistoryProvider({ children }) {
       recordDelete,
       recordBatchDelete,
       recordMove,
+      recordBatchMove,
       recordCreateEdge,
       recordDeleteEdge,
       recordBatchDeleteEdges,
@@ -362,6 +375,7 @@ export function NodeHistoryProvider({ children }) {
       recordDelete,
       recordBatchDelete,
       recordMove,
+      recordBatchMove,
       recordCreateEdge,
       recordDeleteEdge,
       recordBatchDeleteEdges,
