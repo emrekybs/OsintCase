@@ -1,4 +1,4 @@
-# OSINT Case
+# OsintCase
 
 A browser-based OSINT investigation and case mapping tool.
 
