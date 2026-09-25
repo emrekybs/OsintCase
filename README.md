@@ -2,10 +2,6 @@
 
 A serverless investigation and intelligence analysis desk that runs entirely in the browser. Map subjects and identifiers on a link graph, pin locations on a map, build a timeline of events and register evidence with SHA-256 integrity, all in a single case file. Nothing leaves your device.
 
-<p align="center">
-  <img src="/docs/osintcase.png" alt="osintcase" width="380">
-</p>
-
 ![Network view](docs/screenshots/network.png)
 
 ## Try the sample case
