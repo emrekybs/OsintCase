@@ -102,6 +102,27 @@ export function AppConfigProvider({ children }) {
     setState({ loaded: true, ...result });
   };
 
+  // Leaflet karo stili ve anahtarlı karo sağlayıcılarının anahtarları.
+  const setTileStyle = (style) => {
+    writeLocalConfig({ map: { tileStyle: style } });
+    setState((s) => ({
+      ...s,
+      config: { ...s.config, map: { ...(s.config.map ?? {}), tileStyle: style } },
+    }));
+  };
+
+  const setTileKey = (provider, key) => {
+    const trimmed = (key ?? '').trim();
+    writeLocalConfig({ tiles: { [`${provider}Key`]: trimmed } });
+    setState((s) => ({
+      ...s,
+      config: {
+        ...s.config,
+        tiles: { ...(s.config.tiles ?? {}), [`${provider}Key`]: trimmed },
+      },
+    }));
+  };
+
   const googleMapsApiKey = state.config?.googleMaps?.apiKey ?? '';
   const googleMapsMapId =
     state.config?.googleMaps?.mapId?.trim?.() || null;
@@ -121,6 +142,12 @@ export function AppConfigProvider({ children }) {
         // the first-run welcome screen).
         mapProviderSource: state.sources.mapProvider ?? null,
         setMapProvider,
+        tileStyle: state.config?.map?.tileStyle ?? null,
+        tileKeys: {
+          maptiler: state.config?.tiles?.maptilerKey ?? '',
+        },
+        setTileStyle,
+        setTileKey,
         setGoogleMapsApiKey,
         clearGoogleMapsApiKey,
         setGoogleMapsMapId,
