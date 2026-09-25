@@ -1,5 +1,9 @@
 # OsintCase
 
+<p align="center">
+  <img src="docs/osintcase.png" alt="OSINT Case" width="180">
+</p>
+
 > **Based on [OSINTMapper](https://github.com/Geistnigma/OSINTMapper) by [Geistnigma](https://github.com/Geistnigma).**
 >
 > This project is a modified and extended version of OSINTMapper with additional features and changes focused on investigation case management, intelligence analysis and evidence handling.
