@@ -81,8 +81,8 @@ More samples in `example/` (all people, organisations, numbers and places are fi
 |---|---|---|
 | `operasyon-kara-sahin.case.json` | TR | Counter-terrorism style case with subject photos, new identifier types, map, timeline, evidence |
 | `operation-nightjar-photos.case.json` | EN | Operation Nightjar with subject photos and the new identifier types |
-| `ornek-raporlar/tr/` | TR | Dark PDF, light PDF (redacted + watermarked), single-file HTML reports |
-| `ornek-raporlar/en/` | EN | The same outputs in English |
+| `example-reports/tr/` | TR | Dark PDF, light PDF (redacted + watermarked), single-file HTML reports |
+| `example-reports/en/` | EN | The same outputs in English |
 
 The report follows the interface language: switch TR / EN before exporting. The sample files can be regenerated with `python3 tools/ornek-dosya-uret.py` (needs Pillow).
 
