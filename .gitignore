@@ -38,6 +38,7 @@ public/app.config.*.json
 # ─────────────────────────────────────────────────────────────────────────────
 *.osint.json
 *.case.json
+!example/*.case.json
 *.osint.enc.json
 *.case.enc.json
 

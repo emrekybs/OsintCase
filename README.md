@@ -86,10 +86,6 @@ More samples in `example/` (all people, organisations, numbers and places are fi
 
 The report follows the interface language: switch TR / EN before exporting. The sample files can be regenerated with `python3 tools/ornek-dosya-uret.py` (needs Pillow).
 
-`example/operation-nightjar-fotografli.case.json` is the same case with sample subject photos (synthetic silhouettes, not real people) and the new identifier types.
-
-Sample report outputs are in `example/ornek-raporlar/`: dark PDF, light PDF (redacted + watermarked) and a single-file HTML report.
-
 ## Privacy
 
 OSINT Case runs entirely in the browser.
