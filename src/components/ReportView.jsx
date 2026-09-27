@@ -372,6 +372,22 @@ export default function ReportView({ onClose }) {
       const paper = root.cloneNode(true);
       paper.querySelectorAll('.no-print').forEach((n) => n.remove());
       paper.querySelectorAll('.print-only').forEach((n) => n.classList.remove('print-only'));
+      // Aynı fotoğraf raporda birçok yerde geçer (profil, tablo, bağlantılar,
+      // kronoloji). Dosyaya her görseli bir kez göm, <img>'lere açılışta dağıt.
+      const pool = [];
+      const index = new Map();
+      paper.querySelectorAll('img[src^="data:"]').forEach((img) => {
+        const src = img.getAttribute('src');
+        if (!index.has(src)) {
+          index.set(src, pool.length);
+          pool.push(src);
+        }
+        img.setAttribute('data-img', String(index.get(src)));
+        img.removeAttribute('src');
+      });
+      const imgScript = pool.length
+        ? `<script>(function(){var I=${JSON.stringify(pool)};var n=document.querySelectorAll('img[data-img]');for(var i=0;i<n.length;i++){n[i].src=I[+n[i].getAttribute('data-img')];}})();</script>`
+        : '';
       const tocItems = SECTIONS.filter((s) => on(s.key) && paper.querySelector(`#rp-${s.key}`))
         .map((s) => `<a href="#rp-${s.key}">${escapeHtml(t(s.label))}</a>`)
         .join('');
@@ -394,6 +410,7 @@ export default function ReportView({ onClose }) {
   <button type="button" onclick="window.print()">${escapeHtml(t('Yazdır / PDF'))}</button>
 </nav>
 <main class="rp-sa-main">${paper.outerHTML}</main>
+${imgScript}
 </body>
 </html>`;
       triggerDownload(new Blob([html], { type: 'text/html;charset=utf-8' }), `${safeName(caseNo)}_${t('rapor')}.html`);
