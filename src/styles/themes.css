@@ -1,0 +1,63 @@
+/* OSINT Case — siyah / kırmızı / beyaz, mat. Parlama efekti yok. */
+:root {
+  /* İşletim sisteminin kendi yazı tipi: Windows'ta Segoe UI, macOS'ta
+     San Francisco, Linux'ta Ubuntu / Cantarell / Noto. */
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Ubuntu, Cantarell,
+    'Noto Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', 'Ubuntu Mono',
+    'DejaVu Sans Mono', Menlo, Consolas, monospace;
+  --radius-sm: 2px;
+  --radius: 3px;
+  --radius-lg: 5px;
+  --rail-w: 78px;
+}
+
+:root[data-theme='dark'] {
+  --bg-0: #0a0a0a;
+  --bg-1: #111111;
+  --bg-2: #171717;
+  --bg-3: #1e1e1e;
+  --bg-hover: #242424;
+  --border: #292929;
+  --border-strong: #3b3b3b;
+  --text-0: #f1f1f1;
+  --text-1: #b3b3b3;
+  --text-2: #7a7a7a;
+  --accent: #d32f2f;
+  --accent-hover: #e53935;
+  --accent-contrast: #ffffff;
+  --accent-soft: rgba(211, 47, 47, 0.14);
+  --danger: #ff5a4f;
+  --warn: #d9a441;
+  --success: #4caf7a;
+  --info: #5b8fc9;
+  --grid: #151515;
+  --path: #ffffff;
+  --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.6);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+:root[data-theme='light'] {
+  --bg-0: #f3f3f3;
+  --bg-1: #ffffff;
+  --bg-2: #f5f5f5;
+  --bg-3: #ebebeb;
+  --bg-hover: #e4e4e4;
+  --border: #d9d9d9;
+  --border-strong: #bdbdbd;
+  --text-0: #121212;
+  --text-1: #454545;
+  --text-2: #6f6f6f;
+  --accent: #b71c1c;
+  --accent-hover: #9a1616;
+  --accent-contrast: #ffffff;
+  --accent-soft: rgba(183, 28, 28, 0.1);
+  --danger: #c62828;
+  --warn: #a8740e;
+  --success: #2e7d4f;
+  --info: #2b5f9e;
+  --grid: #e8e8e8;
+  --path: #121212;
+  --shadow-lg: 0 14px 40px rgba(0, 0, 0, 0.14);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.12);
+}

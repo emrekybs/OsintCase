@@ -1,0 +1,204 @@
+.id-node {
+  position: relative;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 10px 12px;
+  min-width: 200px;
+  max-width: 260px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.id-node:hover {
+  border-color: var(--border-strong);
+}
+
+.id-node.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-sm);
+}
+
+.id-node.subject {
+  border-left: 3px solid var(--role-color, var(--accent));
+}
+.id-node.on-path {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.id-node.dimmed {
+  opacity: 0.32;
+}
+.id-node-chips {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.node-chip {
+  font-size: 9.5px;
+  font-weight: 600;
+  padding: 0 5px;
+  border: 1px solid;
+  border-radius: 2px;
+  line-height: 15px;
+}
+.node-chip.solid {
+  color: #fff;
+  border-color: transparent;
+}
+.id-node-degree {
+  position: absolute;
+  top: -9px;
+  right: -9px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--accent-contrast);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.react-flow__edge.on-path .react-flow__edge-path {
+  stroke: var(--accent) !important;
+  stroke-width: 3 !important;
+}
+.react-flow__edge.dimmed {
+  opacity: 0.25;
+}
+.react-flow__edge-textbg {
+  fill: var(--bg-1);
+}
+.react-flow__edge-text {
+  fill: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.id-node-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.id-node-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9.5px;
+  font-weight: 500;
+  color: var(--text-2);
+}
+
+.id-node-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-0);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.id-node-secondary {
+  font-size: 11px;
+  color: var(--text-2);
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* The handle ELEMENT is just the 20×20 hit area — transparent, no styles
+   that could compete with the React Flow translate(-50%) that anchors it on
+   the node edge. The visible dot lives on the ::after pseudo so it can scale
+   on hover without disturbing the parent's centering transform. */
+.id-node-handle {
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  min-width: 0;
+  min-height: 0;
+}
+
+.id-node-handle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  background: var(--accent);
+  border: 2px solid var(--bg-1);
+  border-radius: 50%;
+  opacity: 0.55;
+  box-sizing: border-box;
+  transition: transform 0.12s ease, opacity 0.12s ease;
+  pointer-events: none;
+}
+
+.id-node:hover .id-node-handle::after,
+.id-node.selected .id-node-handle::after {
+  opacity: 1;
+}
+
+.id-node-handle:hover::after {
+  transform: scale(1.5);
+  opacity: 1;
+}
+
+/* React Flow theming overrides for our color palette */
+.react-flow__edge-path {
+  stroke: var(--text-1);
+  stroke-width: 1.6;
+}
+
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge:focus .react-flow__edge-path,
+.react-flow__edge:focus-visible .react-flow__edge-path {
+  stroke: var(--accent);
+  stroke-width: 2.2;
+}
+
+.react-flow__connectionline {
+  stroke: var(--accent);
+  stroke-width: 1.8;
+}
+
+.react-flow__controls {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.react-flow__controls-button {
+  background: var(--bg-1);
+  border-bottom: 1px solid var(--border);
+  color: var(--text-1);
+  width: 28px;
+  height: 28px;
+}
+
+.react-flow__controls-button:hover {
+  background: var(--bg-hover);
+  color: var(--text-0);
+}
+
+.react-flow__minimap {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}

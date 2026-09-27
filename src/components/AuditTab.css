@@ -1,0 +1,61 @@
+.audit-tab {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 18px 24px 0;
+}
+.audit-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.audit-head h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+}
+.audit-digest {
+  font-size: 11px;
+  color: var(--text-2);
+  margin-top: 2px;
+}
+.audit-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.audit-controls input,
+.audit-controls select {
+  padding: 6px 9px;
+  font-size: 12.5px;
+  width: 220px;
+}
+.audit-controls select {
+  width: 170px;
+}
+.audit-table-wrap {
+  flex: 1;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 18px;
+  background: var(--bg-1);
+}
+.audit-table {
+  table-layout: fixed;
+}
+.audit-table th:nth-child(1) { width: 52px; }
+.audit-table th:nth-child(2) { width: 170px; }
+.audit-table th:nth-child(3) { width: 170px; }
+.audit-table th:nth-child(4) { width: 250px; }
+.audit-table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.audit-table tr.alarm td:nth-child(4) {
+  color: var(--danger);
+}

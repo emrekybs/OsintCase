@@ -1,0 +1,775 @@
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Polyline,
+  Circle,
+  Popup,
+  useMap,
+  useMapEvents,
+} from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { useProject } from '../context/ProjectContext.jsx';
+import { useAppConfig } from '../context/AppConfigContext.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
+import { useNavigation } from '../context/NavigationContext.jsx';
+import { getPinColor, PIN_COLORS } from '../pinColors.js';
+import { getMapIconSrc } from '../mapIcons.js';
+import PinModal from './PinModal.jsx';
+import {
+  DENSITY_COLOR,
+  RADIUS_COLOR,
+  densityOpacity,
+  densityRadius,
+  pinWeights,
+} from '../utils/mapUtils.js';
+import PinInfoCard from './PinInfoCard.jsx';
+import SettingsModal from './SettingsModal.jsx';
+import { DEFAULT_TILE_STYLE, TILE_STYLES, resolveTileStyle } from '../mapTiles.js';
+import './MapTab.css';
+import './MapTabOSM.css';
+import { t } from '../i18n/index.jsx';
+
+const DEFAULT_CENTER = [20, 0];
+const DEFAULT_ZOOM = 2;
+// Same double-click window as the Google MapTab.
+const DOUBLE_CLICK_MS = 300;
+
+function pinDisplayLabel(pin) {
+  return pin.label?.trim() || pin.address?.trim() || t('Adsız konum');
+}
+
+function pinSecondaryLabel(pin) {
+  const extra = pin.sightings?.length ? ' · ' + t('{0} görülme', {
+    '0': pin.sightings.length
+  }) + '' : '';
+  if (pin.label && pin.address) return pin.address + extra;
+  return `${pin.lat.toFixed(4)}, ${pin.lng.toFixed(4)}${extra}`;
+}
+
+/**
+ * OpenStreetMap-backed alternative to the Google Maps tab.
+ *
+ * Uses Leaflet + OSM tiles and Nominatim for search. No API key required.
+ * Pin data is shared with the Google version through ProjectContext, so
+ * switching providers preserves everything.
+ *
+ * Interaction matches the Google version: single click on a marker opens
+ * the pin details card (Leaflet Popup wrapping the shared PinInfoCard),
+ * double click jumps straight to the editor.
+ *
+ * Limitations vs Google:
+ *   - No live place details in the card (rating, hours, phone) — that data
+ *     comes from Google's Places API.
+ *   - No place-type auto-detection on drop. Address auto-fills via Nominatim
+ *     reverse-geocoding.
+ *   - Tile style is OSM's default. Other free providers exist; can swap.
+ */
+export default function MapTabOSM({ visible = true }) {
+  const { project, addPin, updatePin, deletePin, updateMapDisplay } =
+    useProject();
+  const { theme } = useTheme();
+  const { tileStyle, tileKeys, setTileStyle } = useAppConfig();
+  const tiles = useMemo(
+    () => resolveTileStyle(tileStyle ?? DEFAULT_TILE_STYLE, tileKeys),
+    [tileStyle, tileKeys],
+  );
+  // Katman sağlığı: hiç karo yüklenmeden art arda hata gelirse uyar.
+  const [tileHealth, setTileHealth] = useState({ errors: 0, loads: 0 });
+  useEffect(() => setTileHealth({ errors: 0, loads: 0 }), [tiles.url]);
+  const tilesFailing = tileHealth.errors >= 4 && tileHealth.loads === 0;
+  const { hoveredIdentifierId, focus, consumeFocus } = useNavigation();
+  const [showSettings, setShowSettings] = useState(false);
+  const pins = useMemo(() => project?.locations ?? [], [project?.locations]);
+  const pinLinks = useMemo(
+    () => project?.pinLinks ?? [],
+    [project?.pinLinks],
+  );
+  const mapDisplay = project?.mapDisplay ?? {
+    showPinConnections: false,
+    pinConnectionColor: '#ef4444',
+  };
+
+  // Pin IDs linked to the currently-hovered identifier (for highlight ring).
+  const highlightedPinIds = useMemo(() => {
+    if (!hoveredIdentifierId) return new Set();
+    return new Set(
+      pinLinks
+        .filter((l) => l.identifierId === hoveredIdentifierId)
+        .map((l) => l.pinId),
+    );
+  }, [pinLinks, hoveredIdentifierId]);
+
+  const [editingPin, setEditingPin] = useState(null);
+  const [selectedPinId, setSelectedPinId] = useState(null);
+  const lastMarkerClickRef = useRef({ id: null, time: 0 });
+  const pendingPanRef = useRef(null);
+
+  const weights = useMemo(() => pinWeights(project), [project]);
+  const maxWeight = useMemo(
+    () => Math.max(1, ...Array.from(weights.values())),
+    [weights],
+  );
+
+  // Başka sekmeden (kronoloji, delil) bir konuma gidildiğinde odaklan.
+  useEffect(() => {
+    if (!focus || focus.kind !== 'pin') return;
+    const pin = pins.find((p) => p.id === focus.id);
+    if (pin) {
+      pendingPanRef.current = { lat: pin.lat, lng: pin.lng };
+      setSelectedPinId(pin.id);
+    }
+    consumeFocus(focus.token);
+  }, [focus, pins, consumeFocus]);
+
+  const selectedPin = useMemo(
+    () => pins.find((p) => p.id === selectedPinId) ?? null,
+    [pins, selectedPinId],
+  );
+  const selectedPinIndex = useMemo(() => {
+    const idx = pins.findIndex((p) => p.id === selectedPinId);
+    return idx >= 0 ? idx + 1 : 0;
+  }, [pins, selectedPinId]);
+
+  const initialCenter = useMemo(() => {
+    if (pins.length === 0) return DEFAULT_CENTER;
+    return [pins[0].lat, pins[0].lng];
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const initialZoom = pins.length === 0 ? DEFAULT_ZOOM : 13;
+
+  const handleMarkerClick = useCallback((pin) => {
+    const now = Date.now();
+    const last = lastMarkerClickRef.current;
+    if (last.id === pin.id && now - last.time < DOUBLE_CLICK_MS) {
+      // Double-click on the same marker → jump straight to editor.
+      lastMarkerClickRef.current = { id: null, time: 0 };
+      setSelectedPinId(null);
+      setEditingPin(pin);
+      pendingPanRef.current = { lat: pin.lat, lng: pin.lng };
+    } else {
+      // Single click → show the details card.
+      lastMarkerClickRef.current = { id: pin.id, time: now };
+      setSelectedPinId(pin.id);
+      pendingPanRef.current = { lat: pin.lat, lng: pin.lng };
+    }
+  }, []);
+
+  const handleMapClick = useCallback(
+    async ({ lat, lng }) => {
+      // If a details card is open, an empty-map click should just close it
+      // (matches the Google version) instead of dropping a new pin.
+      if (selectedPinId) {
+        setSelectedPinId(null);
+        return;
+      }
+      const created = addPin({ lat, lng });
+      pendingPanRef.current = { lat, lng };
+      setEditingPin(created);
+      // Best-effort reverse geocode for an address. Nominatim has rate limits
+      // and an attribution policy; this is fine for a single user.
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`,
+          { headers: { Accept: 'application/json' } },
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!data?.display_name) return;
+        setEditingPin((cur) =>
+          cur && cur.id === created.id
+            ? { ...cur, address: cur.address || data.display_name }
+            : cur,
+        );
+        updatePin(created.id, {
+          address: created.address || data.display_name,
+        });
+      } catch {
+        /* ignore — pin works without the address */
+      }
+    },
+    [addPin, updatePin, selectedPinId],
+  );
+
+  const handleSave = (patch) => {
+    if (!editingPin) return;
+    updatePin(editingPin.id, patch);
+    setEditingPin(null);
+  };
+
+  const handleDelete = (id) => {
+    deletePin(id);
+    setEditingPin(null);
+  };
+
+  return (
+    <div className="map-tab">
+      <aside className="map-sidebar">
+        <div className="sidebar-header">
+          <h3>{t('Konumlar')}{' '}<span className="count-pill">{pins.length}</span></h3>
+          <button
+            className="icon-btn"
+            onClick={() => setShowSettings(true)}
+            title={t('Harita ayarları')}
+            aria-label={t('Harita ayarları')}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="map-display-controls">
+          <button
+            type="button"
+            className={`map-connect-toggle ${mapDisplay.showPinConnections ? 'active' : ''}`}
+            onClick={() =>
+              updateMapDisplay({
+                showPinConnections: !mapDisplay.showPinConnections,
+              })
+            }
+          >{t('Rotayı çiz')}</button>
+          <button
+            type="button"
+            className={`map-connect-toggle ${mapDisplay.showRadius !== false ? 'active' : ''}`}
+            onClick={() => updateMapDisplay({ showRadius: mapDisplay.showRadius === false })}
+            title={t('Konumlara girilen yarıçap halkalarını göster')}
+          >{t('Yarıçap halkaları')}</button>
+          <button
+            type="button"
+            className={`map-connect-toggle ${mapDisplay.showDensity ? 'active' : ''}`}
+            onClick={() => updateMapDisplay({ showDensity: !mapDisplay.showDensity })}
+            title={t('Görülme, ziyaret ve olay sayısına göre yoğunluk (yaşam örüntüsü)')}
+          >{t('Yoğunluk')}</button>
+          {mapDisplay.showPinConnections && (
+            <div className="map-connect-colors">
+              {Object.values(PIN_COLORS).map((c) => {
+                const isSelected =
+                  mapDisplay.pinConnectionColor?.toLowerCase() ===
+                  c.bg.toLowerCase();
+                return (
+                  <button
+                    key={c.bg}
+                    type="button"
+                    className={`map-connect-swatch ${isSelected ? 'selected' : ''}`}
+                    style={{ background: c.bg, borderColor: c.border }}
+                    onClick={() =>
+                      updateMapDisplay({ pinConnectionColor: c.bg })
+                    }
+                    aria-label={t('Çizgi rengi: {0}', {
+                      '0': c.name
+                    })}
+                    title={c.name}
+                  />
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="map-layer-select">
+          <label htmlFor="osm-layer">{t('Katman')}</label>
+          <select
+            id="osm-layer"
+            value={tiles.key}
+            onChange={(e) => {
+              const st = TILE_STYLES[e.target.value];
+              if (st?.needsKey && !tileKeys[st.needsKey]) {
+                setShowSettings(true);
+                return;
+              }
+              setTileStyle(e.target.value);
+            }}
+          >
+            {Object.entries(TILE_STYLES).map(([k, st]) => (
+              <option key={k} value={k}>
+                {st.label}
+                {st.needsKey && !tileKeys[st.needsKey] ? ` (${t('API gerekir')})` : ''}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {pins.length === 0 ? (
+          <div className="empty-state">
+            <p>{t('Henüz konum yok.')}</p>
+            <p className="empty-hint">{t('Haritada herhangi bir yere tıklayarak konum ekleyin.')}</p>
+          </div>
+        ) : (
+          <ul className="pin-list">
+            {pins.map((pin, idx) => {
+              const c = getPinColor(pin.color);
+              const iconVariantTheme =
+                c.glyph === '#ffffff' ? 'dark' : 'light';
+              const iconSrc = getMapIconSrc(pin.iconId, iconVariantTheme);
+              return (
+                <li
+                  key={pin.id}
+                  className={`pin-item ${highlightedPinIds.has(pin.id) ? 'highlighted' : ''}`}
+                  onClick={() => {
+                    pendingPanRef.current = { lat: pin.lat, lng: pin.lng };
+                    setEditingPin(pin);
+                  }}
+                >
+                  {iconSrc ? (
+                    <div
+                      className="pin-index pin-index-icon"
+                      style={{ background: c.bg, borderColor: c.border }}
+                    >
+                      <img src={iconSrc} alt="" draggable={false} />
+                      <span
+                        className="pin-index-num"
+                        style={{
+                          background: c.glyph,
+                          color: c.bg,
+                          borderColor: c.bg,
+                        }}
+                      >
+                        {idx + 1}
+                      </span>
+                    </div>
+                  ) : (
+                    <div
+                      className="pin-index"
+                      style={{
+                        background: c.bg,
+                        color: c.glyph,
+                        borderColor: c.border,
+                      }}
+                    >
+                      {idx + 1}
+                    </div>
+                  )}
+                  <div className="pin-body">
+                    <div className="pin-label">{pinDisplayLabel(pin)}</div>
+                    <div className="pin-secondary">
+                      {pinSecondaryLabel(pin)}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="pin-delete"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (confirm(`"${pinDisplayLabel(pin)}" silinsin mi?`)) {
+                        deletePin(pin.id);
+                      }
+                    }}
+                    aria-label={t('Konumu sil')}
+                    title={t('Konumu sil')}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    </svg>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </aside>
+
+      <div className={`map-canvas leaflet-theme-${theme}`}>
+        <MapContainer
+          center={initialCenter}
+          zoom={initialZoom}
+          minZoom={2}
+          maxZoom={20}
+          worldCopyJump
+          className="osm-map-container"
+        >
+          <TileLayer
+            key={tiles.key + (tiles.url.includes('key=') ? tiles.url.slice(-6) : '')}
+            attribution={tiles.attribution}
+            url={tiles.url}
+            subdomains={tiles.subdomains ?? 'abc'}
+            maxZoom={tiles.maxZoom ?? 19}
+            maxNativeZoom={tiles.maxZoom ?? 19}
+            className={tiles.className ?? ''}
+            eventHandlers={{
+              tileerror: () => setTileHealth((h) => ({ ...h, errors: h.errors + 1 })),
+              tileload: () => setTileHealth((h) => ({ ...h, loads: h.loads + 1 })),
+            }}
+          />
+          <ClickToPin onClick={handleMapClick} disabled={!!editingPin} />
+          <PanController pendingPanRef={pendingPanRef} />
+          <InvalidateOnVisible visible={visible} />
+          {mapDisplay.showDensity &&
+            pins.map((p) => {
+              const w = weights.get(p.id) ?? 1;
+              return (
+                <Circle
+                  key={`d-${p.id}`}
+                  center={[p.lat, p.lng]}
+                  radius={densityRadius(w)}
+                  interactive={false}
+                  pathOptions={{
+                    stroke: false,
+                    fillColor: DENSITY_COLOR,
+                    fillOpacity: densityOpacity(w, maxWeight),
+                  }}
+                />
+              );
+            })}
+          {mapDisplay.showRadius !== false &&
+            pins
+              .filter((p) => p.radius > 0)
+              .map((p) => (
+                <Circle
+                  key={`r-${p.id}`}
+                  center={[p.lat, p.lng]}
+                  radius={Number(p.radius)}
+                  interactive={false}
+                  pathOptions={{
+                    color: RADIUS_COLOR,
+                    weight: 1.5,
+                    dashArray: '6 5',
+                    fillColor: RADIUS_COLOR,
+                    fillOpacity: 0.06,
+                  }}
+                />
+              ))}
+          {pins.map((pin, idx) => (
+            <PinMarker
+              key={pin.id}
+              pin={pin}
+              index={idx + 1}
+              highlighted={highlightedPinIds.has(pin.id)}
+              onClick={() => handleMarkerClick(pin)}
+            />
+          ))}
+          {selectedPin && (
+            <Popup
+              key={selectedPin.id}
+              position={[selectedPin.lat, selectedPin.lng]}
+              // Lift the popup tip clear of the 36px centered marker.
+              offset={[0, -22]}
+              closeButton={false}
+              autoPan
+              className="osm-pin-popup"
+              // Leaflet can close the popup itself (e.g. map interactions);
+              // sync React state when that happens so reopening works.
+              eventHandlers={{ remove: () => setSelectedPinId(null) }}
+            >
+              <PinInfoCard
+                pin={selectedPin}
+                index={selectedPinIndex}
+                displayLabel={
+                  selectedPin.label?.trim() ||
+                  selectedPin.address?.trim() ||
+                  t('Konum {0}', {
+                    '0': selectedPinIndex
+                  })
+                }
+                address={selectedPin.address?.trim() || ''}
+                externalUrl={`https://www.openstreetmap.org/?mlat=${selectedPin.lat}&mlon=${selectedPin.lng}#map=17/${selectedPin.lat}/${selectedPin.lng}`}
+                externalLabel={t('OpenStreetMap\'te aç')}
+                onClose={() => setSelectedPinId(null)}
+                onEdit={() => {
+                  setSelectedPinId(null);
+                  setEditingPin(selectedPin);
+                }}
+              />
+            </Popup>
+          )}
+          {mapDisplay.showPinConnections && pins.length >= 2 && (
+            <Polyline
+              positions={pins.map((p) => [p.lat, p.lng])}
+              pathOptions={{
+                color: mapDisplay.pinConnectionColor,
+                weight: 3,
+                opacity: 0.9,
+                dashArray: '8 6',
+              }}
+            />
+          )}
+          <NominatimSearch
+            onSelect={(info) => {
+              const created = addPin({
+                lat: info.lat,
+                lng: info.lng,
+                label: info.name ?? '',
+                address: info.address ?? '',
+              });
+              if (created) {
+                pendingPanRef.current = { lat: info.lat, lng: info.lng };
+                setEditingPin(created);
+              }
+            }}
+          />
+        </MapContainer>
+
+        {tilesFailing && (
+          <div className="tile-alert" role="alert">
+            <div>
+              <b>{t('Harita katmanı yüklenemedi')}</b>
+              <span>
+                {t('“{0}” karoları alınamıyor. İnternet bağlantısını, ağ engelini ya da API anahtarını kontrol edin.', { 0: tiles.label })}
+              </span>
+            </div>
+            {tiles.key !== DEFAULT_TILE_STYLE ? (
+              <button type="button" className="btn btn-primary btn-sm" onClick={() => setTileStyle(DEFAULT_TILE_STYLE)}>
+                {t('OpenStreetMap’e geç')}
+              </button>
+            ) : (
+              <button type="button" className="btn btn-secondary btn-sm" onClick={() => setShowSettings(true)}>
+                {t('Harita ayarları')}
+              </button>
+            )}
+          </div>
+        )}
+        {tiles.fallback && tileStyle && !tilesFailing && (
+          <div className="tile-alert info" role="status">
+            <div>
+              <span>
+                {t('Seçili katman kullanılamıyor (API anahtarı yok ya da katman kaldırıldı). OpenStreetMap gösteriliyor.')}
+              </span>
+            </div>
+            <button type="button" className="btn btn-secondary btn-sm" onClick={() => setTileStyle(DEFAULT_TILE_STYLE)}>
+              {t('Tamam')}
+            </button>
+          </div>
+        )}
+
+        {editingPin && (
+          <PinModal
+            pin={editingPin}
+            onClose={() => setEditingPin(null)}
+            onSave={handleSave}
+            onDelete={handleDelete}
+          />
+        )}
+
+        {showSettings && (
+          <SettingsModal initialSection="map" onClose={() => setShowSettings(false)} />
+        )}
+      </div>
+    </div>
+  );
+}
+
+// --- Helpers ----------------------------------------------------------------
+
+function ClickToPin({ onClick, disabled }) {
+  useMapEvents({
+    click(e) {
+      if (disabled) return;
+      onClick({ lat: e.latlng.lat, lng: e.latlng.lng });
+    },
+  });
+  return null;
+}
+
+function PanController({ pendingPanRef }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!map || !pendingPanRef.current) return;
+    const t = pendingPanRef.current;
+    pendingPanRef.current = null;
+    map.flyTo([t.lat, t.lng], Math.max(map.getZoom(), 14), { duration: 0.6 });
+  });
+  return null;
+}
+
+/**
+ * When the map tab is hidden via display:none and then shown again, Leaflet's
+ * cached container size is stale and tiles render in a broken offset. We
+ * call invalidateSize() on every transition back to visible so Leaflet
+ * re-measures and redraws. Cheap to run — no-ops if size hasn't changed.
+ */
+function InvalidateOnVisible({ visible }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!map || !visible) return;
+    // rAF lets the browser commit the layout change (display: block) before
+    // Leaflet reads the new dimensions.
+    const id = requestAnimationFrame(() => map.invalidateSize());
+    return () => cancelAnimationFrame(id);
+  }, [map, visible]);
+  return null;
+}
+
+/** Build an SVG-based Leaflet DivIcon that mirrors the Google marker look. */
+function buildLeafletIcon({ pin, index, theme, highlighted }) {
+  const c = getPinColor(pin.color);
+  const iconVariantTheme = c.glyph === '#ffffff' ? 'dark' : 'light';
+  const iconSrc = getMapIconSrc(pin.iconId, iconVariantTheme);
+  // Pulse ring shown while a linked identifier is hovered — same visual
+  // as the Google version's .custom-marker.highlighted.
+  const pulseClass = highlighted ? ' osm-marker-highlighted' : '';
+  const pulseVar = highlighted ? `--pulse-color:${c.bg};` : '';
+  // Two visual variants: a plain colored circle with a number, or a
+  // colored circle with an image and a small number badge.
+  const inner = iconSrc
+    ? `<div class="osm-marker osm-marker-icon${pulseClass}"
+           style="background:${c.bg};border-color:${c.border};${pulseVar}">
+         <img src="${iconSrc}" alt="" />
+         <span class="osm-marker-num"
+               style="background:${c.glyph};color:${c.bg};border-color:${c.bg};">
+           ${index}
+         </span>
+       </div>`
+    : `<div class="osm-marker osm-marker-body${pulseClass}"
+           style="background:${c.bg};color:${c.glyph};border-color:${c.border};${pulseVar}">
+         ${index}
+       </div>`;
+  return L.divIcon({
+    className: 'osm-marker-wrap',
+    html: inner,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+  });
+}
+
+function PinMarker({ pin, index, onClick, highlighted }) {
+  const { theme } = useTheme();
+  const icon = useMemo(
+    () => buildLeafletIcon({ pin, index, theme, highlighted }),
+    [pin.color, pin.iconId, index, theme, highlighted], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+  return (
+    <Marker
+      position={[pin.lat, pin.lng]}
+      icon={icon}
+      eventHandlers={{ click: onClick }}
+    />
+  );
+}
+
+function NominatimSearch({ onSelect }) {
+  const map = useMap();
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const abortRef = useRef(null);
+  const debounceRef = useRef(null);
+
+  useEffect(() => {
+    clearTimeout(debounceRef.current);
+    // Nominatim kullanım politikası: saniyede en fazla 1 istek.
+    if (query.trim().length < 3) {
+      setResults([]);
+      setOpen(false);
+      return;
+    }
+    debounceRef.current = setTimeout(async () => {
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      setLoading(true);
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodeURIComponent(query)}&limit=6`,
+          { signal: controller.signal, headers: { Accept: 'application/json' } },
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        setResults(Array.isArray(data) ? data : []);
+        setOpen(true);
+      } catch (err) {
+        if (err.name !== 'AbortError') {
+          // Network error or rate limit — fail silently
+          setResults([]);
+        }
+      } finally {
+        setLoading(false);
+      }
+    }, 800);
+    return () => clearTimeout(debounceRef.current);
+  }, [query]);
+
+  const handleSelect = (r) => {
+    const lat = parseFloat(r.lat);
+    const lng = parseFloat(r.lon);
+    if (Number.isFinite(lat) && Number.isFinite(lng)) {
+      if (r.boundingbox) {
+        const [s, n, w, e] = r.boundingbox.map(parseFloat);
+        if ([s, n, w, e].every(Number.isFinite)) {
+          map?.flyToBounds([
+            [s, w],
+            [n, e],
+          ]);
+        } else {
+          map?.flyTo([lat, lng], 15);
+        }
+      } else {
+        map?.flyTo([lat, lng], 15);
+      }
+      onSelect({
+        lat,
+        lng,
+        name: r.namedetails?.name ?? r.display_name?.split(',')[0] ?? '',
+        address: r.display_name ?? '',
+      });
+    }
+    setQuery('');
+    setResults([]);
+    setOpen(false);
+  };
+
+  return (
+    <div
+      className="map-searchbox osm-searchbox"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <span className="map-searchbox-icon">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m21 21-4.3-4.3" />
+        </svg>
+      </span>
+      <input
+        type="text"
+        autoComplete="off"
+        spellCheck="false"
+        placeholder={t('OpenStreetMap\'te ara…')}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => results.length && setOpen(true)}
+        onBlur={() => setTimeout(() => setOpen(false), 200)}
+      />
+      {query && (
+        <button
+          type="button"
+          className="map-searchbox-clear"
+          onClick={() => setQuery('')}
+          title={t('Temizle')}
+        >
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 6 6 18M6 6l12 12" />
+          </svg>
+        </button>
+      )}
+      {open && (results.length > 0 || loading) && (
+        <ul className="osm-search-results">
+          {loading && results.length === 0 && (
+            <li className="osm-search-loading">{t('Aranıyor…')}</li>
+          )}
+          {results.map((r) => (
+            <li key={r.place_id}>
+              <button
+                type="button"
+                className="osm-search-result"
+                onMouseDown={(e) => {
+                  e.preventDefault();
+                  handleSelect(r);
+                }}
+              >
+                <div className="osm-search-result-name">
+                  {r.display_name?.split(',')[0]}
+                </div>
+                <div className="osm-search-result-meta">
+                  {r.display_name?.split(',').slice(1).join(',').trim()}
+                </div>
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
