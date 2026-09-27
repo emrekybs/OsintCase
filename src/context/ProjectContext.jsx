@@ -127,6 +127,16 @@ export function ProjectProvider({ children }) {
     return { project: opened };
   };
 
+  /**
+   * Hazır bir nesneden aç (ör. sitedeki örnek dosyalar). Her açılışta yeni
+   * kimlik alır; böylece kullanıcının örnek üzerindeki değişiklikleri
+   * örneği yeniden açınca ezilmez.
+   */
+  const openProjectFromObject = (obj, how = '') => {
+    const loaded = validateProject({ ...obj, id: crypto.randomUUID() });
+    return openLoaded(loaded, null, how);
+  };
+
   const openEncryptedFile = async (envelope, password, fileName = '') => {
     const { data, session } = await decryptEnvelope(envelope, password);
     const loaded = validateProject(data);
@@ -732,6 +742,7 @@ export function ProjectProvider({ children }) {
         isEncrypted,
         newProject,
         openProjectFromFile,
+        openProjectFromObject,
         openEncryptedFile,
         openProjectFromSnapshot,
         closeProject,

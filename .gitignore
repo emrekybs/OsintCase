@@ -89,3 +89,6 @@ ehthumbs.db
 Thumbs.db
 desktop.ini
 $RECYCLE.BIN/
+
+# Örnek dosyalar build sırasında example/ klasöründen üretilir
+public/samples/

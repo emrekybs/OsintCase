@@ -1,0 +1,16 @@
+# Cloudflare Pages yanıt başlıkları
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), payment=(), usb=(), interest-cohort=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/site/*
+  Cache-Control: public, max-age=86400
+
+/samples/*
+  Cache-Control: public, max-age=3600

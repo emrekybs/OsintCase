@@ -191,4 +191,15 @@ export default {
   'parmak izi': 'fingerprint',
   'rapor': 'report',
   'fotoğraf': 'photos',
+  // Örnek dosyalar / ana ekran
+  'Örnek dosyalar': 'Sample cases',
+  'Kurgusal verilerle aracı keşfedin. Örnek üzerinde yaptığınız değişiklikler yalnızca bu tarayıcıda kalır.': 'Explore the tool with fictional data. Changes you make to a sample stay in this browser only.',
+  'Örneği aç': 'Open sample',
+  'Yükleniyor…': 'Loading…',
+  'Örnek dosya: {0}': 'Sample case: {0}',
+  'Örnek açılamadı: {0}': 'Could not open the sample: {0}',
+  '{0} şahıs': '{0} subjects',
+  '{0} tanımlayıcı': '{0} identifiers',
+  '{0} fotoğraf': '{0} photos',
+  '{0} konum': '{0} locations',
 };

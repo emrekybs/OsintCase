@@ -3,11 +3,234 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OSINT Case · Soruşturma ve istihbarat analiz masası</title>
+    <meta name="description" content="Şahıslar, hesaplar, konumlar, deliller ve kronoloji tek soruşturma dosyasında. Bağlantı ağı, harita, delil kasası, PDF/HTML rapor. Sunucusuz, kayıt gerektirmez." />
+    <meta property="og:title" content="OSINT Case" />
+    <meta property="og:description" content="Tarayıcıda çalışan açık kaynak soruşturma ve istihbarat analiz masası." />
+    <meta property="og:image" content="/site/shots/tr-network.webp" />
+    <meta name="theme-color" content="#0a0a0a" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <title>OSINT Case</title>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+    <div class="band">
+      <span data-i18n="band">OSINT CASE · SORUŞTURMA VE İSTİHBARAT ANALİZ MASASI</span>
+    </div>
+
+    <header class="nav">
+      <a class="brand" href="/" aria-label="OSINT Case">
+        <img src="/site/logo.webp" alt="" width="36" height="36" />
+        <span>OSINT <b>Case</b></span>
+      </a>
+      <nav class="nav-links" aria-label="Sayfa">
+        <a href="#ekranlar" data-i18n="nav.screens">Ekranlar</a>
+        <a href="#ozellikler" data-i18n="nav.features">Özellikler</a>
+        <a href="#rapor" data-i18n="nav.report">Rapor</a>
+        <a href="#ornekler" data-i18n="nav.samples">Örnekler</a>
+        <a href="#gizlilik" data-i18n="nav.privacy">Gizlilik</a>
+      </nav>
+      <div class="nav-right">
+        <div class="lang" role="group" aria-label="Dil / Language">
+          <button type="button" data-lang="tr">TR</button>
+          <button type="button" data-lang="en">EN</button>
+        </div>
+        <a class="btn btn-primary btn-sm" href="/app/" data-i18n="cta.start">Soruşturmaya başla</a>
+      </div>
+    </header>
+
+    <main>
+      <!-- ---- Açılış ---------------------------------------------------- -->
+      <section class="hero">
+        <div class="hero-text">
+          <div class="kicker mono" data-i18n="hero.kicker">AÇIK KAYNAK · SUNUCUSUZ · KAYIT GEREKTİRMEZ</div>
+          <h1 data-i18n="hero.title">Dağınık izleri tek bir soruşturma dosyasında birleştirin.</h1>
+          <p class="lead" data-i18n="hero.lead">
+            Şahıslar, hesaplar, konumlar, deliller ve kronoloji aynı masada. Bağlantı ağını görün, kaynakları
+            değerlendirin, raporu tek tıkla PDF ya da HTML olarak alın. Veriler tarayıcınızdan çıkmaz.
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-primary btn-lg" href="/app/">
+              <span data-i18n="cta.start">Soruşturmaya başla</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 18l6-6M13 6l6 6"/></svg>
+            </a>
+            <a class="btn btn-ghost btn-lg" id="hero-sample" href="/app/?sample=kara-sahin" data-i18n="cta.sample">Örnek dosyayı aç</a>
+          </div>
+          <ul class="facts mono">
+            <li>AES-256-GCM</li>
+            <li>SHA-256</li>
+            <li>NATO Admiralty</li>
+            <li>TR / EN</li>
+            <li>GPL-3.0</li>
+          </ul>
+        </div>
+        <figure class="hero-shot frame">
+          <img data-shot="network" src="/site/shots/tr-network.webp" alt="" width="1600" height="1000" />
+        </figure>
+      </section>
+
+      <!-- ---- Adımlar ---------------------------------------------------- -->
+      <section class="steps">
+        <div class="step">
+          <span class="step-no mono">01</span>
+          <h3 data-i18n="s1.t">Dosyayı aç</h3>
+          <p data-i18n="s1.d">Dosya no, gizlilik derecesi, hedef ve hukuki dayanakla künyeyi oluşturun. Her sayfada gizlilik bandı görünür.</p>
+        </div>
+        <div class="step">
+          <span class="step-no mono">02</span>
+          <h3 data-i18n="s2.t">Topla ve bağla</h3>
+          <p data-i18n="s2.d">50'den fazla tanımlayıcı türü, kişi fotoğrafları, konumlar ve deliller. Sürükleyip bağlayın, kaynağı Admiralty koduyla derecelendirin.</p>
+        </div>
+        <div class="step">
+          <span class="step-no mono">03</span>
+          <h3 data-i18n="s3.t">Raporla</h3>
+          <p data-i18n="s3.d">Kapak, şahıs profilleri, ağ şeması, kronoloji ve delil listesiyle rapor. Koyu ya da açık tema, karartma ve filigran.</p>
+        </div>
+      </section>
+
+      <!-- ---- Ekranlar --------------------------------------------------- -->
+      <section class="section" id="ekranlar">
+        <div class="section-head">
+          <span class="kicker mono" data-i18n="scr.kicker">EKRANLAR</span>
+          <h2 data-i18n="scr.title">Bir soruşturmanın tamamı, tek pencerede</h2>
+        </div>
+        <div class="tabs" role="tablist">
+          <button type="button" role="tab" class="on" data-tab="subject" data-i18n="tab.subject">Şahıs ve fotoğraflar</button>
+          <button type="button" role="tab" data-tab="timeline" data-i18n="tab.timeline">Kronoloji</button>
+          <button type="button" role="tab" data-tab="evidence" data-i18n="tab.evidence">Delil kasası</button>
+          <button type="button" role="tab" data-tab="report" data-i18n="tab.report">Rapor</button>
+          <button type="button" role="tab" data-tab="network" data-i18n="tab.network">Bağlantı ağı</button>
+        </div>
+        <div class="tab-view">
+          <figure class="frame">
+            <img id="tab-img" data-shot="subject" src="/site/shots/tr-subject.webp" alt="" width="1600" height="1000" loading="lazy" />
+          </figure>
+          <p class="tab-cap" id="tab-cap"></p>
+        </div>
+      </section>
+
+      <!-- ---- Özellikler ------------------------------------------------- -->
+      <section class="section" id="ozellikler">
+        <div class="section-head">
+          <span class="kicker mono" data-i18n="feat.kicker">ÖZELLİKLER</span>
+          <h2 data-i18n="feat.title">Soruşturma masasında olması gereken her şey</h2>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <svg viewBox="0 0 24 24"><path d="M5 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M19 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M5 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M19 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M5 7l0 10M7 5l10 0M7 19l10 0M19 7l0 10"/></svg>
+            <h3 data-i18n="f1.t">Bağlantı ağı</h3>
+            <p data-i18n="f1.d">Sürükle-bağla düğümler, kesin / muhtemel / şüpheli bağlantılar, en kısa yol ve merkezilik analizi.</p>
+          </article>
+          <article class="card">
+            <svg viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
+            <h3 data-i18n="f2.t">Şahıs profilleri</h3>
+            <p data-i18n="f2.d">Rol, tehdit seviyesi, eşkal. Birden fazla ana ve diğer fotoğraf; her görselin SHA-256 özeti saklanır.</p>
+          </article>
+          <article class="card">
+            <svg viewBox="0 0 24 24"><path d="M8 9h8M8 13h6M9 18h-3a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-3l-3 3l-3 -3z"/></svg>
+            <h3 data-i18n="f3.t">50+ tanımlayıcı</h3>
+            <p data-i18n="f3.d">Tanıdık, aile, iş ve eğitim geçmişi; Instagram'dan GitHub'a, WhatsApp'tan Telegram kanallarına 25+ platform; sızıntı kaydı.</p>
+          </article>
+          <article class="card">
+            <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/></svg>
+            <h3 data-i18n="f4.t">Harita ve kroki</h3>
+            <p data-i18n="f4.d">OpenStreetMap (anahtarsız) ya da Google Maps. Ziyaret, görülme kaydı, yarıçap ve yoğunluk.</p>
+          </article>
+          <article class="card">
+            <svg viewBox="0 0 24 24"><path d="M12 7v5l3 3M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/></svg>
+            <h3 data-i18n="f5.t">Kronoloji</h3>
+            <p data-i18n="f5.d">Olaylar, konum ziyaretleri, görülmeler ve deliller tek zaman çizelgesinde birleşir.</p>
+          </article>
+          <article class="card">
+            <svg viewBox="0 0 24 24"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3M9 12l2 2l4 -4"/></svg>
+            <h3 data-i18n="f6.t">Delil kasası</h3>
+            <p data-i18n="f6.d">SHA-256 bütünlük özeti, yeniden doğrulama ve teslim zinciri. Her işlem kayda geçer.</p>
+          </article>
+          <article class="card">
+            <svg viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2zM9 17h6M9 13h6"/></svg>
+            <h3 data-i18n="f7.t">PDF ve HTML rapor</h3>
+            <p data-i18n="f7.d">Koyu ya da açık tema, sayfa numarası, gizlilik bandı. Hassas alanlar için karartma, sızıntı takibi için filigran.</p>
+          </article>
+          <article class="card">
+            <svg viewBox="0 0 24 24"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2zM11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0M8 11v-4a4 4 0 1 1 8 0v4"/></svg>
+            <h3 data-i18n="f8.t">Şifreli dosya</h3>
+            <p data-i18n="f8.d">Dosyayı AES-256-GCM ile parolalayın. Otomatik kurtarma kaydı da şifreli tutulur.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- ---- Rapor ------------------------------------------------------ -->
+      <section class="section report" id="rapor">
+        <div class="report-text">
+          <span class="kicker mono" data-i18n="rep.kicker">RAPOR</span>
+          <h2 data-i18n="rep.title">Masadan çıkan belge, masanın kendisi kadar düzenli</h2>
+          <ul class="ticks">
+            <li data-i18n="rep.l1">Kapakta hedefin fotoğrafı, künye ve dosya parmak izi</li>
+            <li data-i18n="rep.l2">Her şahıs için fotoğraflı profil kartı ve bağlı tanımlayıcılar</li>
+            <li data-i18n="rep.l3">Ağ şeması, konum krokisi ve görsel kronoloji</li>
+            <li data-i18n="rep.l4">Her sayfada gizlilik bandı ve “Sayfa X / Y”</li>
+            <li data-i18n="rep.l5">Karartma açıkken hassas değerler çıktıya hiç yazılmaz</li>
+            <li data-i18n="rep.l6">Rapor dili arayüz diliyle aynıdır: TR ya da EN</li>
+          </ul>
+          <a class="btn btn-ghost" id="report-sample" href="/app/?sample=kara-sahin" data-i18n="rep.cta">Örnek dosyayla rapor al</a>
+        </div>
+        <div class="report-pages">
+          <img data-shot="pdf-cover" src="/site/shots/tr-pdf-cover.webp" alt="" width="900" height="1273" loading="lazy" />
+          <img data-shot="pdf-profile" src="/site/shots/tr-pdf-profile.webp" alt="" width="900" height="1273" loading="lazy" />
+        </div>
+      </section>
+
+      <!-- ---- Örnekler --------------------------------------------------- -->
+      <section class="section" id="ornekler">
+        <div class="section-head">
+          <span class="kicker mono" data-i18n="smp.kicker">ÖRNEK DOSYALAR</span>
+          <h2 data-i18n="smp.title">Kurgusal bir soruşturmayla hemen deneyin</h2>
+          <p class="section-sub" data-i18n="smp.sub">Tüm kişi, örgüt, numara ve yerler kurgusaldır; fotoğraflar sentetik silüetlerdir.</p>
+        </div>
+        <div class="samples" id="samples"></div>
+      </section>
+
+      <!-- ---- Gizlilik --------------------------------------------------- -->
+      <section class="section privacy" id="gizlilik">
+        <div class="section-head">
+          <span class="kicker mono" data-i18n="prv.kicker">GİZLİLİK</span>
+          <h2 data-i18n="prv.title">Sunucu yok. Hesap yok. İzleme yok.</h2>
+        </div>
+        <div class="grid three">
+          <article class="card flat">
+            <h3 data-i18n="p1.t">Veriler tarayıcıda kalır</h3>
+            <p data-i18n="p1.d">Uygulama tamamen tarayıcınızda çalışır. Dosyalar bu cihazda tutulur; indirip saklamak sizin elinizdedir.</p>
+          </article>
+          <article class="card flat">
+            <h3 data-i18n="p2.t">Kayıt ve giriş gerekmez</h3>
+            <p data-i18n="p2.d">E-posta, parola, hesap yok. Sayfayı açın, dosyayı başlatın.</p>
+          </article>
+          <article class="card flat">
+            <h3 data-i18n="p3.t">Sorumlu kullanım</h3>
+            <p data-i18n="p3.d">OSINT Case, yetkili soruşturma ve araştırmalar içindir. Kişisel verileri yalnızca yasal dayanak ve amaç dahilinde işleyin.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="final">
+        <h2 data-i18n="fin.title">Dosyayı açın, izleri birleştirin.</h2>
+        <a class="btn btn-primary btn-lg" href="/app/">
+          <span data-i18n="cta.start">Soruşturmaya başla</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 18l6-6M13 6l6 6"/></svg>
+        </a>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="brand small">
+        <img src="/site/logo.webp" alt="" width="24" height="24" />
+        <span>OSINT <b>Case</b></span>
+      </div>
+      <p>
+        <span data-i18n="foot.based">OSINTMapper (Geistnigma) tabanlıdır.</span>
+        · GPL-3.0 ·
+        <a href="https://github.com/emrekybs/OsintCase" rel="noopener">GitHub</a>
+      </p>
+    </footer>
+
+    <script type="module" src="/src/site/site.js"></script>
   </body>
 </html>

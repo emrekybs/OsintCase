@@ -333,3 +333,119 @@
   line-height: 1.9;
   color: #8f8f8f;
 }
+
+/* ---- Örnek dosyalar ------------------------------------------------------ */
+.landing-samples {
+  margin-bottom: 30px;
+}
+.landing-samples-sub {
+  margin: 8px 0 12px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+.landing-samples-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 12px;
+}
+.sample-card {
+  display: flex;
+  gap: 14px;
+  text-align: left;
+  padding: 12px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text-0);
+  transition: border-color 0.12s ease, background 0.12s ease;
+}
+.sample-card:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--bg-2);
+}
+.sample-card:disabled {
+  cursor: default;
+}
+.sample-card.busy {
+  border-color: var(--accent);
+}
+.sample-cover {
+  position: relative;
+  width: 84px;
+  height: 104px;
+  flex-shrink: 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-3);
+  border: 1px solid var(--border-strong);
+}
+.sample-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.sample-cls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  padding: 2px 0;
+}
+.sample-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  flex: 1;
+}
+.sample-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.sample-no {
+  font-size: 11px;
+  color: var(--accent);
+}
+.sample-lang {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  padding: 0 4px;
+}
+.sample-title {
+  font-size: 15px;
+  line-height: 1.25;
+}
+.sample-desc {
+  font-size: 12px;
+  color: var(--text-1);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.sample-stats {
+  font-size: 10.5px;
+  color: var(--text-2);
+}
+.sample-cta {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+}

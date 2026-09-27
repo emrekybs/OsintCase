@@ -1,11 +1,14 @@
 {
-  "name": "osint-mapping-tool",
+  "name": "osint-case",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Free, open-source OSINT tool for mapping target information and visited locations.",
+  "description": "OSINT Case — browser-based investigation and case mapping tool.",
   "scripts": {
+    "samples": "node scripts/prepare-samples.mjs",
+    "predev": "node scripts/prepare-samples.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/prepare-samples.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },

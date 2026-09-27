@@ -1,0 +1,22 @@
+[
+  {
+    "id": "kara-sahin",
+    "file": "operasyon-kara-sahin.case.json",
+    "lang": "tr",
+    "title": { "tr": "Operasyon Kara Şahin", "en": "Operation Black Falcon" },
+    "desc": {
+      "tr": "Kurgusal bir örgüt hücresi: bölge sorumlusu, finans hattı, propaganda kanalı, lojistik araç. Fotoğraflar, harita, kronoloji ve deliller.",
+      "en": "A fictional cell: regional leader, finance line, propaganda channel, logistics vehicle. Photos, map, timeline and evidence (Turkish data)."
+    }
+  },
+  {
+    "id": "nightjar",
+    "file": "operation-nightjar-photos.case.json",
+    "lang": "en",
+    "title": { "tr": "Operation Nightjar", "en": "Operation Nightjar" },
+    "desc": {
+      "tr": "Kurgusal kaçakçılık ve kara para ağı: paravan şirket, araçlar, dijital iz ve ödeme akışı (İngilizce veri).",
+      "en": "A fictional smuggling and money-laundering network: front company, vehicles, digital footprint and payment flows."
+    }
+  }
+]

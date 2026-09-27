@@ -28,6 +28,11 @@ function readLang() {
     const v = localStorage.getItem(STORAGE_KEY);
     if (v === 'tr' || v === 'en') return v;
   } catch {}
+  // İlk ziyaret: tarayıcı dili Türkçe değilse İngilizce başla.
+  try {
+    const nav = (navigator.languages?.[0] || navigator.language || '').toLowerCase();
+    if (nav && !nav.startsWith('tr')) return 'en';
+  } catch {}
   return 'tr';
 }
 

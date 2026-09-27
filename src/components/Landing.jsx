@@ -14,7 +14,7 @@ import {
   suggestCaseNumber,
   fmtDate,
 } from '../caseModel.js';
-import { t } from '../i18n/index.jsx';
+import { getLang, t } from '../i18n/index.jsx';
 import ThemeToggle from './ThemeToggle.jsx';
 import BrandMark from './BrandMark.jsx';
 import LangSwitch from './LangSwitch.jsx';
@@ -46,13 +46,84 @@ const EMPTY_FORM = () => ({
   priority: 'orta',
 });
 
+const SAMPLES_BASE = `${import.meta.env.BASE_URL ?? '/'}samples/`;
+
+/** Sitede hazır gelen örnek dosyalar (public/samples/index.json). */
+function SampleGallery({ onOpen, busyId }) {
+  const [items, setItems] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    fetch(`${SAMPLES_BASE}index.json`, { cache: 'no-cache' })
+      .then((r) => (r.ok ? r.json() : []))
+      .then((j) => alive && setItems(Array.isArray(j) ? j : []))
+      .catch(() => alive && setItems([]));
+    return () => {
+      alive = false;
+    };
+  }, []);
+  if (!items || items.length === 0) return null;
+  const lang = getLang();
+  return (
+    <div className="landing-samples">
+      <div className="landing-recents-header">
+        <span>{t('Örnek dosyalar')}</span>
+        <span className="count-pill">{items.length}</span>
+      </div>
+      <p className="landing-samples-sub">
+        {t('Kurgusal verilerle aracı keşfedin. Örnek üzerinde yaptığınız değişiklikler yalnızca bu tarayıcıda kalır.')}
+      </p>
+      <div className="landing-samples-grid">
+        {items.map((s) => {
+          const cls = s.classification ? getClassification(s.classification) : null;
+          const busy = busyId === s.id;
+          return (
+            <button
+              key={s.id}
+              type="button"
+              className={`sample-card ${busy ? 'busy' : ''}`}
+              onClick={() => onOpen(s)}
+              disabled={Boolean(busyId)}
+            >
+              <span className="sample-cover">
+                {s.cover ? <img src={`${SAMPLES_BASE}${s.cover}`} alt="" loading="lazy" /> : null}
+                {cls && (
+                  <span className="sample-cls" style={{ background: cls.color, color: cls.text }}>{cls.label}</span>
+                )}
+              </span>
+              <span className="sample-body">
+                <span className="sample-top">
+                  <span className="mono sample-no">{s.caseNumber}</span>
+                  <span className="sample-lang">{String(s.lang || '').toUpperCase()}</span>
+                </span>
+                <b className="sample-title">{s.title?.[lang] ?? s.title?.tr ?? s.id}</b>
+                <span className="sample-desc">{s.desc?.[lang] ?? s.desc?.tr ?? ''}</span>
+                <span className="sample-stats mono">
+                  {t('{0} şahıs', { 0: s.stats?.subjects ?? 0 })} · {t('{0} tanımlayıcı', { 0: s.stats?.identifiers ?? 0 })} · {t('{0} fotoğraf', { 0: s.stats?.photos ?? 0 })} · {t('{0} konum', { 0: s.stats?.locations ?? 0 })}
+                </span>
+                <span className="sample-cta">
+                  {busy ? t('Yükleniyor…') : t('Örneği aç')}
+                  {!busy && (
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 18l6 -6M13 6l6 6" /></svg>
+                  )}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function Landing() {
   const {
     newProject,
     openProjectFromFile,
     openEncryptedFile,
     openProjectFromSnapshot,
+    openProjectFromObject,
   } = useProject();
+  const [sampleBusy, setSampleBusy] = useState(null);
   const [showNew, setShowNew] = useState(false);
   const [form, setForm] = useState(EMPTY_FORM);
   const [error, setError] = useState('');
@@ -130,6 +201,38 @@ export default function Landing() {
     }
   };
 
+  const handleOpenSample = async (s) => {
+    setError('');
+    setSampleBusy(s.id);
+    try {
+      const res = await fetch(`${SAMPLES_BASE}${s.file}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const obj = await res.json();
+      openProjectFromObject(obj, t('Örnek dosya: {0}', { 0: s.title?.[getLang()] ?? s.id }));
+    } catch (err) {
+      setError(t('Örnek açılamadı: {0}', { 0: err.message }));
+      setSampleBusy(null);
+    }
+  };
+
+  // Tanıtım sayfasından gelen bağlantı: /app/?sample=<id> → örneği doğrudan aç.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('sample');
+    if (!id) return;
+    params.delete('sample');
+    const qs = params.toString();
+    window.history.replaceState(null, '', `${window.location.pathname}${qs ? `?${qs}` : ''}${window.location.hash}`);
+    fetch(`${SAMPLES_BASE}index.json`)
+      .then((r) => (r.ok ? r.json() : []))
+      .then((list) => {
+        const s = (Array.isArray(list) ? list : []).find((x) => x.id === id);
+        if (s) handleOpenSample(s);
+      })
+      .catch(() => {});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const openNew = () => {
     setForm(EMPTY_FORM());
     setError('');
@@ -203,6 +306,8 @@ export default function Landing() {
               </span>
             </button>
           </div>
+
+          <SampleGallery onOpen={handleOpenSample} busyId={sampleBusy} />
 
           <div className="landing-recents">
             <div className="landing-recents-header">

@@ -57,7 +57,20 @@ npm install
 npm run dev
 ```
 
-Open `http://localhost:5173`.
+Open `http://localhost:5173` for the intro page, `http://localhost:5173/app/` for the application.
+
+## Deploy (Cloudflare Pages)
+
+The build is fully static: an intro page at `/` and the application at `/app/`. No server, no database, no login.
+
+1. Push the repository to GitHub.
+2. Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git** and pick the repository.
+3. Build settings: framework preset **None**, build command `npm run build`, output directory `dist`, environment variable `NODE_VERSION = 22`.
+4. **Custom domains → Set up a domain** and add your domain (DNS is created automatically when the domain is on Cloudflare).
+
+`npm run build` also copies the sample cases from `example/` to `/samples/` (see `example/samples.meta.json`), so they show on the intro page and on the app home screen. `public/_headers` sets security and cache headers.
+
+The first-run setup wizard is off by default (the app opens straight to the home screen with OpenStreetMap). To bring it back for self-hosted installs, build with `VITE_SETUP_WIZARD=1`.
 
 ## Docker
 
@@ -65,7 +78,7 @@ Open `http://localhost:5173`.
 docker compose up --build
 ```
 
-Then open `http://localhost:5173`.
+Then open `http://localhost:5173` (application: `/app/`).
 
 ## Sample Case
 
