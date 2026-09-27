@@ -2,31 +2,32 @@
  * Intro page (/). No framework: screen tabs and sample case cards.
  * Fonts are bundled with the site (no third-party font requests).
  */
-import '@fontsource-variable/archivo/wdth.css';
+import '@fontsource/ibm-plex-sans/400.css';
+import '@fontsource/ibm-plex-sans/500.css';
+import '@fontsource/ibm-plex-sans/600.css';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
-import '@fontsource/ibm-plex-mono/600.css';
 import './site.css';
 
 const TABS = {
   subject: {
-    title: 'SUBJECTS & PHOTOS',
+    title: 'Subjects & photos',
     cap: 'Several main and additional photos per person — drag & drop or paste with Ctrl+V. A SHA-256 hash of every original is kept.',
   },
   timeline: {
-    title: 'TIMELINE',
+    title: 'Timeline',
     cap: 'Events, location visits, sightings and exhibits merged into one month-by-month timeline.',
   },
   evidence: {
-    title: 'EVIDENCE VAULT',
+    title: 'Evidence vault',
     cap: 'Exhibit number, SHA-256 hash, re-verification and chain of custody for every item.',
   },
   report: {
-    title: 'REPORT BUILDER',
+    title: 'Report builder',
     cap: 'Pick theme, sections, redaction and watermark — then save as PDF or a single-file HTML report.',
   },
   home: {
-    title: 'CASE DESK',
+    title: 'Case desk',
     cap: 'Start a new case, open a file from disk, pick up where you left off, or explore a sample case.',
   },
 };
@@ -92,7 +93,7 @@ function renderSamples(list) {
       <span><b>${st.photos ?? 0}</b> photos</span>
       <span><b>${st.evidence ?? 0}</b> exhibits</span>
     </span>
-    <span class="sample-go mono">Open case →</span>
+    <span class="sample-go">Open case →</span>
     ${data}
   </span>
 </a>`;

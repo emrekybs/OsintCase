@@ -8,28 +8,24 @@
     <meta property="og:title" content="OSINT Case" />
     <meta property="og:description" content="Every trace, one case file. A browser-based investigation and intelligence analysis desk." />
     <meta property="og:image" content="/site/shots/en-network.webp" />
-    <meta name="theme-color" content="#0b0b0b" />
+    <meta name="theme-color" content="#121212" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="preload" as="image" href="/site/logo.webp" />
   </head>
   <body>
-    <div class="band mono">
-      <span>UNCLASSIFIED</span>
-      <span class="band-sep">//</span>
-      <span>OSINT CASE · INVESTIGATION &amp; INTELLIGENCE ANALYSIS DESK</span>
-    </div>
+    <div class="band mono">UNCLASSIFIED · OSINT CASE · FOR AUTHORISED INVESTIGATIONS</div>
 
     <header class="nav">
       <div class="wrap nav-inner">
         <a class="brand" href="/" aria-label="OSINT Case home">
-          <img src="/site/logo.webp" alt="" width="40" height="40" />
-          <span class="brand-word">OSINT <b>CASE</b></span>
+          <img src="/site/logo.webp" alt="" width="38" height="38" />
+          <span>OSINT <b>Case</b></span>
         </a>
         <nav class="nav-links" aria-label="Sections">
+          <a href="#how">How it works</a>
           <a href="#screens">Screens</a>
           <a href="#features">Features</a>
           <a href="#report">Report</a>
-          <a href="#samples">Samples</a>
+          <a href="#samples">Sample cases</a>
           <a href="#privacy">Privacy</a>
         </nav>
         <a class="btn btn-primary btn-sm" href="/app/">Start investigation</a>
@@ -41,66 +37,100 @@
       <section class="hero">
         <div class="wrap hero-inner">
           <div class="hero-text">
-            <p class="label mono"><span class="dot"></span>Open-source investigation desk</p>
-            <h1>Every trace.<br /><span>One case file.</span></h1>
+            <p class="tag mono">Case file · Open-source intelligence</p>
+            <h1>Every trace, in one case file.</h1>
             <p class="lead">
-              Subjects, accounts, locations, evidence and timeline on a single desk. Map the link network,
-              grade every source, and export a classified-style report as PDF or HTML. Nothing leaves your browser.
+              OSINT Case is a quiet desk for investigators. Collect subjects, accounts, places and evidence,
+              connect them on a link network, grade every source, and hand over a clean report as PDF or HTML.
+              It runs in your browser — nothing is uploaded anywhere.
             </p>
             <div class="hero-cta">
               <a class="btn btn-primary btn-lg" href="/app/">
                 Start investigation
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </a>
               <a class="btn btn-line btn-lg" href="/app/?sample=nightjar">Open a sample case</a>
             </div>
-            <ul class="facts mono">
+            <ul class="facts">
               <li>No sign-up</li>
-              <li>AES-256-GCM</li>
-              <li>SHA-256 evidence</li>
+              <li>AES-256-GCM encryption</li>
+              <li>SHA-256 evidence hashing</li>
               <li>NATO Admiralty grading</li>
-              <li>GPL-3.0</li>
             </ul>
           </div>
 
-          <div class="emblem" aria-hidden="true">
-            <span class="emblem-coord mono tl">41.0265 N</span>
-            <span class="emblem-coord mono tr">28.9742 E</span>
-            <span class="emblem-coord mono bl">CASE 2026/INV-0417</span>
-            <span class="emblem-coord mono br">GRID 08</span>
-            <img src="/site/logo.webp" alt="OSINT Case emblem" width="512" height="512" />
+          <!-- Dossier: a case sheet with the subject photo clipped on -->
+          <div class="dossier" aria-hidden="true">
+            <div class="folder-tab mono">2026/INV-0417</div>
+            <div class="folder">
+              <div class="sheet">
+                <div class="sheet-head">
+                  <img class="seal" src="/site/logo.webp" alt="" width="54" height="54" />
+                  <div>
+                    <span class="mono sheet-kicker">Investigation report</span>
+                    <b>Operation Nightjar</b>
+                  </div>
+                  <span class="stamp mono">Secret</span>
+                </div>
+                <div class="sheet-subject">
+                  <figure class="clip-photo">
+                    <span class="paperclip"></span>
+                    <img src="/samples/nightjar.jpg" alt="" width="600" height="760" />
+                    <figcaption class="mono">Subject 01</figcaption>
+                  </figure>
+                  <dl class="mono">
+                    <div><dt>Name</dt><dd>Marcus Hale</dd></div>
+                    <div><dt>Code name</dt><dd>NIGHTJAR</dd></div>
+                    <div><dt>Role</dt><dd>Suspect</dd></div>
+                    <div><dt>Threat</dt><dd><span class="pill">High</span></dd></div>
+                    <div><dt>Grading</dt><dd>B2</dd></div>
+                  </dl>
+                </div>
+                <div class="sheet-lines mono">
+                  <span>20 identifiers</span><span>21 links</span><span>5 locations</span><span>5 exhibits</span>
+                </div>
+                <p class="sheet-note">Coordinates night-time shipments through a front company. Continue surveillance.</p>
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div class="wrap">
-          <figure class="window">
-            <figcaption class="window-bar mono">
-              <span class="win-dots"><i></i><i></i><i></i></span>
-              <span>OPERATION NIGHTJAR — LINK NETWORK</span>
-              <span class="win-cls">SECRET</span>
-            </figcaption>
-            <img src="/site/shots/en-network.webp" alt="OSINT Case link network view" width="1600" height="1000" />
-          </figure>
         </div>
       </section>
 
-      <!-- ---- Steps ------------------------------------------------------ -->
-      <div class="wrap steps-head"><p class="label mono">01 / How it works</p></div>
-      <section class="wrap steps">
-        <div class="step">
-          <span class="step-no mono">01</span>
-          <h3>Open a case</h3>
-          <p>Case number, classification, primary target and legal basis. The classification band follows you onto every page.</p>
-        </div>
-        <div class="step">
-          <span class="step-no mono">02</span>
-          <h3>Collect &amp; connect</h3>
-          <p>50+ identifier types, subject photos, locations and evidence. Drag to link, grade each source with an Admiralty code.</p>
-        </div>
-        <div class="step">
-          <span class="step-no mono">03</span>
-          <h3>Report</h3>
-          <p>Cover, subject profiles, network diagram, timeline and exhibits. Dark or light, with redaction and watermark.</p>
+      <!-- ---- App window ------------------------------------------------- -->
+      <section class="wrap">
+        <figure class="window">
+          <figcaption class="window-bar mono">
+            <span class="win-dots"><i></i><i></i><i></i></span>
+            <span>Operation Nightjar — link network</span>
+          </figcaption>
+          <img src="/site/shots/en-network.webp" alt="OSINT Case link network view" width="1600" height="1000" />
+        </figure>
+      </section>
+
+      <!-- ---- How it works ----------------------------------------------- -->
+      <section class="section" id="how">
+        <div class="wrap">
+          <header class="section-head">
+            <p class="tag mono">01 · How it works</p>
+            <h2>Three steps from a lead to a report</h2>
+          </header>
+          <div class="steps">
+            <article>
+              <span class="num mono">1</span>
+              <h3>Open a case</h3>
+              <p>Give it a number, a classification, the primary target and the legal basis. The classification band follows you onto every page.</p>
+            </article>
+            <article>
+              <span class="num mono">2</span>
+              <h3>Collect and connect</h3>
+              <p>More than 50 identifier types, subject photos, locations and evidence. Drag to link them and grade each source with an Admiralty code.</p>
+            </article>
+            <article>
+              <span class="num mono">3</span>
+              <h3>Write the report</h3>
+              <p>Cover, subject profiles, network diagram, timeline and exhibits — dark or light, with optional redaction and watermark.</p>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -108,10 +138,10 @@
       <section class="section" id="screens">
         <div class="wrap">
           <header class="section-head">
-            <p class="label mono">02 / Screens</p>
-            <h2>A whole investigation in one window</h2>
+            <p class="tag mono">02 · Screens</p>
+            <h2>The whole investigation in one window</h2>
           </header>
-          <div class="tabs mono" role="tablist">
+          <div class="tabs" role="tablist">
             <button type="button" role="tab" class="on" data-tab="subject">Subjects &amp; photos</button>
             <button type="button" role="tab" data-tab="timeline">Timeline</button>
             <button type="button" role="tab" data-tab="evidence">Evidence vault</button>
@@ -121,8 +151,7 @@
           <figure class="window">
             <figcaption class="window-bar mono">
               <span class="win-dots"><i></i><i></i><i></i></span>
-              <span id="tab-title">SUBJECTS &amp; PHOTOS</span>
-              <span class="win-cls">SECRET</span>
+              <span id="tab-title">Subjects &amp; photos</span>
             </figcaption>
             <img id="tab-img" src="/site/shots/en-subject.webp" alt="" width="1600" height="1000" loading="lazy" />
           </figure>
@@ -134,49 +163,49 @@
       <section class="section" id="features">
         <div class="wrap">
           <header class="section-head">
-            <p class="label mono">03 / Features</p>
-            <h2>Everything an investigation desk needs</h2>
+            <p class="tag mono">03 · Features</p>
+            <h2>What is on the desk</h2>
           </header>
           <div class="features">
             <article>
-              <svg viewBox="0 0 24 24"><path d="M5 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M19 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M5 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M19 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M5 7l0 10M7 5l10 0M7 19l10 0M19 7l0 10"/></svg>
+              <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M19 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M5 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M19 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0M5 7l0 10M7 5l10 0M7 19l10 0M19 7l0 10"/></svg></span>
               <h3>Link network</h3>
-              <p>Drag-to-connect nodes, confirmed / probable / doubtful links, shortest path and centrality.</p>
+              <p>Drag-to-connect nodes; confirmed, probable and doubtful links; shortest path and centrality.</p>
             </article>
             <article>
-              <svg viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
+              <span class="ico"><svg viewBox="0 0 24 24"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg></span>
               <h3>Subject profiles</h3>
-              <p>Role, threat level and description. Several main and additional photos, each with a SHA-256 hash.</p>
+              <p>Role, threat level and description, with several main and additional photos per person.</p>
             </article>
             <article>
-              <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+              <span class="ico"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></span>
               <h3>50+ identifiers</h3>
-              <p>Acquaintances, family, employment, education; 25+ platforms from Instagram to GitHub, WhatsApp to Telegram channels; breach records.</p>
+              <p>Friends, family, work and education; 25+ platforms from Instagram to GitHub; breach records.</p>
             </article>
             <article>
-              <svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/></svg>
+              <span class="ico"><svg viewBox="0 0 24 24"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/></svg></span>
               <h3>Map &amp; sketch</h3>
               <p>OpenStreetMap with no key, or Google Maps. Visits, sightings, radius and density.</p>
             </article>
             <article>
-              <svg viewBox="0 0 24 24"><path d="M12 7v5l3 3M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/></svg>
+              <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 7v5l3 3M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/></svg></span>
               <h3>Timeline</h3>
-              <p>Events, location visits, sightings and exhibits merged into one month-by-month timeline.</p>
+              <p>Events, visits, sightings and exhibits merged into one month-by-month timeline.</p>
             </article>
             <article>
-              <svg viewBox="0 0 24 24"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3M9 12l2 2l4 -4"/></svg>
+              <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3M9 12l2 2l4 -4"/></svg></span>
               <h3>Evidence vault</h3>
-              <p>SHA-256 integrity hash, re-verification and chain of custody. Every action goes into the audit log.</p>
+              <p>SHA-256 integrity hash, re-verification and chain of custody. Every action is logged.</p>
             </article>
             <article>
-              <svg viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2zM9 17h6M9 13h6"/></svg>
+              <span class="ico"><svg viewBox="0 0 24 24"><path d="M14 3v4a1 1 0 0 0 1 1h4M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2zM9 17h6M9 13h6"/></svg></span>
               <h3>PDF &amp; HTML report</h3>
-              <p>Dark or light theme, page numbers, classification band. Redaction for sensitive fields, watermark for leak tracing.</p>
+              <p>Dark or light theme, page numbers, classification band, redaction and watermark.</p>
             </article>
             <article>
-              <svg viewBox="0 0 24 24"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2zM11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0M8 11v-4a4 4 0 1 1 8 0v4"/></svg>
+              <span class="ico"><svg viewBox="0 0 24 24"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2zM11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0M8 11v-4a4 4 0 1 1 8 0v4"/></svg></span>
               <h3>Encrypted files</h3>
-              <p>Protect a case with AES-256-GCM. The autosave copy in the browser is encrypted too.</p>
+              <p>Lock a case with AES-256-GCM. The browser autosave copy is encrypted too.</p>
             </article>
           </div>
         </div>
@@ -186,11 +215,11 @@
       <section class="section" id="report">
         <div class="wrap report">
           <div class="report-text">
-            <p class="label mono">04 / Report</p>
-            <h2>The document that leaves the desk is as tidy as the desk</h2>
+            <p class="tag mono">04 · Report</p>
+            <h2>A report you can hand over</h2>
             <ul class="ticks">
               <li>Cover with the target photo, case header and file fingerprint</li>
-              <li>A photo profile card for every subject, with linked identifiers</li>
+              <li>A photo profile for every subject, with linked identifiers</li>
               <li>Network diagram, location sketch and visual timeline</li>
               <li>Classification band and “Page X / Y” on every page</li>
               <li>With redaction on, sensitive values never reach the output</li>
@@ -209,8 +238,8 @@
       <section class="section" id="samples">
         <div class="wrap">
           <header class="section-head">
-            <p class="label mono">05 / Sample cases</p>
-            <h2>Try it now with a fictional investigation</h2>
+            <p class="tag mono">05 · Sample cases</p>
+            <h2>Try it with a fictional case</h2>
             <p class="section-sub">All people, organisations, numbers and places are fictional. Photos are synthetic silhouettes.</p>
           </header>
           <div class="samples" id="sample-list"></div>
@@ -221,8 +250,8 @@
       <section class="section" id="privacy">
         <div class="wrap">
           <header class="section-head">
-            <p class="label mono">06 / Privacy</p>
-            <h2>No server. No account. No tracking.</h2>
+            <p class="tag mono">06 · Privacy</p>
+            <h2>No server, no account, no tracking</h2>
           </header>
           <div class="privacy">
             <article>
@@ -243,11 +272,14 @@
 
       <section class="final">
         <div class="wrap final-inner">
-          <img src="/site/logo.webp" alt="" width="120" height="120" loading="lazy" />
-          <h2>Open a case.<br /><span>Connect the traces.</span></h2>
+          <img src="/site/logo.webp" alt="" width="96" height="96" loading="lazy" />
+          <div>
+            <h2>Open a case and start connecting the traces.</h2>
+            <p>Free, open source, and nothing to install.</p>
+          </div>
           <a class="btn btn-primary btn-lg" href="/app/">
             Start investigation
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
       </section>
@@ -257,9 +289,9 @@
       <div class="wrap foot-inner">
         <a class="brand small" href="/">
           <img src="/site/logo.webp" alt="" width="26" height="26" loading="lazy" />
-          <span class="brand-word">OSINT <b>CASE</b></span>
+          <span>OSINT <b>Case</b></span>
         </a>
-        <p class="mono">Based on OSINTMapper by Geistnigma · GPL-3.0 · <a href="https://github.com/emrekybs/OsintCase" rel="noopener">GitHub</a></p>
+        <p>Based on OSINTMapper by Geistnigma · GPL-3.0 · <a href="https://github.com/emrekybs/OsintCase" rel="noopener">GitHub</a></p>
       </div>
     </footer>
 
