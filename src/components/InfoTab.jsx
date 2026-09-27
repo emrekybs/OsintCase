@@ -20,6 +20,7 @@ import {
   getSecondaryLabel,
 } from '../identifierTypes.js';
 import IdentifierBadge from './IdentifierBadge.jsx';
+import { getAvatarPhoto } from '../utils/photos.js';
 import IdentifierModal from './IdentifierModal.jsx';
 import IdentifierNode, { AdmiraltyTag } from './IdentifierNode.jsx';
 import NodeCreationMenu from './NodeCreationMenu.jsx';
@@ -390,6 +391,7 @@ function InfoTabInner() {
         notes: payload.notes,
         customIconId: payload.customIconId ?? null,
         reliability: payload.reliability ?? null,
+        photos: payload.photos ?? [],
       });
     } else {
       const created = addIdentifier(payload);
@@ -625,7 +627,8 @@ function InfoTabInner() {
                   <IdentifierBadge
                     typeKey={id.type}
                     customIconId={id.customIconId}
-                    size="md"
+                    size={getAvatarPhoto(id) ? 'lg' : 'md'}
+                    photo={getAvatarPhoto(id)}
                   />
                   <div className="identifier-body">
                     <div className="identifier-type">

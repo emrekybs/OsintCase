@@ -115,6 +115,71 @@ export const EVENT_CATEGORIES = [
   { key: 'operasyon', label: 'Operasyon', color: '#d0493f' },
 ];
 
+// ---- Kişi ilişkileri ve hesap durumları --------------------------------------
+
+export const FAMILY_RELATIONS = [
+  { key: 'es', label: 'Eş' },
+  { key: 'anne', label: 'Anne' },
+  { key: 'baba', label: 'Baba' },
+  { key: 'kardes', label: 'Kardeş' },
+  { key: 'cocuk', label: 'Çocuk' },
+  { key: 'buyukebeveyn', label: 'Büyükanne / büyükbaba' },
+  { key: 'torun', label: 'Torun' },
+  { key: 'amca-dayi', label: 'Amca / dayı' },
+  { key: 'hala-teyze', label: 'Hala / teyze' },
+  { key: 'kuzen', label: 'Kuzen' },
+  { key: 'yegen', label: 'Yeğen' },
+  { key: 'kayin', label: 'Kayın (eşin ailesi)' },
+  { key: 'eski-es', label: 'Eski eş' },
+  { key: 'diger', label: 'Diğer' },
+];
+
+export const ACQUAINTANCE_RELATIONS = [
+  { key: 'arkadas', label: 'Arkadaş' },
+  { key: 'yakin-arkadas', label: 'Yakın arkadaş' },
+  { key: 'is-arkadasi', label: 'İş arkadaşı' },
+  { key: 'is-ortagi', label: 'İş ortağı' },
+  { key: 'okul-arkadasi', label: 'Okul arkadaşı' },
+  { key: 'komsu', label: 'Komşu' },
+  { key: 'partner', label: 'Partner / sevgili' },
+  { key: 'eski-partner', label: 'Eski partner' },
+  { key: 'cevrimici', label: 'Çevrim içi bağlantı' },
+  { key: 'tanidik', label: 'Tanıdık' },
+  { key: 'diger', label: 'Diğer' },
+];
+
+export const CLOSENESS = [
+  { key: 'zayif', label: 'Zayıf' },
+  { key: 'orta', label: 'Orta' },
+  { key: 'guclu', label: 'Güçlü' },
+];
+
+export const ACCOUNT_STATUSES = [
+  { key: 'aktif', label: 'Aktif' },
+  { key: 'gizli', label: 'Gizli hesap' },
+  { key: 'pasif', label: 'Pasif / kullanılmıyor' },
+  { key: 'askida', label: 'Askıya alınmış' },
+  { key: 'silindi', label: 'Silinmiş' },
+  { key: 'bilinmiyor', label: 'Bilinmiyor' },
+];
+
+export const MESSENGER_KINDS = [
+  { key: 'kisisel', label: 'Kişisel' },
+  { key: 'isletme', label: 'İşletme' },
+];
+
+export const TG_CHAT_KINDS = [
+  { key: 'kanal', label: 'Kanal' },
+  { key: 'grup', label: 'Grup' },
+];
+
+/** Analist değerlendirmesinin güven düzeyi (tahmin dili). */
+export const ASSESSMENT_CONFIDENCE = [
+  { key: 'yuksek', label: 'Yüksek güven', color: '#4f9d69' },
+  { key: 'orta', label: 'Orta güven', color: '#c9a227' },
+  { key: 'dusuk', label: 'Düşük güven', color: '#d9772b' },
+];
+
 export function suggestCaseNumber(date = new Date()) {
   const y = date.getFullYear();
   const n = String(Math.floor(Math.random() * 900) + 100);
@@ -179,4 +244,11 @@ localizeRegistry(
   THREAT_LEVELS,
   LINK_CONFIDENCE,
   EVENT_CATEGORIES,
+  FAMILY_RELATIONS,
+  ACQUAINTANCE_RELATIONS,
+  CLOSENESS,
+  ACCOUNT_STATUSES,
+  MESSENGER_KINDS,
+  TG_CHAT_KINDS,
+  ASSESSMENT_CONFIDENCE,
 );

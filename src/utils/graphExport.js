@@ -14,6 +14,8 @@ import {
   getClassification,
 } from '../caseModel.js';
 import { NODE_H, NODE_W } from './graph.js';
+import { glyphSvgInner } from '../typeGlyphs.js';
+import { getAvatarPhoto } from './photos.js';
 import { triggerDownload } from './projectIO.js';
 
 const esc = (s) =>
@@ -31,21 +33,21 @@ const clip = (s, n) => {
 const PALETTES = {
   light: {
     bg: '#ffffff',
-    node: '#f7f7f2',
-    border: '#9fa294',
-    text: '#1b1e19',
-    muted: '#6c7168',
-    edge: '#6c7168',
+    node: '#f6f6f6',
+    border: '#bdbdbd',
+    text: '#141414',
+    muted: '#6a6a6a',
+    edge: '#8a8a8a',
     edgeLabelBg: '#ffffff',
   },
   dark: {
-    bg: '#0b0d0c',
-    node: '#171b18',
-    border: '#3a433b',
-    text: '#e2e5de',
-    muted: '#7a8277',
-    edge: '#8a9186',
-    edgeLabelBg: '#0b0d0c',
+    bg: '#0b0b0b',
+    node: '#151515',
+    border: '#343434',
+    text: '#ececec',
+    muted: '#8a8a8a',
+    edge: '#6e6e6e',
+    edgeLabelBg: '#0b0b0b',
   },
 };
 
@@ -58,7 +60,28 @@ function readableOn(hex) {
   return (r * 299 + g * 587 + b * 114) / 1000 > 150 ? '#111' : '#fff';
 }
 
-export function buildGraphSvg(project, { theme = 'light', highlight = null, banner = true } = {}) {
+/** Düğüm rozeti: ana fotoğraf > SVG glif > harf. */
+function badgeSvg(i, def, bx, by, size, pal) {
+  const photo = getAvatarPhoto(i);
+  if (photo?.dataUrl) {
+    const cid = `c${String(i.id).replace(/[^a-zA-Z0-9]/g, '').slice(0, 24)}`;
+    return `<clipPath id="${cid}"><rect x="${bx}" y="${by}" width="${size}" height="${size}" rx="3"/></clipPath>
+<image href="${photo.dataUrl}" x="${bx}" y="${by}" width="${size}" height="${size}" preserveAspectRatio="xMidYMid slice" clip-path="url(#${cid})"/>
+<rect x="${bx}" y="${by}" width="${size}" height="${size}" rx="3" fill="none" stroke="${pal.border}"/>`;
+  }
+  const fg = readableOn(def.color);
+  const inner = glyphSvgInner(i.type, fg);
+  if (inner) {
+    const g = size * 0.62;
+    const off = (size - g) / 2;
+    return `<rect x="${bx}" y="${by}" width="${size}" height="${size}" rx="3" fill="${def.color}"/>
+<svg x="${bx + off}" y="${by + off}" width="${g}" height="${g}" viewBox="0 0 24 24">${inner}</svg>`;
+  }
+  return `<rect x="${bx}" y="${by}" width="${size}" height="${size}" rx="3" fill="${def.color}"/>
+<text x="${bx + size / 2}" y="${by + size / 2 + 4}" font-size="12" font-weight="700" text-anchor="middle" fill="${fg}">${esc(def.glyph)}</text>`;
+}
+
+export function buildGraphSvg(project, { theme = 'light', highlight = null, banner = true, labelFn = getDisplayLabel, secondaryFn = getSecondaryLabel } = {}) {
   const pal = PALETTES[theme] ?? PALETTES.light;
   const idents = project.identifiers ?? [];
   const conns = project.connections ?? [];
@@ -120,13 +143,12 @@ export function buildGraphSvg(project, { theme = 'light', highlight = null, bann
       const rel = i.reliability;
       const code =
         rel && (rel.source || rel.info) ? `${rel.source || '?'}${rel.info || '?'}` : '';
-      const secondary = getSecondaryLabel(i);
+      const secondary = secondaryFn(i);
       return `<g>
-<rect x="${x}" y="${y}" width="${NODE_W}" height="${NODE_H}" fill="${pal.node}" stroke="${border}" stroke-width="${on || role ? 2 : 1}"/>
-<rect x="${x + 10}" y="${y + 16}" width="30" height="30" fill="${def.color}"/>
-<text x="${x + 25}" y="${y + 36}" font-size="12" font-weight="700" text-anchor="middle" fill="${readableOn(def.color)}">${esc(def.glyph)}</text>
+<rect x="${x}" y="${y}" width="${NODE_W}" height="${NODE_H}" rx="4" fill="${pal.node}" stroke="${border}" stroke-width="${on || role ? 2 : 1}"/>
+${badgeSvg(i, def, x + 10, y + 16, 30, pal)}
 <text x="${x + 50}" y="${y + 19}" font-size="9" letter-spacing="0.8" fill="${pal.muted}">${esc(def.label.toUpperCase())}${code ? `  [${code}]` : ''}</text>
-<text x="${x + 50}" y="${y + 36}" font-size="13" font-weight="600" fill="${pal.text}">${esc(clip(getDisplayLabel(i), 24))}</text>
+<text x="${x + 50}" y="${y + 36}" font-size="13" font-weight="600" fill="${pal.text}">${esc(clip(labelFn(i), 24))}</text>
 ${secondary ? `<text x="${x + 50}" y="${y + 52}" font-size="10" fill="${pal.muted}">${esc(clip(secondary, 30))}</text>` : ''}
 ${role ? `<text x="${x + NODE_W - 8}" y="${y + 52}" font-size="9" font-weight="700" text-anchor="end" fill="${role.color}">${esc(role.label.toUpperCase())}</text>` : ''}
 </g>`;

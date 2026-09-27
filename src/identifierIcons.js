@@ -98,6 +98,9 @@ export const TYPE_DEFAULT_ICON = {
   licensePlate: 'licensePlate',
   email: 'email',
   address: 'home',
+  whatsapp: 'whatsapp',
+  google: 'google',
+  spotify: 'spotify',
 };
 
 /**
@@ -113,3 +116,20 @@ export function getBuiltInSrc(iconId, theme = 'dark') {
 }
 
 localizeRegistry(BUILT_IN_ICONS);
+
+// Menüde ikonlar ilk açılışta boş görünmesin diye yerleşik simgeleri önceden
+// yükle (tarayıcı önbelleğine alır, çözümlemeyi bekletmez).
+if (typeof window !== 'undefined' && typeof Image !== 'undefined') {
+  const warm = () => {
+    for (const e of Object.values(BUILT_IN_ICONS)) {
+      for (const src of [e.src, e.light, e.dark]) {
+        if (!src) continue;
+        const im = new Image();
+        im.decoding = 'async';
+        im.src = src;
+      }
+    }
+  };
+  if ('requestIdleCallback' in window) window.requestIdleCallback(warm);
+  else setTimeout(warm, 200);
+}

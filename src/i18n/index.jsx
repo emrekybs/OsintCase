@@ -12,7 +12,10 @@
  * etiketlenir ve uygulama yeniden çizilir.
  */
 import { createContext, useCallback, useContext, useState } from 'react';
-import EN from './en.js';
+import EN_BASE from './en.js';
+import EN_EXTRA from './en.extra.js';
+
+const EN = { ...EN_BASE, ...EN_EXTRA };
 
 const STORAGE_KEY = 'osint-tool:lang';
 export const LANGUAGES = [

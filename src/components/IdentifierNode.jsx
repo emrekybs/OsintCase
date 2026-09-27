@@ -1,5 +1,6 @@
 import { Handle, Position } from '@xyflow/react';
 import IdentifierBadge from './IdentifierBadge.jsx';
+import { getAvatarPhoto } from '../utils/photos.js';
 import {
   getTypeDef,
   getDisplayLabel,
@@ -45,6 +46,7 @@ export default function IdentifierNode({ data, selected }) {
   const display = getDisplayLabel(identifier);
   const secondary = getSecondaryLabel(identifier);
   const isSubject = identifier.type === 'subject';
+  const avatar = getAvatarPhoto(identifier);
   const role = isSubject ? findOption(SUBJECT_ROLES, identifier.fields?.role) : null;
   const threat = isSubject ? findOption(THREAT_LEVELS, identifier.fields?.threat) : null;
 
@@ -75,7 +77,8 @@ export default function IdentifierNode({ data, selected }) {
       <IdentifierBadge
         typeKey={identifier.type}
         customIconId={identifier.customIconId}
-        size="md"
+        size={avatar ? 'node' : 'md'}
+        photo={avatar}
       />
       <div className="id-node-body">
         <div className="id-node-type">

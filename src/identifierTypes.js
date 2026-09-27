@@ -18,8 +18,24 @@
  *   - placeholder: isteğe bağlı
  *   - primary:     true ise liste etiketi olarak kullanılır ve zorunludur
  */
-import { SUBJECT_ROLES, THREAT_LEVELS } from './caseModel.js';
+import {
+  ACCOUNT_STATUSES,
+  ACQUAINTANCE_RELATIONS,
+  CLOSENESS,
+  FAMILY_RELATIONS,
+  MESSENGER_KINDS,
+  SUBJECT_ROLES,
+  TG_CHAT_KINDS,
+  THREAT_LEVELS,
+} from './caseModel.js';
 import { localizeRegistry } from './i18n/index.jsx';
+
+/*
+ * Ek alan özellikleri:
+ *   - section:   aynı section değerini taşıyan alanlar formda bir alt başlık
+ *                altında toplanır (ör. "Hesap bilgileri").
+ *   - sensitive: raporda "karartma" açıkken değer siyah bantla gizlenir.
+ */
 
 export const CATEGORIES = {
   personal: { label: 'Kişi', order: 1 },
@@ -31,13 +47,41 @@ export const CATEGORIES = {
   other: { label: 'Diğer', order: 7 },
 };
 
-const socialNumericFields = [
+const ACCOUNT = 'Hesap bilgileri';
+
+const socialNumericFields = () => [
   { key: 'followers', label: 'Takipçi', type: 'number' },
   { key: 'following', label: 'Takip edilen', type: 'number' },
   { key: 'posts', label: 'Gönderi', type: 'number' },
 ];
 
+/**
+ * Tüm sosyal medya hesaplarında ortak alanlar. Kullanıcı adı değişebilir;
+ * sayısal ID ve arşiv bağlantısı hesabın izini korur.
+ */
+const accountMeta = ({ withId = true, idLabel = 'Sayısal kullanıcı ID' } = {}) => [
+  ...(withId
+    ? [{ key: 'userId', label: idLabel, type: 'text', section: ACCOUNT, placeholder: 'Kullanıcı adı değişse de sabit kalır' }]
+    : []),
+  { key: 'accountStatus', label: 'Hesap durumu', type: 'select', options: ACCOUNT_STATUSES, section: ACCOUNT },
+  { key: 'createdAt', label: 'Hesap açılış tarihi', type: 'date', section: ACCOUNT },
+  { key: 'lastSeen', label: 'Son etkinlik', type: 'date', section: ACCOUNT },
+  { key: 'archiveUrl', label: 'Arşiv bağlantısı', type: 'url', section: ACCOUNT, placeholder: 'web.archive.org / archive.today' },
+];
+
+/** Basit profil: kullanıcı adı + URL + görünen ad + sayılar + biyografi. */
+const simpleProfile = ({ usernamePlaceholder = '@kullanici', numeric = socialNumericFields(), extra = [], meta = {} } = {}) => [
+  { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: usernamePlaceholder },
+  { key: 'profileUrl', label: 'Profil URL', type: 'url' },
+  { key: 'displayName', label: 'Görünen ad', type: 'text' },
+  ...extra,
+  ...numeric,
+  { key: 'bio', label: 'Biyografi', type: 'textarea' },
+  ...accountMeta(meta),
+];
+
 export const IDENTIFIER_TYPES = {
+  // ---- Kişi ------------------------------------------------------------------
   subject: {
     label: 'Şahıs',
     category: 'personal',
@@ -51,7 +95,7 @@ export const IDENTIFIER_TYPES = {
       { key: 'dob', label: 'Doğum tarihi', type: 'date' },
       { key: 'birthPlace', label: 'Doğum yeri', type: 'text' },
       { key: 'nationality', label: 'Uyruk', type: 'text' },
-      { key: 'idNumber', label: 'Kimlik / pasaport no', type: 'text' },
+      { key: 'idNumber', label: 'Kimlik / pasaport no', type: 'text', sensitive: true },
       { key: 'occupation', label: 'Meslek / görev', type: 'text' },
       { key: 'description', label: 'Eşkal / tarif', type: 'textarea' },
     ],
@@ -68,6 +112,22 @@ export const IDENTIFIER_TYPES = {
       { key: 'gender', label: 'Cinsiyet', type: 'text' },
     ],
   },
+  acquaintance: {
+    label: 'Tanıdık / arkadaş',
+    category: 'personal',
+    glyph: 'TN',
+    color: '#7C3AED',
+    fields: [
+      { key: 'name', label: 'Ad soyad', type: 'text', primary: true },
+      { key: 'relation', label: 'İlişki türü', type: 'select', options: ACQUAINTANCE_RELATIONS },
+      { key: 'closeness', label: 'Yakınlık derecesi', type: 'select', options: CLOSENESS },
+      { key: 'metAt', label: 'Nereden tanışıyor', type: 'text', placeholder: 'Okul, iş yeri, mahalle, spor salonu…' },
+      { key: 'platform', label: 'Bağlantılı olduğu platform', type: 'text', placeholder: 'Instagram takipçisi, Facebook arkadaşı…' },
+      { key: 'since', label: 'Ne zamandan beri', type: 'text', placeholder: 'ör. 2019’dan beri' },
+      { key: 'occupation', label: 'Meslek', type: 'text' },
+      { key: 'contact', label: 'İletişim', type: 'text' },
+    ],
+  },
   family: {
     label: 'Aile üyesi',
     category: 'personal',
@@ -75,8 +135,9 @@ export const IDENTIFIER_TYPES = {
     color: '#F59E0B',
     fields: [
       { key: 'name', label: 'Ad', type: 'text', primary: true },
-      { key: 'relation', label: 'Yakınlık', type: 'text', placeholder: 'Eş, anne, kardeş…' },
+      { key: 'relation', label: 'Yakınlık', type: 'select', options: FAMILY_RELATIONS },
       { key: 'dob', label: 'Doğum tarihi', type: 'date' },
+      { key: 'occupation', label: 'Meslek', type: 'text' },
       { key: 'contact', label: 'İletişim', type: 'text' },
     ],
   },
@@ -93,6 +154,33 @@ export const IDENTIFIER_TYPES = {
       { key: 'postal', label: 'Posta kodu', type: 'text' },
       { key: 'country', label: 'Ülke', type: 'text' },
       { key: 'context', label: 'Niteliği', type: 'text', placeholder: 'İkamet, iş yeri, eski adres…' },
+    ],
+  },
+  employment: {
+    label: 'İş geçmişi',
+    category: 'personal',
+    glyph: 'İŞ',
+    color: '#0369A1',
+    fields: [
+      { key: 'company', label: 'Kurum / şirket', type: 'text', primary: true },
+      { key: 'position', label: 'Pozisyon', type: 'text' },
+      { key: 'location', label: 'Konum', type: 'text' },
+      { key: 'start', label: 'Başlangıç', type: 'text', placeholder: 'ör. 03.2019' },
+      { key: 'end', label: 'Bitiş', type: 'text', placeholder: 'ör. 2023 ya da “devam ediyor”' },
+      { key: 'source', label: 'Bilginin geçtiği yer', type: 'text', placeholder: 'LinkedIn, şirket sitesi, haber…' },
+    ],
+  },
+  education: {
+    label: 'Eğitim',
+    category: 'personal',
+    glyph: 'EĞ',
+    color: '#4D7C0F',
+    fields: [
+      { key: 'school', label: 'Okul / kurum', type: 'text', primary: true },
+      { key: 'department', label: 'Bölüm / alan', type: 'text' },
+      { key: 'degree', label: 'Derece', type: 'text', placeholder: 'Lise, ön lisans, lisans, yüksek lisans…' },
+      { key: 'years', label: 'Yıllar', type: 'text', placeholder: 'ör. 2012–2016' },
+      { key: 'city', label: 'Şehir', type: 'text' },
     ],
   },
   organization: {
@@ -114,13 +202,14 @@ export const IDENTIFIER_TYPES = {
     glyph: 'ID',
     color: '#0F766E',
     fields: [
-      { key: 'number', label: 'Belge no', type: 'text', primary: true },
+      { key: 'number', label: 'Belge no', type: 'text', primary: true, sensitive: true },
       { key: 'docType', label: 'Belge türü', type: 'text', placeholder: 'Pasaport, kimlik, ehliyet…' },
       { key: 'issuer', label: 'Veren makam / ülke', type: 'text' },
       { key: 'validUntil', label: 'Geçerlilik', type: 'date' },
     ],
   },
 
+  // ---- Sosyal medya -------------------------------------------------------------
   instagram: {
     label: 'Instagram',
     category: 'social',
@@ -132,10 +221,11 @@ export const IDENTIFIER_TYPES = {
       { key: 'displayName', label: 'Görünen ad', type: 'text' },
       { key: 'email', label: 'Bağlı e-posta', type: 'email' },
       { key: 'phone', label: 'Bağlı telefon', type: 'tel' },
-      ...socialNumericFields,
+      ...socialNumericFields(),
       { key: 'videos', label: 'Video', type: 'number' },
       { key: 'taggedPhotos', label: 'Etiketli fotoğraf', type: 'number' },
       { key: 'bio', label: 'Biyografi', type: 'textarea' },
+      ...accountMeta(),
     ],
   },
   facebook: {
@@ -148,8 +238,10 @@ export const IDENTIFIER_TYPES = {
       { key: 'profileUrl', label: 'Profil URL', type: 'url' },
       { key: 'displayName', label: 'Görünen ad', type: 'text' },
       { key: 'email', label: 'Bağlı e-posta', type: 'email' },
-      ...socialNumericFields,
+      { key: 'friends', label: 'Arkadaş sayısı', type: 'number' },
+      ...socialNumericFields(),
       { key: 'bio', label: 'Biyografi', type: 'textarea' },
+      ...accountMeta(),
     ],
   },
   twitter: {
@@ -157,13 +249,7 @@ export const IDENTIFIER_TYPES = {
     category: 'social',
     glyph: 'X',
     color: '#1d1d1f',
-    fields: [
-      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: '@kullanici' },
-      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
-      { key: 'displayName', label: 'Görünen ad', type: 'text' },
-      ...socialNumericFields,
-      { key: 'bio', label: 'Biyografi', type: 'textarea' },
-    ],
+    fields: simpleProfile(),
   },
   youtube: {
     label: 'YouTube',
@@ -177,6 +263,7 @@ export const IDENTIFIER_TYPES = {
       { key: 'subscribers', label: 'Abone', type: 'number' },
       { key: 'videos', label: 'Video', type: 'number' },
       { key: 'bio', label: 'Hakkında', type: 'textarea' },
+      ...accountMeta({ idLabel: 'Kanal ID' }),
     ],
   },
   tiktok: {
@@ -184,14 +271,7 @@ export const IDENTIFIER_TYPES = {
     category: 'social',
     glyph: 'TT',
     color: '#000000',
-    fields: [
-      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: '@kullanici' },
-      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
-      { key: 'displayName', label: 'Görünen ad', type: 'text' },
-      ...socialNumericFields,
-      { key: 'likes', label: 'Beğeni', type: 'number' },
-      { key: 'bio', label: 'Biyografi', type: 'textarea' },
-    ],
+    fields: simpleProfile({ extra: [], numeric: [...socialNumericFields(), { key: 'likes', label: 'Beğeni', type: 'number' }] }),
   },
   linkedin: {
     label: 'LinkedIn',
@@ -206,6 +286,64 @@ export const IDENTIFIER_TYPES = {
       { key: 'role', label: 'Pozisyon', type: 'text' },
       { key: 'location', label: 'Konum', type: 'text' },
       { key: 'connections', label: 'Bağlantı sayısı', type: 'number' },
+      ...accountMeta({ withId: false }),
+    ],
+  },
+  whatsapp: {
+    label: 'WhatsApp',
+    category: 'social',
+    glyph: 'WA',
+    color: '#25D366',
+    fields: [
+      { key: 'phone', label: 'Telefon numarası', type: 'tel', primary: true, placeholder: '+90 5xx xxx xx xx' },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
+      { key: 'about', label: 'Hakkında / durum metni', type: 'text' },
+      { key: 'accountKind', label: 'Hesap türü', type: 'select', options: MESSENGER_KINDS },
+      { key: 'businessInfo', label: 'İşletme bilgisi', type: 'textarea', placeholder: 'Adres, kategori, web sitesi, çalışma saatleri…' },
+      { key: 'groups', label: 'Ortak / bilinen gruplar', type: 'textarea' },
+      ...accountMeta({ withId: false }),
+    ],
+  },
+  telegram: {
+    label: 'Telegram',
+    category: 'social',
+    glyph: 'TG',
+    color: '#2AABEE',
+    fields: [
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: '@kullanici' },
+      { key: 'phone', label: 'Bağlı telefon', type: 'tel' },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
+      { key: 'bio', label: 'Biyografi', type: 'textarea' },
+      ...accountMeta(),
+    ],
+  },
+  telegramChannel: {
+    label: 'Telegram kanal / grup',
+    category: 'social',
+    glyph: 'TK',
+    color: '#26A5E4',
+    fields: [
+      { key: 'handle', label: 'Kanal / grup adı', type: 'text', primary: true, placeholder: '@kanal' },
+      { key: 'title', label: 'Başlık', type: 'text' },
+      { key: 'chatKind', label: 'Türü', type: 'select', options: TG_CHAT_KINDS },
+      { key: 'inviteLink', label: 'Davet bağlantısı', type: 'url', placeholder: 'https://t.me/+…' },
+      { key: 'members', label: 'Üye / abone', type: 'number' },
+      { key: 'admins', label: 'Yöneticiler', type: 'text' },
+      { key: 'description', label: 'Açıklama', type: 'textarea' },
+      ...accountMeta({ idLabel: 'Kanal / grup ID' }),
+    ],
+  },
+  signal: {
+    label: 'Signal',
+    category: 'social',
+    glyph: 'SG',
+    color: '#3B45FD',
+    fields: [
+      { key: 'phone', label: 'Telefon numarası', type: 'tel', primary: true, placeholder: '+90 5xx xxx xx xx' },
+      { key: 'username', label: 'Signal kullanıcı adı', type: 'text', placeholder: 'ad.01' },
+      { key: 'displayName', label: 'Profil adı', type: 'text' },
+      { key: 'about', label: 'Hakkında', type: 'text' },
+      ...accountMeta({ withId: false }),
     ],
   },
   snapchat: {
@@ -217,6 +355,20 @@ export const IDENTIFIER_TYPES = {
       { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true },
       { key: 'displayName', label: 'Görünen ad', type: 'text' },
       { key: 'snapcode', label: 'Snapcode URL', type: 'url' },
+      ...accountMeta({ withId: false }),
+    ],
+  },
+  discord: {
+    label: 'Discord',
+    category: 'social',
+    glyph: 'DC',
+    color: '#5865F2',
+    fields: [
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
+      { key: 'userId', label: 'Kullanıcı ID', type: 'text' },
+      { key: 'servers', label: 'Bilinen sunucular', type: 'textarea' },
+      ...accountMeta({ withId: false }),
     ],
   },
   reddit: {
@@ -229,29 +381,187 @@ export const IDENTIFIER_TYPES = {
       { key: 'profileUrl', label: 'Profil URL', type: 'url' },
       { key: 'karma', label: 'Karma', type: 'number' },
       { key: 'accountAge', label: 'Hesap yaşı', type: 'text', placeholder: 'ör. 4 yıl' },
+      { key: 'subreddits', label: 'Aktif olduğu topluluklar', type: 'textarea' },
+      ...accountMeta({ withId: false }),
     ],
   },
-  discord: {
-    label: 'Discord',
+  github: {
+    label: 'GitHub',
     category: 'social',
-    glyph: 'DC',
-    color: '#5865F2',
+    glyph: 'GH',
+    color: '#24292F',
     fields: [
       { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url', placeholder: 'https://github.com/…' },
       { key: 'displayName', label: 'Görünen ad', type: 'text' },
-      { key: 'userId', label: 'Kullanıcı ID', type: 'text' },
+      { key: 'commitEmails', label: 'Commit e-postaları', type: 'textarea', placeholder: 'Commit / .patch çıktılarında görünen adresler' },
+      { key: 'company', label: 'Şirket', type: 'text' },
+      { key: 'location', label: 'Konum', type: 'text' },
+      { key: 'website', label: 'Web sitesi / blog', type: 'url' },
+      { key: 'repos', label: 'Açık repo', type: 'number' },
+      { key: 'followers', label: 'Takipçi', type: 'number' },
+      { key: 'following', label: 'Takip edilen', type: 'number' },
+      { key: 'keys', label: 'SSH / GPG anahtar parmak izleri', type: 'textarea' },
+      { key: 'bio', label: 'Biyografi', type: 'textarea' },
+      ...accountMeta(),
     ],
   },
-  telegram: {
-    label: 'Telegram',
+  gitlab: {
+    label: 'GitLab',
     category: 'social',
-    glyph: 'TG',
-    color: '#2AABEE',
+    glyph: 'GL',
+    color: '#FC6D26',
     fields: [
-      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: '@kullanici' },
-      { key: 'phone', label: 'Bağlı telefon', type: 'tel' },
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
       { key: 'displayName', label: 'Görünen ad', type: 'text' },
+      { key: 'commitEmails', label: 'Commit e-postaları', type: 'textarea' },
+      { key: 'location', label: 'Konum', type: 'text' },
+      { key: 'projects', label: 'Proje sayısı', type: 'number' },
+      { key: 'bio', label: 'Biyografi', type: 'textarea' },
+      ...accountMeta(),
     ],
+  },
+  google: {
+    label: 'Google hesabı',
+    category: 'social',
+    glyph: 'G',
+    color: '#4285F4',
+    fields: [
+      { key: 'email', label: 'Gmail / Google hesabı', type: 'email', primary: true, placeholder: 'ad@gmail.com' },
+      { key: 'gaiaId', label: 'GAIA ID', type: 'text' },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
+      { key: 'mapsProfile', label: 'Maps katkı profili', type: 'url' },
+      { key: 'mapsReviews', label: 'Maps yorum sayısı', type: 'number' },
+      { key: 'services', label: 'Kullandığı servisler', type: 'text', placeholder: 'YouTube, Maps, Takvim, Fotoğraflar…' },
+      ...accountMeta({ withId: false }),
+    ],
+  },
+  threads: {
+    label: 'Threads',
+    category: 'social',
+    glyph: 'TH',
+    color: '#101010',
+    fields: simpleProfile(),
+  },
+  bluesky: {
+    label: 'Bluesky',
+    category: 'social',
+    glyph: 'BS',
+    color: '#1185FE',
+    fields: [
+      { key: 'handle', label: 'Handle', type: 'text', primary: true, placeholder: 'ad.bsky.social' },
+      { key: 'did', label: 'DID', type: 'text', placeholder: 'did:plc:…' },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
+      ...socialNumericFields(),
+      { key: 'bio', label: 'Biyografi', type: 'textarea' },
+      ...accountMeta({ withId: false }),
+    ],
+  },
+  mastodon: {
+    label: 'Mastodon',
+    category: 'social',
+    glyph: 'MA',
+    color: '#6364FF',
+    fields: [
+      { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true, placeholder: '@ad@sunucu.social' },
+      { key: 'instance', label: 'Sunucu', type: 'text', placeholder: 'mastodon.social' },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
+      { key: 'displayName', label: 'Görünen ad', type: 'text' },
+      ...socialNumericFields(),
+      { key: 'bio', label: 'Biyografi', type: 'textarea' },
+      ...accountMeta(),
+    ],
+  },
+  vk: {
+    label: 'VK',
+    category: 'social',
+    glyph: 'VK',
+    color: '#0077FF',
+    fields: simpleProfile({
+      usernamePlaceholder: 'kısa ad ya da id…',
+      extra: [{ key: 'city', label: 'Şehir', type: 'text' }],
+      numeric: [
+        { key: 'friends', label: 'Arkadaş sayısı', type: 'number' },
+        { key: 'followers', label: 'Takipçi', type: 'number' },
+      ],
+    }),
+  },
+  pinterest: {
+    label: 'Pinterest',
+    category: 'social',
+    glyph: 'PI',
+    color: '#BD081C',
+    fields: simpleProfile({
+      numeric: [
+        { key: 'followers', label: 'Takipçi', type: 'number' },
+        { key: 'following', label: 'Takip edilen', type: 'number' },
+        { key: 'pins', label: 'Pin sayısı', type: 'number' },
+      ],
+    }),
+  },
+  twitch: {
+    label: 'Twitch',
+    category: 'social',
+    glyph: 'TW',
+    color: '#9146FF',
+    fields: simpleProfile({
+      usernamePlaceholder: 'kanal adı',
+      numeric: [{ key: 'followers', label: 'Takipçi', type: 'number' }],
+    }),
+  },
+  kick: {
+    label: 'Kick',
+    category: 'social',
+    glyph: 'KI',
+    color: '#0B0B0B',
+    fields: simpleProfile({
+      usernamePlaceholder: 'kanal adı',
+      numeric: [{ key: 'followers', label: 'Takipçi', type: 'number' }],
+      meta: { withId: false },
+    }),
+  },
+  steam: {
+    label: 'Steam',
+    category: 'social',
+    glyph: 'ST',
+    color: '#1B2838',
+    fields: [
+      { key: 'username', label: 'Profil adı / özel URL', type: 'text', primary: true },
+      { key: 'steamId', label: 'SteamID64', type: 'text', placeholder: '7656119…' },
+      { key: 'profileUrl', label: 'Profil URL', type: 'url' },
+      { key: 'realName', label: 'Profildeki gerçek ad', type: 'text' },
+      { key: 'country', label: 'Ülke', type: 'text' },
+      { key: 'level', label: 'Seviye', type: 'number' },
+      { key: 'friends', label: 'Arkadaş sayısı', type: 'number' },
+      { key: 'nameHistory', label: 'Eski profil adları', type: 'textarea' },
+      ...accountMeta({ withId: false }),
+    ],
+  },
+  spotify: {
+    label: 'Spotify',
+    category: 'social',
+    glyph: 'SP',
+    color: '#1ED760',
+    fields: simpleProfile({
+      usernamePlaceholder: 'kullanıcı adı / id',
+      numeric: [
+        { key: 'followers', label: 'Takipçi', type: 'number' },
+        { key: 'playlists', label: 'Çalma listesi', type: 'number' },
+      ],
+      meta: { withId: false },
+    }),
+  },
+  medium: {
+    label: 'Medium',
+    category: 'social',
+    glyph: 'ME',
+    color: '#111111',
+    fields: simpleProfile({
+      numeric: [{ key: 'followers', label: 'Takipçi', type: 'number' }],
+      meta: { withId: false },
+    }),
   },
   username: {
     label: 'Kullanıcı adı (genel)',
@@ -262,9 +572,11 @@ export const IDENTIFIER_TYPES = {
       { key: 'username', label: 'Kullanıcı adı', type: 'text', primary: true },
       { key: 'platform', label: 'Platform / forum', type: 'text' },
       { key: 'profileUrl', label: 'Profil URL', type: 'url' },
+      ...accountMeta({ withId: false }),
     ],
   },
 
+  // ---- İletişim -----------------------------------------------------------------
   email: {
     label: 'E-posta',
     category: 'contact',
@@ -285,11 +597,12 @@ export const IDENTIFIER_TYPES = {
       { key: 'number', label: 'Telefon numarası', type: 'tel', primary: true, placeholder: '+90 5xx xxx xx xx' },
       { key: 'carrier', label: 'Operatör', type: 'text' },
       { key: 'lineType', label: 'Hat türü', type: 'text', placeholder: 'Mobil, sabit, VoIP…' },
-      { key: 'imei', label: 'IMEI', type: 'text' },
+      { key: 'imei', label: 'IMEI', type: 'text', sensitive: true },
       { key: 'country', label: 'Ülke', type: 'text' },
     ],
   },
 
+  // ---- Dijital ------------------------------------------------------------------
   ip: {
     label: 'IP adresi',
     category: 'digital',
@@ -321,12 +634,27 @@ export const IDENTIFIER_TYPES = {
     color: '#334155',
     fields: [
       { key: 'model', label: 'Marka / model', type: 'text', primary: true },
-      { key: 'serial', label: 'Seri no', type: 'text' },
-      { key: 'imei', label: 'IMEI', type: 'text' },
+      { key: 'serial', label: 'Seri no', type: 'text', sensitive: true },
+      { key: 'imei', label: 'IMEI', type: 'text', sensitive: true },
       { key: 'mac', label: 'MAC adresi', type: 'text' },
     ],
   },
+  breach: {
+    label: 'Sızıntı kaydı',
+    category: 'digital',
+    glyph: 'SZ',
+    color: '#9F1239',
+    fields: [
+      { key: 'breachName', label: 'Sızıntı / veri ihlali', type: 'text', primary: true, placeholder: 'ör. Örnek Site 2021' },
+      { key: 'breachDate', label: 'İhlal tarihi', type: 'date' },
+      { key: 'matched', label: 'Eşleşen tanımlayıcı', type: 'text', placeholder: 'e-posta, telefon, kullanıcı adı…' },
+      { key: 'exposedData', label: 'Açığa çıkan veri türleri', type: 'text', placeholder: 'e-posta, parola özeti, telefon, adres…' },
+      { key: 'lookup', label: 'Sorgulanan servis', type: 'text', placeholder: 'ör. Have I Been Pwned' },
+      { key: 'summary', label: 'Kayıt özeti', type: 'textarea', placeholder: 'Parolaları düz metin olarak yazmayın.', sensitive: true },
+    ],
+  },
 
+  // ---- Finans -------------------------------------------------------------------
   wallet: {
     label: 'Kripto cüzdan',
     category: 'finance',
@@ -344,12 +672,13 @@ export const IDENTIFIER_TYPES = {
     glyph: '₺',
     color: '#15803D',
     fields: [
-      { key: 'iban', label: 'IBAN / hesap no', type: 'text', primary: true },
+      { key: 'iban', label: 'IBAN / hesap no', type: 'text', primary: true, sensitive: true },
       { key: 'bank', label: 'Banka', type: 'text' },
       { key: 'holder', label: 'Hesap sahibi', type: 'text' },
     ],
   },
 
+  // ---- Araç ---------------------------------------------------------------------
   vehicle: {
     label: 'Araç',
     category: 'vehicle',
@@ -399,6 +728,9 @@ export const IDENTIFIER_TYPES = {
     ],
   },
 };
+
+/** Kişi türleri: fotoğraf alanı bunlarda formun üstünde açık gelir, "Şahsa dönüştür" bunlarda çıkar. */
+export const PERSON_TYPES = new Set(['subject', 'name', 'acquaintance', 'family']);
 
 export function listTypesByCategory() {
   const byCat = {};

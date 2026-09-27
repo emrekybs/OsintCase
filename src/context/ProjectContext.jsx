@@ -226,6 +226,7 @@ export function ProjectProvider({ children }) {
     },
     customIconId: identifier.customIconId ?? null,
     reliability: identifier.reliability ?? null,
+    photos: Array.isArray(identifier.photos) ? identifier.photos : [],
     createdAt: now,
     updatedAt: now,
   });

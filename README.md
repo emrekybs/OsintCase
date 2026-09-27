@@ -31,7 +31,8 @@ Organize subjects, identifiers, relationships, locations, timelines and evidence
 ## Features
 
 - Investigation case management
-- Entity and identifier mapping
+- Entity and identifier mapping (50+ types: people, acquaintances, employment, education, 25+ social platforms, breach records…)
+- Subject photos: multiple main and additional photos per person, SHA-256 of each original
 - Relationship and link analysis
 - Location mapping
 - Investigation timeline
@@ -39,7 +40,8 @@ Organize subjects, identifiers, relationships, locations, timelines and evidence
 - SHA-256 evidence hashing
 - Chain of custody
 - Audit log
-- Intelligence report generation
+- Intelligence report generation: dark / light themes, subject profiles, redaction, watermark
+- Report export as PDF (print engine, page numbers, classification band) and single-file HTML
 - Case file import and export
 - Optional AES-256-GCM encryption
 - Turkish and English interface
@@ -69,7 +71,7 @@ Then open `http://localhost:5173`.
 
 A fictional investigation is included:
 
-`examples/operation-nightjar.case.json`
+`example/operation-nightjar.case.json`
 
 Open the file from the application to explore the sample investigation.
 

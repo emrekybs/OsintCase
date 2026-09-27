@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  PERSON_TYPES,
   getTypeDef,
   getPrimaryFieldKey,
   listTypesByCategory,
 } from '../identifierTypes.js';
+import { getAvatarPhoto } from '../utils/photos.js';
+import PhotoManager from './PhotoManager.jsx';
 import { useProject } from '../context/ProjectContext.jsx';
 import { getPinColor } from '../pinColors.js';
 import { INFO_CREDIBILITY, SOURCE_RELIABILITY } from '../caseModel.js';
@@ -31,9 +34,13 @@ function FieldInput({ field, value, onChange, autoFocus }) {
     return <textarea rows={3} {...common} />;
   }
   if (field.type === 'select') {
+    // Eski dosyalarda serbest metin olarak girilmiş değerler kaybolmasın.
+    const unknown =
+      value && !field.options.some((o) => o.key === value) ? String(value) : null;
     return (
       <select {...common}>
         <option value="">{t('Seçilmedi')}</option>
+        {unknown && <option value={unknown}>{unknown}</option>}
         {field.options.map((o) => (
           <option key={o.key} value={o.key}>
             {o.label}
@@ -61,6 +68,9 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
     initial?.fields ?? (initial?.type ? buildEmptyFields(initial.type) : {}),
   );
   const [notes, setNotes] = useState(initial?.notes ?? '');
+  const [photos, setPhotos] = useState(() =>
+    Array.isArray(initial?.photos) ? initial.photos : [],
+  );
   const [reliability, setReliability] = useState(
     initial?.reliability ?? { source: '', info: '', sourceNote: '', collectedAt: '' },
   );
@@ -164,6 +174,7 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
       type: typeKey,
       fields: trimmedFields,
       notes: notes.trim(),
+      photos,
       customIconId,
       reliability:
         reliability.source || reliability.info || reliability.sourceNote || reliability.collectedAt
@@ -175,6 +186,30 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
             }
           : null,
     });
+  };
+
+  // Tanıdık / aile / isim → Şahıs: bağlantılar, konumlar ve fotoğraflar
+  // aynı kayıtta kalır (id değişmez); yalnızca tür ve alanlar dönüşür.
+  const promoteToSubject = () => {
+    const src = getTypeDef(typeKey);
+    const name = fields.fullName || fields.name || '';
+    const relField = src.fields.find((f) => f.key === 'relation');
+    const relLabel = relField?.options?.find((o) => o.key === fields.relation)?.label ?? fields.relation;
+    const carried = src.fields
+      .filter((f) => !['name', 'fullName', 'dob', 'aliases', 'occupation'].includes(f.key) && fields[f.key])
+      .map((f) => `${f.label}: ${f.key === 'relation' ? relLabel : f.options?.find((o) => o.key === fields[f.key])?.label ?? fields[f.key]}`);
+    const next = buildEmptyFields('subject');
+    next.fullName = name;
+    next.dob = fields.dob ?? '';
+    next.aliases = fields.aliases ?? '';
+    next.occupation = fields.occupation ?? '';
+    next.role = 'irtibat';
+    setFields(next);
+    if (carried.length) {
+      setNotes((n) => [n, `${t('Önceki kayıt')} (${src.label}) — ${carried.join(' · ')}`].filter(Boolean).join('\n'));
+    }
+    setTypeKey('subject');
+    formScrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const toggleStagedPin = (pinId) => {
@@ -335,13 +370,14 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
                     typeKey={typeKey}
                     customIconId={customIconId}
                     size="lg"
+                    photo={getAvatarPhoto({ photos })}
                   />
                   <span className="form-title-icon-edit">
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4z"/></svg>
                   </span>
                 </button>
                 <h2>
-                  {def.label} · {editing ? t('düzenle') : 'yeni'}
+                  {def.label} · {editing ? t('düzenle') : t('yeni')}
                 </h2>
               </div>
               <button
@@ -356,20 +392,39 @@ export default function IdentifierModal({ initial, onClose, onSubmit }) {
 
             <div className="form-scroll" ref={formScrollRef}>
               {error && <div className="form-error">{error}</div>}
-              {def.fields.map((field, idx) => (
-                <div className="field" key={field.key}>
-                  <label htmlFor={`field-${field.key}`}>
-                    {field.label}
-                    {field.primary && <span className="required">*</span>}
-                  </label>
-                  <FieldInput
-                    field={field}
-                    value={fields[field.key]}
-                    onChange={handleFieldChange}
-                    autoFocus={idx === 0 && !editing}
-                  />
+              {editing && ['acquaintance', 'family', 'name'].includes(typeKey) && (
+                <div className="promote-box">
+                  <span>{t('Bu kişi dosyada önem kazandıysa tam Şahıs kaydına yükseltebilirsiniz. Bağlantılar, konumlar ve fotoğraflar korunur.')}</span>
+                  <button type="button" className="btn btn-secondary" onClick={promoteToSubject}>{t('Şahsa dönüştür')}</button>
                 </div>
-              ))}
+              )}
+              {PERSON_TYPES.has(typeKey) && (
+                <PhotoManager photos={photos} onChange={setPhotos} personMode />
+              )}
+              {def.fields.map((field, idx) => {
+                const prev = def.fields[idx - 1];
+                const heading = field.section && field.section !== prev?.section ? field.section : null;
+                return (
+                  <div key={field.key}>
+                    {heading && <div className="field-section">{t(heading)}</div>}
+                    <div className="field">
+                      <label htmlFor={`field-${field.key}`}>
+                        {field.label}
+                        {field.primary && <span className="required">*</span>}
+                      </label>
+                      <FieldInput
+                        field={field}
+                        value={fields[field.key]}
+                        onChange={handleFieldChange}
+                        autoFocus={idx === 0 && !editing}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+              {!PERSON_TYPES.has(typeKey) && (
+                <PhotoManager photos={photos} onChange={setPhotos} />
+              )}
               <fieldset className="reliability-box">
                 <legend>{t('Kaynak değerlendirmesi (Admiralty)')}</legend>
                 <div className="field-row">
