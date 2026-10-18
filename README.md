@@ -14,7 +14,8 @@
 Debian, Ubuntu, Kali, Mint, Parrot — the menu entry and icon come with it:
 
 ```bash
-curl -LO https://github.com/emrekybs/OsintCase/releases/latest/download/osintcase_amd64.deb && sudo apt install -y ./osintcase_amd64.deb```
+curl -LO https://github.com/emrekybs/OsintCase/releases/latest/download/osintcase_amd64.deb && sudo apt install -y ./osintcase_amd64.deb
+```
 
 Other systems, with pipx or pip:
 
