@@ -29,6 +29,8 @@ Then run `pipx ensurepath` once and open a new terminal. Requires Python 3.9+.
 
 Link network, map, subject profiles, timeline, evidence vault and reports (PDF or single-file HTML).
 
+### Light
+
 | Link network | Map |
 |---|---|
 | ![Network](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/network.png) | ![Map](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/map.png) |
@@ -36,6 +38,16 @@ Link network, map, subject profiles, timeline, evidence vault and reports (PDF o
 | Subject profile | Report |
 |---|---|
 | ![Subject](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/subject.png) | ![Report](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/report.png) |
+
+### Dark
+
+| Link network | Timeline |
+|---|---|
+| ![Network](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/network-dark.png) | ![Timeline](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/timeline-dark.png) |
+
+| Evidence | Report |
+|---|---|
+| ![Evidence](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/evidence-dark.png) | ![Report](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/report-dark.png) |
 
 Three fictional sample cases are on the home screen.
 

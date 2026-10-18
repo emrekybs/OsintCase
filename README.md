@@ -30,6 +30,8 @@ Link network with confirmed, probable and doubtful links, shortest path and cent
 profiles with 50+ identifier types. Locations on a map. One timeline. Evidence vault with audit log.
 Reports as PDF or single-file HTML.
 
+### Light
+
 | Link network | Map |
 |---|---|
 | ![Network](docs/screenshots/network.png) | ![Map](docs/screenshots/map.png) |
@@ -37,6 +39,16 @@ Reports as PDF or single-file HTML.
 | Subject profile | Report |
 |---|---|
 | ![Subject](docs/screenshots/subject.png) | ![Report](docs/screenshots/report.png) |
+
+### Dark
+
+| Link network | Timeline |
+|---|---|
+| ![Network](docs/screenshots/network-dark.png) | ![Timeline](docs/screenshots/timeline-dark.png) |
+
+| Evidence | Report |
+|---|---|
+| ![Evidence](docs/screenshots/evidence-dark.png) | ![Report](docs/screenshots/report-dark.png) |
 
 ## Sample cases
 
