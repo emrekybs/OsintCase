@@ -6,7 +6,6 @@
 
 <p align="center">
   A local investigation workspace for profiling subjects, taking notes, mapping links and writing up the case.<br>
-  Turkish and English. No server, no telemetry.
 </p>
 
 OSINT Case does **not** run tools, query platforms or scrape anything. It is where findings you
