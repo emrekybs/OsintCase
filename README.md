@@ -6,7 +6,7 @@
 
 <p align="center">
   A local investigation workspace: profile subjects, map links, build a timeline, keep evidence, export a report.<br>
-  Turkish and English. No server, no telemetry.
+  No server, no telemetry.
 </p>
 
 ## Install
@@ -26,27 +26,17 @@ npm run dev
 
 ## What it does
 
-**Link network.** Confirmed, probable and doubtful links, shortest path, centrality, PNG/SVG export.
+Link network with confirmed, probable and doubtful links, shortest path and centrality. Subject
+profiles with 50+ identifier types. Locations on a map. One timeline. Evidence vault with audit log.
+Reports as PDF or single-file HTML.
 
-![Network](docs/screenshots/network.png)
+| Link network | Map |
+|---|---|
+| ![Network](docs/screenshots/network.png) | ![Map](docs/screenshots/map.png) |
 
-**Subject profiles.** 50+ identifier types with reliability grading.
-
-![Subject](docs/screenshots/subject.png)
-
-**One timeline.** Events, visits, sightings and exhibits in a single view.
-
-![Timeline](docs/screenshots/timeline.png)
-
-**Evidence vault.** Files with source, date and audit log.
-
-![Evidence](docs/screenshots/evidence.png)
-
-**Reports.** PDF or single-file HTML, with optional redaction and watermark.
-
-![Report](docs/screenshots/report.png)
-
-Locations on OpenStreetMap or Google Maps, light and dark themes.
+| Subject profile | Report |
+|---|---|
+| ![Subject](docs/screenshots/subject.png) | ![Report](docs/screenshots/report.png) |
 
 ## Sample cases
 
