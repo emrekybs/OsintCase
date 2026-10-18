@@ -1,0 +1,399 @@
+/*
+ * OSINT Case — görsel kimlik katmanı. En son yüklenir.
+ * Mantık: zemin beton / antrasit, eylem rengi kemik beyazı, kırmızı
+ * (--signal) yalnızca küçük işaretlerde. Başlıklar Chakra Petch, metin
+ * IBM Plex Sans, veri (numara, hash, saat) IBM Plex Mono.
+ */
+
+/* ---- Temel ------------------------------------------------------------ */
+body {
+  font-family: var(--font-sans);
+  font-size: calc(14px * var(--fs, 1));
+  line-height: 1.5;
+  text-rendering: optimizeLegibility;
+}
+h1,
+h2,
+.modal h3,
+.landing-title,
+.welcome-panel h1,
+.sidebar-header h3,
+.section-title,
+.tl-month,
+.set-subtitle {
+  font-family: var(--font-display);
+  letter-spacing: 0.005em;
+}
+.modal h2 {
+  font-size: calc(19px * var(--fs, 1));
+  font-weight: 600;
+}
+.landing-title,
+.welcome-panel h1 {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+code,
+kbd,
+.mono,
+.hash,
+.hash-value,
+.pv-case-no,
+.tl-date,
+.tl-time,
+.ev-no,
+.id-no {
+  font-family: var(--font-mono);
+}
+
+.modal {
+  border-radius: 8px;
+  box-shadow: var(--shadow-lg);
+  border-color: var(--border-strong);
+}
+.modal-backdrop {
+  background: rgba(20, 19, 17, 0.45);
+  backdrop-filter: blur(2px);
+}
+
+.btn {
+  border-radius: var(--radius);
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+.btn-secondary {
+  background: var(--bg-2);
+  border-color: var(--border-strong);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--bg-3);
+}
+.btn-danger,
+.btn.danger {
+  color: var(--danger);
+}
+input,
+textarea,
+select {
+  border-radius: var(--radius);
+  background: var(--bg-2);
+}
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--text-2);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+input[type='checkbox'],
+input[type='radio'] {
+  accent-color: var(--text-0);
+}
+
+/* Sayfa görünümlerinde seçili öğeler: kırmızı yerine nötr vurgu */
+.tag-rec,
+.welcome .tag-rec {
+  background: var(--bg-3);
+  color: var(--text-0);
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+}
+.lang-switch {
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.lang-switch button.active,
+.report-seg button.on {
+  background: var(--primary);
+  color: var(--primary-contrast);
+}
+.maps-setup-icon {
+  background: var(--bg-3);
+  border: 1px solid var(--border-strong);
+  color: var(--text-0);
+}
+.landing-tile.primary {
+  border-color: var(--border-strong);
+}
+.landing-tile.primary .tile-icon {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-contrast);
+}
+
+/* ---- Marka ------------------------------------------------------------- */
+.brandmark-word {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.brandmark-word .w1 {
+  color: var(--text-0);
+}
+.brandmark-word .w2 {
+  color: var(--signal);
+}
+.landing-side-word,
+.welcome-word {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* ---- Sol menü: temayla birlikte (açıkta kâğıt, koyuda grafit) ----------- */
+.rail {
+  width: var(--rail-w);
+  background: var(--bg-1);
+  border-right: 1px solid var(--border);
+  color: var(--text-1);
+}
+:root[data-theme='light'] .rail {
+  background: var(--bg-1);
+}
+.rail-brand {
+  flex-direction: column;
+  align-items: center;
+  padding: 18px 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.rail .rail-brand .brandmark-logo {
+  width: 92px;
+  height: 92px;
+  object-fit: contain;
+}
+/* Açık temada logonun koyu mürekkep sürümü kullanılır (BrandMark.jsx) */
+.rail-group {
+  padding: 10px 8px;
+  gap: 2px;
+}
+.rail-bottom {
+  border-top: 1px solid var(--border);
+}
+.rail-btn {
+  position: relative;
+  height: 40px;
+  padding: 0 12px 0 14px;
+  border-radius: 4px;
+  border-left: none;
+  color: var(--text-1);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: calc(14.5px * var(--fs, 1));
+  letter-spacing: 0.02em;
+}
+.rail-btn:hover {
+  color: var(--text-0);
+  background: var(--bg-2);
+}
+.rail-btn.active {
+  color: var(--primary-contrast);
+  font-weight: 600;
+  background: var(--primary);
+  border-left-color: transparent;
+}
+.rail-count {
+  font-family: var(--font-mono);
+  font-size: calc(11px * var(--fs, 1));
+  color: var(--text-2);
+}
+.rail-btn.active .rail-count {
+  color: var(--primary-contrast);
+  opacity: 0.7;
+}
+
+/* ---- Üst çubuk / durum çubuğu -------------------------------------------- */
+.pv-header {
+  background: var(--bg-1);
+}
+.pv-case-no {
+  color: var(--text-1);
+  background: var(--bg-2);
+  font-size: calc(12px * var(--fs, 1));
+  letter-spacing: 0.06em;
+}
+.pv-case-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: calc(16px * var(--fs, 1));
+  letter-spacing: 0.005em;
+}
+.pv-case:hover .pv-case-name {
+  text-decoration-color: var(--signal);
+}
+.meta-chip {
+  font-size: calc(12px * var(--fs, 1));
+}
+.lock-btn {
+  font-family: var(--font-sans);
+  font-size: calc(12px * var(--fs, 1));
+  font-weight: 500;
+  border-radius: var(--radius);
+}
+.statusbar {
+  background: var(--bg-1);
+  font-size: calc(11px * var(--fs, 1));
+}
+
+/* ---- Gizlilik bandı: ince, sakin; derece rengi yalnızca işaret ve yazıda -- */
+.classification-banner {
+  height: 22px;
+  gap: 14px;
+  font-size: calc(10.5px * var(--fs, 1));
+  letter-spacing: 0.26em;
+  background: color-mix(in srgb, var(--cls) 11%, var(--bg-1));
+  color: color-mix(in srgb, var(--cls) 60%, var(--text-0));
+  border-bottom: 1px solid color-mix(in srgb, var(--cls) 40%, var(--border));
+}
+.classification-banner.bottom {
+  border-bottom: none;
+  border-top: 1px solid color-mix(in srgb, var(--cls) 40%, var(--border));
+}
+
+/* ---- Ağ düğümleri: sol kenar çizgisi yok; rol küçük renkli noktada ------ */
+.id-node {
+  background: var(--bg-2);
+  border-radius: 9px;
+  padding: 10px 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+:root[data-theme='light'] .id-node {
+  background: var(--bg-1);
+  box-shadow: 0 4px 14px rgba(30, 28, 22, 0.1);
+}
+.id-node.subject {
+  border-left: 1px solid var(--border);
+  border-color: color-mix(in srgb, var(--role-color, var(--border-strong)) 45%, var(--border));
+}
+.id-node-type {
+  font-size: calc(11px * var(--fs, 1));
+  font-weight: 500;
+  color: var(--text-2);
+}
+.id-node-label {
+  font-size: calc(13.5px * var(--fs, 1));
+  font-weight: 500;
+}
+.id-node-degree {
+  background: var(--primary);
+  color: var(--primary-contrast);
+}
+.node-chip {
+  border-radius: 3px;
+  font-size: calc(10px * var(--fs, 1));
+}
+.react-flow__edge-path {
+  stroke: var(--text-2);
+  stroke-width: 1.3;
+}
+.react-flow__edge-textbg {
+  fill: var(--bg-0);
+}
+.react-flow__edge-text {
+  fill: var(--text-1);
+  font-family: var(--font-mono);
+  font-size: calc(10px * var(--fs, 1));
+}
+.react-flow__controls {
+  border-radius: var(--radius);
+}
+
+/* ---- Karşılama / dosya ekranı: kimlik paneli ---------------------------- */
+.landing-side,
+.welcome-side {
+  background: var(--bg-2);
+  color: var(--text-0);
+  border-right: 1px solid var(--border);
+}
+.landing-side::before,
+.welcome-side::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(circle at 50% 45%, #000 0, transparent 68%);
+  mask-image: radial-gradient(circle at 50% 45%, #000 0, transparent 68%);
+  pointer-events: none;
+}
+.landing-side > *,
+.welcome-side > * {
+  position: relative;
+}
+.landing-side .brandmark-logo,
+.welcome-side .brandmark-logo {
+  object-fit: contain;
+}
+.landing-side-tag,
+.welcome-side-text p {
+  color: var(--text-1);
+  font-size: calc(14px * var(--fs, 1));
+}
+.landing-side-foot {
+  color: var(--text-2);
+  font-size: calc(11px * var(--fs, 1));
+}
+.landing-side-foot span::before {
+  content: none;
+}
+.landing-tile,
+.choice-card {
+  border-radius: 6px;
+}
+.landing-tile:hover,
+.choice-card:hover {
+  border-color: var(--border-strong);
+}
+.choice-card.active {
+  border-color: var(--text-1);
+  background: var(--bg-2);
+}
+.landing-recent-no {
+  color: var(--text-1);
+}
+.stepper li.current {
+  border-bottom-color: var(--signal);
+}
+.stepper li.done {
+  border-bottom-color: var(--border-strong);
+}
+.stepper-no {
+  color: var(--text-2);
+  font-family: var(--font-mono);
+}
+
+/* ---- Dosya kâğıdı dili: küçük etiketler mono, büyük harf ---------------- */
+.filter-label,
+.kv span,
+.hash-label,
+.data-table th,
+.modal-kicker,
+.landing-analyst-label,
+.report-side h4,
+.rp-label {
+  font-family: var(--font-mono);
+  font-size: calc(10.5px * var(--fs, 1));
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+.btn {
+  font-family: var(--font-display);
+  font-size: calc(13.5px * var(--fs, 1));
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.landing-title,
+.welcome-panel h1 {
+  font-weight: 700;
+}
+
+/* Kâğıt üzerinde düğümler: gölge yok, ince çizgi */
+:root[data-theme='light'] .id-node {
+  box-shadow: none;
+  background: var(--bg-1);
+}
+:root[data-theme='dark'] .id-node {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+}

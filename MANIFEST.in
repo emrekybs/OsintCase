@@ -1,0 +1,4 @@
+include LICENSE PYPI.md
+recursive-include osintcase/static *
+recursive-include osintcase/assets *
+include packaging/linux/*

@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "osintcase"
+version = "0.3.2"
+description = "OSINT Case: investigation case workspace for profiling, notes, link analysis and reports. Runs locally."
+readme = "PYPI.md"
+requires-python = ">=3.9"
+license = { text = "GPL-3.0-only" }
+authors = [{ name = "OSINT Case contributors" }]
+keywords = ["osint", "investigation", "case-management", "link-analysis", "intelligence"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Web Environment",
+  "Intended Audience :: Information Technology",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Programming Language :: Python :: 3",
+  "Topic :: Security",
+]
+dependencies = [
+  "pywebview>=5.0; sys_platform != 'linux'",
+  "pywebview[qt]>=5.0; sys_platform == 'linux'",
+]
+
+[project.urls]
+Homepage = "https://osintcase.com"
+Source = "https://github.com/emrekybs/OsintCase"
+Upstream = "https://github.com/Geistnigma/OSINTMapper"
+
+[project.scripts]
+osintcase = "osintcase.cli:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = ["osintcase*"]
+
+[tool.setuptools.package-data]
+osintcase = ["static/**/*", "assets/*"]
+
+# Linux: `pip install` (user or system) puts the menu entry and icon in share/ directly.
+# (pipx installs into a private venv, so there the entry is created on first launch.)
+[tool.setuptools.data-files]
+"share/applications" = ["packaging/linux/osintcase.desktop"]
+"share/icons/hicolor/512x512/apps" = ["packaging/linux/osintcase.png"]

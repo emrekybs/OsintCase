@@ -1,0 +1,1189 @@
+{
+ "schemaVersion": 2,
+ "id": "e2237f38-703a-4cc9-9678-fea6a9a1468c",
+ "name": "Operation Nightjar",
+ "createdAt": "2026-08-02T08:30:00.000Z",
+ "updatedAt": "2026-08-21T14:30:00.000Z",
+ "classification": "gizli",
+ "caseInfo": {
+  "caseNumber": "2026/INV-0417",
+  "investigator": "Analyst J. Doe",
+  "unit": "Financial Crimes & OSINT Unit",
+  "status": "aktif",
+  "priority": "yuksek",
+  "openedAt": "2026-08-02",
+  "legalBasis": "Tasking order TO-2026/118 (sample)",
+  "summary": "Investigation into a suspected smuggling and money-laundering network operating through Harbor Line Trading Ltd. Focus on the primary subject (code name NIGHTJAR), his associates, vehicles, digital footprint and payment flows.\n\nAll names, numbers and places in this file are fictional sample data.",
+  "assessment": "Hale is assessed with moderate-to-high confidence to coordinate night-time shipments from the quay warehouse. Kovac probably manages the payment side. Recommend continued surveillance and a financial production order for the exchange account."
+ },
+ "target": {
+  "name": "Marcus Hale (NIGHTJAR)",
+  "notes": "Avoid direct contact. Uses prepaid phones and changes them frequently."
+ },
+ "identifiers": [
+  {
+   "id": "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+   "type": "subject",
+   "fields": {
+    "fullName": "Marcus Hale",
+    "role": "supheli",
+    "threat": "yuksek",
+    "aliases": "NIGHTJAR, M.H.",
+    "dob": "1987-04-12",
+    "birthPlace": "Sample City",
+    "nationality": "Fictional Republic",
+    "idNumber": "P-00000000 (sample)",
+    "occupation": "Logistics consultant",
+    "description": "approx. 1.85 m, short dark hair, scar on left hand"
+   },
+   "notes": "Primary subject. Coordinates shipments through a front company.",
+   "position": {
+    "x": 560,
+    "y": 40
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "B",
+    "info": "2",
+    "sourceNote": "Informant report IR-114, cross-checked with travel records",
+    "collectedAt": "2026-08-03"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "597e32de-f19a-41a7-a501-a205a6dad6bb",
+   "type": "subject",
+   "fields": {
+    "fullName": "Elena Kovac",
+    "role": "irtibat",
+    "threat": "orta",
+    "aliases": "Lena",
+    "nationality": "Fictional Republic",
+    "occupation": "Accountant"
+   },
+   "notes": "Handles payments for Harbor Line Trading.",
+   "position": {
+    "x": 1060,
+    "y": 40
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "C",
+    "info": "2",
+    "sourceNote": "Company registry + open-source profile",
+    "collectedAt": "2026-08-06"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "0ad1fc1e-06ca-46d7-bdf5-dc745ed9b80e",
+   "type": "subject",
+   "fields": {
+    "fullName": "Daniel Ortiz",
+    "role": "tanik",
+    "threat": "dusuk",
+    "occupation": "Warehouse supervisor"
+   },
+   "notes": "Saw the subject at the warehouse on several nights.",
+   "position": {
+    "x": 60,
+    "y": 40
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "B",
+    "info": "3",
+    "sourceNote": "Witness interview W-02",
+    "collectedAt": "2026-08-09"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "6a0a4cad-18cf-40ff-9f94-b8a066b3ad12",
+   "type": "instagram",
+   "fields": {
+    "username": "@nightjar.travels",
+    "profileUrl": "https://instagram.example/nightjar.travels",
+    "displayName": "M.",
+    "followers": "842",
+    "following": "311",
+    "posts": "57",
+    "bio": "Always on the move."
+   },
+   "notes": "",
+   "position": {
+    "x": 310,
+    "y": 250
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "A",
+    "info": "2",
+    "sourceNote": "Archived profile capture E-003",
+    "collectedAt": "2026-08-05"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "a7db80ac-11ea-4ba4-a11d-f11b7cc34bfc",
+   "type": "telegram",
+   "fields": {
+    "username": "@nj_ops",
+    "displayName": "NJ"
+   },
+   "notes": "",
+   "position": {
+    "x": 560,
+    "y": 250
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "C",
+    "info": "3",
+    "sourceNote": "Seized phone contact list",
+    "collectedAt": "2026-08-15"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "db7248a2-0313-4157-9c79-af88048bcd59",
+   "type": "email",
+   "fields": {
+    "address": "m.hale@harborline.example",
+    "provider": "Custom domain",
+    "context": "Work"
+   },
+   "notes": "",
+   "position": {
+    "x": 810,
+    "y": 250
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "A",
+    "info": "1",
+    "sourceNote": "Company website + domain WHOIS",
+    "collectedAt": "2026-08-04"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "af79ac50-635e-422a-b1fe-708b933e27fd",
+   "type": "phone",
+   "fields": {
+    "number": "+1 555 0142 773",
+    "carrier": "Sample Mobile",
+    "lineType": "Mobile (prepaid)",
+    "imei": "35-000000-000000-0"
+   },
+   "notes": "",
+   "position": {
+    "x": 60,
+    "y": 250
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "B",
+    "info": "2",
+    "sourceNote": "Call detail records CDR-7",
+    "collectedAt": "2026-08-12"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "1289cb55-bec0-417b-9e2d-17938ea9fa7b",
+   "type": "organization",
+   "fields": {
+    "name": "Harbor Line Trading Ltd.",
+    "kind": "Company (shell suspected)",
+    "registryNo": "HL-000123",
+    "country": "Fictional Republic",
+    "website": "https://harborline.example"
+   },
+   "notes": "",
+   "position": {
+    "x": 1060,
+    "y": 250
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "A",
+    "info": "1",
+    "sourceNote": "Official company registry",
+    "collectedAt": "2026-08-04"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "95a99336-5ee4-4402-8757-b75241ba6986",
+   "type": "domain",
+   "fields": {
+    "domain": "harborline.example",
+    "registrar": "Example Registrar",
+    "registered": "2025-11-02",
+    "hosting": "203.0.113.40"
+   },
+   "notes": "",
+   "position": {
+    "x": 1060,
+    "y": 450
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "A",
+    "info": "1",
+    "sourceNote": "WHOIS / DNS lookup",
+    "collectedAt": "2026-08-04"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "7f44c65a-ce6b-47b4-8897-1a1689cfd087",
+   "type": "ip",
+   "fields": {
+    "ip": "203.0.113.40",
+    "asn": "AS64500 Example Hosting",
+    "geo": "Data centre, Sample City",
+    "seenAt": "2026-08-10"
+   },
+   "notes": "",
+   "position": {
+    "x": 810,
+    "y": 450
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "B",
+    "info": "2",
+    "sourceNote": "Server logs provided by host",
+    "collectedAt": "2026-08-10"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "138afb7a-5e9b-4f07-a73f-fe523290cb39",
+   "type": "wallet",
+   "fields": {
+    "address": "bc1q-sample-wallet-0000-nightjar-demo",
+    "chain": "BTC",
+    "exchange": "Example Exchange"
+   },
+   "notes": "",
+   "position": {
+    "x": 1310,
+    "y": 250
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "C",
+    "info": "3",
+    "sourceNote": "Blockchain explorer trace",
+    "collectedAt": "2026-08-17"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "1c6f27fb-55f9-4e6e-82fd-bdf07179b2de",
+   "type": "bankAccount",
+   "fields": {
+    "iban": "XX00 SAMP 0000 0000 0000 00",
+    "bank": "Sample Bank",
+    "holder": "Harbor Line Trading Ltd."
+   },
+   "notes": "",
+   "position": {
+    "x": 1310,
+    "y": 40
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "B",
+    "info": "2",
+    "sourceNote": "Financial intelligence referral",
+    "collectedAt": "2026-08-18"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "a82e60f9-14f8-4375-a0d7-56cb2ea6184b",
+   "type": "licensePlate",
+   "fields": {
+    "plate": "SMPL 4471",
+    "region": "Harbour district",
+    "vehicleDescription": "Grey panel van"
+   },
+   "notes": "",
+   "position": {
+    "x": 60,
+    "y": 450
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "B",
+    "info": "1",
+    "sourceNote": "ANPR camera hits",
+    "collectedAt": "2026-08-11"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "91f9dd85-3682-4076-8e86-d7ccb09e6783",
+   "type": "vehicle",
+   "fields": {
+    "description": "Grey panel van, 2019",
+    "make": "Sample Motors",
+    "model": "Cargo",
+    "year": "2019",
+    "color": "Grey",
+    "owner": "Harbor Line Trading Ltd."
+   },
+   "notes": "",
+   "position": {
+    "x": 310,
+    "y": 450
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "A",
+    "info": "1",
+    "sourceNote": "Vehicle registry",
+    "collectedAt": "2026-08-11"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "82cfae45-c41e-4485-bfec-16b25a32cd31",
+   "type": "address",
+   "fields": {
+    "line1": "14 Example Quay",
+    "city": "Harbour district",
+    "region": "Sample City",
+    "country": "Fictional Republic",
+    "context": "Warehouse"
+   },
+   "notes": "",
+   "position": {
+    "x": 310,
+    "y": 650
+   },
+   "customIconId": null,
+   "reliability": {
+    "source": "A",
+    "info": "1",
+    "sourceNote": "Land registry",
+    "collectedAt": "2026-08-08"
+   },
+   "createdAt": "2026-08-02T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  }
+ ],
+ "connections": [
+  {
+   "id": "438d6d3b-704a-48a3-bd8f-48da1382d2b6",
+   "source": "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+   "target": "6a0a4cad-18cf-40ff-9f94-b8a066b3ad12",
+   "sourceHandle": "bottom",
+   "targetHandle": "top",
+   "label": "Uses",
+   "confidence": "kesin",
+   "note": "Same photos as seized phone"
+  },
+  {
+   "id": "04f61900-ebfa-4cda-875c-6cd2c7adfb19",
+   "source": "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+   "target": "a7db80ac-11ea-4ba4-a11d-f11b7cc34bfc",
+   "sourceHandle": "bottom",
+   "targetHandle": "top",
+   "label": "Uses",
+   "confidence": "muhtemel",
+   "note": "Contact saved as \"NJ ops\""
+  },
+  {
+   "id": "e98a7cf9-a96a-4fc6-b4c8-162749d64576",
+   "source": "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+   "target": "db7248a2-0313-4157-9c79-af88048bcd59",
+   "sourceHandle": "bottom",
+   "targetHandle": "top",
+   "label": "Uses",
+   "confidence": "kesin",
+   "note": ""
+  },
+  {
+   "id": "e99a466b-91c4-40ab-813b-dd7f7cf018f9",
+   "source": "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+   "target": "597e32de-f19a-41a7-a501-a205a6dad6bb",
+   "sourceHandle": "right",
+   "targetHandle": "left",
+   "label": "Business partner",
+   "confidence": "muhtemel",
+   "note": "Seen together twice"
+  },
+  {
+   "id": "802fbf15-f2df-42c3-9717-224cbaeb865e",
+   "source": "0ad1fc1e-06ca-46d7-bdf5-dc745ed9b80e",
+   "target": "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+   "sourceHandle": "right",
+   "targetHandle": "left",
+   "label": "Witnessed",
+   "confidence": "kesin",
+   "note": "Statement W-02"
+  },
+  {
+   "id": "58706287-b80d-48f6-a49d-43d925f68c89",
+   "source": "0ad1fc1e-06ca-46d7-bdf5-dc745ed9b80e",
+   "target": "af79ac50-635e-422a-b1fe-708b933e27fd",
+   "sourceHandle": "bottom",
+   "targetHandle": "top",
+   "label": "Called by",
+   "confidence": "muhtemel",
+   "note": ""
+  },
+  {
+   "id": "db58dfdf-67ef-4da8-8ff6-7eff09beff3d",
+   "source": "af79ac50-635e-422a-b1fe-708b933e27fd",
+   "target": "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+   "sourceHandle": "right",
+   "targetHandle": "bottom",
+   "label": "Registered to alias",
+   "confidence": "supheli",
+   "note": "Prepaid, no ID"
+  },
+  {
+   "id": "1e1246ea-60c4-4425-8e02-7a7a381d5525",
+   "source": "597e32de-f19a-41a7-a501-a205a6dad6bb",
+   "target": "1289cb55-bec0-417b-9e2d-17938ea9fa7b",
+   "sourceHandle": "bottom",
+   "targetHandle": "top",
+   "label": "Accountant of",
+   "confidence": "kesin",
+   "note": ""
+  },
+  {
+   "id": "59bebf8b-fc3c-4e6b-8c19-85856d7acbfb",
+   "source": "db7248a2-0313-4157-9c79-af88048bcd59",
+   "target": "1289cb55-bec0-417b-9e2d-17938ea9fa7b",
+   "sourceHandle": "right",
+   "targetHandle": "left",
+   "label": "Company domain",
+   "confidence": "kesin",
+   "note": ""
+  },
+  {
+   "id": "4f19347f-ec6d-414e-8665-45086bf5da64",
+   "source": "1289cb55-bec0-417b-9e2d-17938ea9fa7b",
+   "target": "95a99336-5ee4-4402-8757-b75241ba6986",
+   "sourceHandle": "bottom",
+   "targetHandle": "top",
+   "label": "Owns",
+   "confidence": "kesin",
+   "note": ""
+  },
+  {
+   "id": "a2a07cf3-8b7c-4c9f-99c2-c085854dc57f",
+   "source": "95a99336-5ee4-4402-8757-b75241ba6986",
+   "target": "7f44c65a-ce6b-47b4-8897-1a1689cfd087",
+   "sourceHandle": "left",
+   "targetHandle": "right",
+   "label": "Hosted on",
+   "confidence": "kesin",
+   "note": ""
+  },
+  {
+   "id": "bf5b1b0c-41eb-4ba6-9a21-835baaf9bf59",
+   "source": "1289cb55-bec0-417b-9e2d-17938ea9fa7b",
+   "target": "1c6f27fb-55f9-4e6e-82fd-bdf07179b2de",
+   "sourceHandle": "right",
+   "targetHandle": "bottom",
+   "label": "Holds account",
+   "confidence": "kesin",
+   "note": ""
+  },
+  {
+   "id": "60e7f2e1-1701-4240-9ff1-fd6dc6689837",
+   "source": "1c6f27fb-55f9-4e6e-82fd-bdf07179b2de",
+   "target": "138afb7a-5e9b-4f07-a73f-fe523290cb39",
+   "sourceHandle": "bottom",
+   "targetHandle": "top",
+   "label": "Money transfer",
+   "confidence": "muhtemel",
+   "note": "3 transfers, Aug 2026"
+  },
+  {
+   "id": "fb98319c-191c-418c-b773-9be31275b709",
+   "source": "1289cb55-bec0-417b-9e2d-17938ea9fa7b",
+   "target": "91f9dd85-3682-4076-8e86-d7ccb09e6783",
+   "sourceHandle": "bottom",
+   "targetHandle": "right",
+   "label": "Registered owner",
+   "confidence": "kesin",
+   "note": ""
+  },
+  {
+   "id": "b87a9518-ca1d-4efe-8bc7-a7197e76d0f7",
+   "source": "91f9dd85-3682-4076-8e86-d7ccb09e6783",
+   "target": "a82e60f9-14f8-4375-a0d7-56cb2ea6184b",
+   "sourceHandle": "left",
+   "targetHandle": "right",
+   "label": "Plate",
+   "confidence": "kesin",
+   "note": ""
+  },
+  {
+   "id": "81d9e0c9-21bd-4772-af19-507304249481",
+   "source": "a82e60f9-14f8-4375-a0d7-56cb2ea6184b",
+   "target": "82cfae45-c41e-4485-bfec-16b25a32cd31",
+   "sourceHandle": "bottom",
+   "targetHandle": "left",
+   "label": "Seen at",
+   "confidence": "kesin",
+   "note": "ANPR hits"
+  }
+ ],
+ "locations": [
+  {
+   "id": "62cc1367-4e8f-4ff0-a06a-017addf6c6e5",
+   "label": "Warehouse",
+   "address": "14 Example Quay, Harbour district",
+   "lat": 41.0265,
+   "lng": 28.9742,
+   "placeId": null,
+   "visitedAt": "2026-08-09 23:40",
+   "withWho": "Daniel Ortiz",
+   "notes": "Night-time loading observed.",
+   "color": "red",
+   "iconId": "home",
+   "radius": 400,
+   "sightings": [
+    {
+     "id": "6a55c39c-2111-4943-8be0-0740c63d6239",
+     "date": "2026-08-11",
+     "time": "22:15",
+     "note": "ANPR: SMPL 4471 enters"
+    },
+    {
+     "id": "5a27b66b-0ecd-44f8-bc36-e40ec4d5f523",
+     "date": "2026-08-14",
+     "time": "23:05",
+     "note": "ANPR: SMPL 4471 enters"
+    },
+    {
+     "id": "c0912536-4664-43f6-a3b4-86dde2c6e744",
+     "date": "2026-08-19",
+     "time": "00:20",
+     "note": "Surveillance team"
+    }
+   ],
+   "createdAt": "2026-08-05T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "21375dfd-7c74-4d68-8f61-9c8c1ddc8b20",
+   "label": "Harbour Café",
+   "address": "Sample Street 3",
+   "lat": 41.0339,
+   "lng": 28.9779,
+   "placeId": null,
+   "visitedAt": "2026-08-13 18:30",
+   "withWho": "Elena Kovac",
+   "notes": "Meeting between Hale and Kovac.",
+   "color": "orange",
+   "iconId": "coffee",
+   "radius": 0,
+   "sightings": [
+    {
+     "id": "abfba2af-1993-443f-8ba0-b785b41f9ffd",
+     "date": "2026-08-16",
+     "time": "17:50",
+     "note": "Surveillance photo E-004"
+    }
+   ],
+   "createdAt": "2026-08-05T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "76199aa3-2ef6-49f1-a3ad-f2626d40c5b2",
+   "label": "Harbor Line office",
+   "address": "Example Tower, floor 7",
+   "lat": 41.0421,
+   "lng": 29.006,
+   "placeId": null,
+   "visitedAt": "2026-08-04",
+   "withWho": "",
+   "notes": "Registered company address.",
+   "color": "blue",
+   "iconId": null,
+   "radius": 250,
+   "sightings": [],
+   "createdAt": "2026-08-05T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "6700dec3-321d-4c34-b13b-f80f50eb893f",
+   "label": "Residence (suspected)",
+   "address": "Example Avenue 88",
+   "lat": 41.0482,
+   "lng": 28.987,
+   "placeId": null,
+   "visitedAt": "",
+   "withWho": "",
+   "notes": "Phone connects to cell tower near here overnight.",
+   "color": "purple",
+   "iconId": null,
+   "radius": 800,
+   "sightings": [
+    {
+     "id": "ab687e44-18a9-4c65-92bf-afc9f70fab3e",
+     "date": "2026-08-12",
+     "time": "02:10",
+     "note": "CDR cell-site"
+    },
+    {
+     "id": "f2dfc8c0-16ad-4018-bff9-84e4264ea3e3",
+     "date": "2026-08-15",
+     "time": "01:45",
+     "note": "CDR cell-site"
+    }
+   ],
+   "createdAt": "2026-08-05T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "3fd21935-8110-4f69-b3ea-e8c86d5684cf",
+   "label": "Hosting data centre",
+   "address": "Sample Industrial Park",
+   "lat": 41.01,
+   "lng": 29.05,
+   "placeId": null,
+   "visitedAt": "2026-08-10",
+   "withWho": "",
+   "notes": "Server for harborline.example.",
+   "color": "teal",
+   "iconId": null,
+   "radius": 0,
+   "sightings": [],
+   "createdAt": "2026-08-05T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  }
+ ],
+ "pinLinks": [
+  {
+   "id": "2cf2a14c-178a-4f02-881f-eace81d85855",
+   "pinId": "62cc1367-4e8f-4ff0-a06a-017addf6c6e5",
+   "identifierId": "82cfae45-c41e-4485-bfec-16b25a32cd31",
+   "context": "Registered warehouse",
+   "createdAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "8a7fddb1-8099-4eee-875f-781e8b672378",
+   "pinId": "62cc1367-4e8f-4ff0-a06a-017addf6c6e5",
+   "identifierId": "a82e60f9-14f8-4375-a0d7-56cb2ea6184b",
+   "context": "ANPR hits",
+   "createdAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "06b77756-74a1-4661-8bee-439edbbf8b91",
+   "pinId": "62cc1367-4e8f-4ff0-a06a-017addf6c6e5",
+   "identifierId": "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+   "context": "Seen loading",
+   "createdAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "386cdc0d-b1d6-49fe-84f9-82f74fafb814",
+   "pinId": "21375dfd-7c74-4d68-8f61-9c8c1ddc8b20",
+   "identifierId": "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+   "context": "Meeting",
+   "createdAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "ea1402e5-a7d6-4ad5-ab10-93037ed2bbc8",
+   "pinId": "21375dfd-7c74-4d68-8f61-9c8c1ddc8b20",
+   "identifierId": "597e32de-f19a-41a7-a501-a205a6dad6bb",
+   "context": "Meeting",
+   "createdAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "86e63cb6-c9d0-4d24-862f-49a2c86015c0",
+   "pinId": "21375dfd-7c74-4d68-8f61-9c8c1ddc8b20",
+   "identifierId": "6a0a4cad-18cf-40ff-9f94-b8a066b3ad12",
+   "context": "Story geotag",
+   "createdAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "3545f7f4-36a0-47f2-9fe1-51dc2bd912f5",
+   "pinId": "76199aa3-2ef6-49f1-a3ad-f2626d40c5b2",
+   "identifierId": "1289cb55-bec0-417b-9e2d-17938ea9fa7b",
+   "context": "Registered address",
+   "createdAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "900443b9-1b19-42d9-be72-e019d509c69d",
+   "pinId": "6700dec3-321d-4c34-b13b-f80f50eb893f",
+   "identifierId": "af79ac50-635e-422a-b1fe-708b933e27fd",
+   "context": "Overnight cell-site",
+   "createdAt": "2026-08-20T09:00:00.000Z"
+  },
+  {
+   "id": "64e5a3b0-7e8a-463a-ad9b-7a8068f6c875",
+   "pinId": "3fd21935-8110-4f69-b3ea-e8c86d5684cf",
+   "identifierId": "7f44c65a-ce6b-47b4-8897-1a1689cfd087",
+   "context": "Hosting",
+   "createdAt": "2026-08-20T09:00:00.000Z"
+  }
+ ],
+ "events": [
+  {
+   "id": "84bfacf0-f150-4525-b943-66b03af5900b",
+   "date": "2026-08-03",
+   "time": "11:20",
+   "title": "First transfer to crypto exchange",
+   "description": "EUR 18,500 from the company account.",
+   "category": "finans",
+   "identifierIds": [
+    "1c6f27fb-55f9-4e6e-82fd-bdf07179b2de",
+    "1289cb55-bec0-417b-9e2d-17938ea9fa7b"
+   ],
+   "pinIds": [],
+   "evidenceIds": [
+    "1ff5b2f3-6a62-4274-ab19-6e13d7b6462d"
+   ],
+   "reliability": {
+    "source": "B",
+    "info": "2"
+   },
+   "createdAt": "2026-08-03T09:00:00.000Z",
+   "updatedAt": "2026-08-03T09:00:00.000Z"
+  },
+  {
+   "id": "c24fb0ef-843b-40d2-a0e7-22717091c82d",
+   "date": "2026-08-06",
+   "time": "",
+   "title": "Domain harborline.example linked to Hale",
+   "description": "Company email address used on a travel booking.",
+   "category": "dijital",
+   "identifierIds": [
+    "db7248a2-0313-4157-9c79-af88048bcd59",
+    "95a99336-5ee4-4402-8757-b75241ba6986",
+    "4f3abb6a-308e-4f04-84f2-71dbbc5d7718"
+   ],
+   "pinIds": [],
+   "evidenceIds": [],
+   "reliability": {
+    "source": "A",
+    "info": "2"
+   },
+   "createdAt": "2026-08-06T09:00:00.000Z",
+   "updatedAt": "2026-08-06T09:00:00.000Z"
+  },
+  {
+   "id": "fd17de54-8af2-4431-a362-8bfe77692d87",
+   "date": "2026-08-09",
+   "time": "23:40",
+   "title": "Witness sees van loading at warehouse",
+   "description": "",
+   "category": "gorulme",
+   "identifierIds": [
+    "0ad1fc1e-06ca-46d7-bdf5-dc745ed9b80e",
+    "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+    "a82e60f9-14f8-4375-a0d7-56cb2ea6184b"
+   ],
+   "pinIds": [
+    "62cc1367-4e8f-4ff0-a06a-017addf6c6e5"
+   ],
+   "evidenceIds": [
+    "dbaea382-1ccc-43de-970f-0e9d72d05884"
+   ],
+   "reliability": {
+    "source": "B",
+    "info": "3"
+   },
+   "createdAt": "2026-08-09T09:00:00.000Z",
+   "updatedAt": "2026-08-09T09:00:00.000Z"
+  },
+  {
+   "id": "9d888437-e828-4c9c-a76d-7c70c454fde7",
+   "date": "2026-08-13",
+   "time": "18:30",
+   "title": "Hale and Kovac meet at Harbour Café",
+   "description": "First confirmed meeting.",
+   "category": "iletisim",
+   "identifierIds": [
+    "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+    "597e32de-f19a-41a7-a501-a205a6dad6bb"
+   ],
+   "pinIds": [
+    "21375dfd-7c74-4d68-8f61-9c8c1ddc8b20"
+   ],
+   "evidenceIds": [
+    "20596bd1-71fa-49d4-af21-5fde9b64d4fd"
+   ],
+   "reliability": {
+    "source": "B",
+    "info": "2"
+   },
+   "createdAt": "2026-08-13T09:00:00.000Z",
+   "updatedAt": "2026-08-13T09:00:00.000Z"
+  },
+  {
+   "id": "8233ec38-f245-41cc-a0ca-528ee22142f1",
+   "date": "2026-08-15",
+   "time": "02:05",
+   "title": "Late-night Telegram activity",
+   "description": "@nj_ops messages 6 contacts within 10 minutes.",
+   "category": "iletisim",
+   "identifierIds": [
+    "a7db80ac-11ea-4ba4-a11d-f11b7cc34bfc"
+   ],
+   "pinIds": [],
+   "evidenceIds": [],
+   "reliability": {
+    "source": "C",
+    "info": "3"
+   },
+   "createdAt": "2026-08-15T09:00:00.000Z",
+   "updatedAt": "2026-08-15T09:00:00.000Z"
+  },
+  {
+   "id": "c1a617a4-0a1f-49a6-88dc-c82b472f47d4",
+   "date": "2026-08-20",
+   "time": "09:00",
+   "title": "Surveillance extended",
+   "description": "Authorisation extended for 30 days.",
+   "category": "operasyon",
+   "identifierIds": [
+    "4f3abb6a-308e-4f04-84f2-71dbbc5d7718"
+   ],
+   "pinIds": [],
+   "evidenceIds": [],
+   "reliability": null,
+   "createdAt": "2026-08-20T09:00:00.000Z",
+   "updatedAt": "2026-08-20T09:00:00.000Z"
+  }
+ ],
+ "evidence": [
+  {
+   "id": "dbaea382-1ccc-43de-970f-0e9d72d05884",
+   "number": "D-001",
+   "title": "Witness statement W-02",
+   "description": "Signed statement of the warehouse supervisor.",
+   "fileName": "witness_statement_W-02.txt",
+   "mimeType": "text/plain",
+   "size": 200,
+   "sha256": "34842f371b74b4cac714691e391ad19f784b1f7f97f14f007d70de13d7793402",
+   "dataUrl": "data:text/plain;base64,V0lUTkVTUyBTVEFURU1FTlQgVy0wMiAoRklDVElPTkFMIFNBTVBMRSkKV2l0bmVzczogRGFuaWVsIE9ydGl6CkRhdGU6IDIwMjYtMDgtMDkKCkkgc2F3IGEgZ3JleSB2YW4gKFNNUEwgNDQ3MSkgYXQgMTQgRXhhbXBsZSBRdWF5IGFyb3VuZCAyMzo0MC4KVGhlIG1hbiBsb2FkaW5nIGJveGVzIG1hdGNoZXMgdGhlIHBob3RvIG9mIE1hcmN1cyBIYWxlLgo=",
+   "source": "Interview room 2",
+   "acquiredAt": "2026-08-09",
+   "identifierIds": [
+    "0ad1fc1e-06ca-46d7-bdf5-dc745ed9b80e",
+    "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+    "a82e60f9-14f8-4375-a0d7-56cb2ea6184b"
+   ],
+   "pinIds": [
+    "62cc1367-4e8f-4ff0-a06a-017addf6c6e5"
+   ],
+   "addedAt": "2026-08-09T10:15:00.000Z",
+   "addedBy": "Analyst J. Doe",
+   "custody": [
+    {
+     "id": "d8fb07cb-d406-4146-adac-2042c08e6a65",
+     "ts": "2026-08-09T10:15:00.000Z",
+     "action": "Kayda alındı",
+     "person": "Analyst J. Doe",
+     "note": "SHA-256: 34842f371b74b4cac714691e391ad19f784b1f7f97f14f007d70de13d7793402"
+    },
+    {
+     "id": "6401e0de-fed8-4749-9fd5-ab2d826f5cfc",
+     "ts": "2026-08-09T16:00:00.000Z",
+     "action": "Muhafazaya alındı",
+     "person": "Evidence officer K. Lee",
+     "note": "Locker B-4, seal 4471"
+    }
+   ],
+   "verifications": [
+    {
+     "id": "0f784f51-eb3b-4b24-8396-6012c85d47bc",
+     "ts": "2026-08-21T14:02:00.000Z",
+     "ok": true,
+     "fileName": "witness_statement_W-02.txt",
+     "sha256": "34842f371b74b4cac714691e391ad19f784b1f7f97f14f007d70de13d7793402",
+     "analyst": "Analyst J. Doe"
+    }
+   ]
+  },
+  {
+   "id": "561c8e84-9801-4e88-908e-30ec3e52280d",
+   "number": "D-002",
+   "title": "ANPR camera still",
+   "description": "Camera still of the van entering the quay.",
+   "fileName": "anpr_SMPL4471.png",
+   "mimeType": "image/png",
+   "size": 5021,
+   "sha256": "ae1d71b69b86793f86ad44e4a04c29d161e9a73012b0bbe19b0cee90869b80b5",
+   "dataUrl": "data:image/png;base64,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",
+   "source": "City ANPR network",
+   "acquiredAt": "2026-08-11",
+   "identifierIds": [
+    "a82e60f9-14f8-4375-a0d7-56cb2ea6184b",
+    "91f9dd85-3682-4076-8e86-d7ccb09e6783"
+   ],
+   "pinIds": [
+    "62cc1367-4e8f-4ff0-a06a-017addf6c6e5"
+   ],
+   "addedAt": "2026-08-11T10:15:00.000Z",
+   "addedBy": "Analyst J. Doe",
+   "custody": [
+    {
+     "id": "6cdeb686-15e9-4b9e-a107-8bde8bb469bf",
+     "ts": "2026-08-11T10:15:00.000Z",
+     "action": "Kayda alındı",
+     "person": "Analyst J. Doe",
+     "note": "SHA-256: ae1d71b69b86793f86ad44e4a04c29d161e9a73012b0bbe19b0cee90869b80b5"
+    }
+   ],
+   "verifications": [
+    {
+     "id": "670c015d-46ab-4a0e-8343-af5a0c0a72d8",
+     "ts": "2026-08-21T14:02:00.000Z",
+     "ok": true,
+     "fileName": "anpr_SMPL4471.png",
+     "sha256": "ae1d71b69b86793f86ad44e4a04c29d161e9a73012b0bbe19b0cee90869b80b5",
+     "analyst": "Analyst J. Doe"
+    }
+   ]
+  },
+  {
+   "id": "20596bd1-71fa-49d4-af21-5fde9b64d4fd",
+   "number": "D-003",
+   "title": "Instagram profile capture",
+   "description": "Archived profile incl. geotagged story at Harbour Café.",
+   "fileName": "nightjar_profile_capture.png",
+   "mimeType": "image/png",
+   "size": 4915,
+   "sha256": "04eb8f91c0fe384e0f456600d1c6c05a399f72a17aeff3175cbf9fd75f203bf4",
+   "dataUrl": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAeAAAAEsCAIAAACUnPcNAAAS+klEQVR42u3deVRUZePA8WeYYUBUMqUk0UxCOxogyKa5pBLgfvScDNkscyk7YloK5lIuB9yik2FYHg9mg2waaYmgpuQuoICIspWKJnHSUlHQwZnh98ftnd+c2cQ3fSP7fv6Ce597n+de68v1gipzdnYWAIDWx4ZbAAAEGgBAoAGAQAMACDQAEGgAAIEGABBoACDQAICHQWF9d77zq9wjAHh0Auq28wQNAP8wBBoAWinFX38IBwA8qJa8QOYJGgBaKQINAAQaAECgAYBAAwAINAAQaAAAgQYAEGgAINAAAAINAAQaAECgAQAEGgAINACAQAMAgQYAEGgA+FdSPNKzP//881FRUQqFQqvVJiYmXrt2TQgRFBT01ltvTZs27caNG0KIzMzMwsLCtWvXSofMnTt3wIABr732mrSrurq6ublZLpcnJydXV1enpqaGh4cbTiGNkT4uKCjYuXOn2e0dOnS4cuXKDz/8IG1ZunTpV199FR8fL51NP5FCodi7d++BAwfMnjkzM7Oqqmrx4sXSRv1igoODR4wYcefOnbt3727YsEG6TEsLA4BWEejo6OgVK1b8/vvvAwYMmDJlilRhPz+/Xbt2+fj47N+/Xwih0WhcXFxsbGx0Op1MJnN2dtZoNNLhGo1m0aJFQoju3btHR0fPmzfPdAr9GOvbX3zxxTFjxkiBtre3f+qppy5evGg62N7efuHChWq1+ujRo6Zn1mg0crnc3d29rKxMv9HLy2vw4MELFixoamrq16/f7NmzP/zwQysLA4BW8YrjiSeeUCqV0iNkdna2EMLOzs7e3n7fvn2+vr76YefPn+/Zs6cQokePHjU1Nabnqamp6dy5819ZSXl5uaurq1wuF0L07du3qKjI7LC7d+9u2bJlzJgxls6TlpYWFhZmuGX8+PEpKSlNTU1CiKKiorq6OmkWAGjVgVapVPHx8bNmzerTp8+5c+eEEN7e3kVFRVeuXHn66acVij+f34uLi729vaW9xcXFpufx9PS8cOHCX1mJTqerrKzs1auXEMLX17egoMDSyIsXLz7zzDOW9paWlgohPDw89Fu6det2/vx5/adJSUlarZb/sAC09lccBw4cKCgoCAgImDp16okTJ9LT0/39/V1dXV966aWOHTu6u7uXlJRI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zZsNDQ33PXDVqlWrVq2KiIgoKSm5c+eOlZEnT55MSkp6++23pU9TU1PT0tIqKyvr6+uVSqXhw+P69eull7BGh5g9Kjc397vvvps8ebIQYuXKlcuXL580aZJWq5VeLAghampqwsLCfvzxx8zMTJlMlpSUZLQwtVodEhIyderUW7duLVq0yHDXmjVr4uLiQkND79y5Y/TyXa+mpmbGjBlmp5buT1xcXHh4+O3bt2NjYzUajdH6TWfXX3VcXNynn376xx9/lJaWGj1cW7pYAH8LmbOzs5Xd+c6vSh8E1G3/7ybw9PScOXNmp06dGhoacnNzt2/f3pLfNa9atWrz5s2VlZUeHh6xsbGRkZHWx8vl8uPHj/v7+7eeO1tYWGj9h74f49kB3FdL6qp41IsoLS2dOXPmgx6lUqmWLFmiVqttbW2XLVt23/Eff/zxoUOH+CUHwBM0AOCRP0Hzd3EAQCtFoAGAQAMACDQAEGgAAIEGAAINACDQAAACDQAEGgBAoAGAQAMACDQAgEADAIEGABBoACDQAAACDQAEGgBAoAEABBoACDQAgEADAIEGABBoAACBBgACDQAg0ABAoAEABBoACDQAgEADAAg0ABBoAACBBgACDQAg0AAAAg0ABBoAQKABgEADAAg0ABBobgEAEGgAAIEGAAINACDQAECgAQAEGgBAoAGAQAMACDQAEGgAAIEGABBoACDQAAACDQAEGgBAoAGAQAMACDQAgEADAIEGABBoACDQAAACDQAg0ABAoAEABBoACDQAgEADAIEGABBoAACBBgACDQAg0ABAoAEABBoAQKABgEADAAg0ABBoAACBBgACDQAg0AAAAg0ABBoAQKABgEADAAg0AIBAAwCBBgAQaAAg0AAAAg0AINAAQKABAAQaAAg0AIBAAwCBBgAQaAAAgQYAAg0AINAAQKABAAQaAECgAYBAAwAINAAQaAAAgQYAAg0AINAAAAINAAQaAECgAYBAAwAINACAQAMAgQYAEGgAINAAAAINAAQaAECgAQAEGgAINACAQAMAgQYAEGgAAIEGAAINACDQAECgAQAEGgBAoAGAQAMACDQAEGgAAIEGAAINACDQAAACDQAEGgBAoAGAQAMACDQAgEADAIEGABBoACDQAAACDQAEGgBAoAEABBoACDQAgEADAIEGABBoAACBBgACDQAg0ABAoAEABBoACDQAgEADAAg0ABBoAACBBgACDQAg0AAAAg0ABBoAQKABgEADAAg0AIBAAwCBBgAQaAAg0AAAAg0ABBoAQKABAAQaAAg0AIBAAwCBBgAQ6NakY8eO/v7+dnZ23AoAj2Gg58yZE/ofvr6+Tk5OXl5eZkcGBAQIIawMaIno6OgH2i5Nasn48eM1Go1Op/vrC3i4rC/7Id5PAH8vxSM9u1arzcjIMNxy7do1syP9/f3z8/OvXbtmacCjIE1qaW/btm2Liopa4a+Z9WX/jfcTwD8p0GafMRMTE9u0aRMcHGxvb6/T6bKzs729vZVK5cSJE7dt2yYNaNu27YgRI2xtbe/du5ebm9vQ0BAdHV1SUuLi4mJnZ3fs2LHq6monJ6egoCA7O7szZ86cOnXKaCIHB4eQkBB7e/sbN25IW4zGDxw4UJo0Ly/P9DxeXl5KpTI0NHTPnj2BgYFGK6murv7tt9+kfJtOZG9vHxgY2LZtWxsbm4MHD/7666/ShVdXV3fr1q2goKBr165dunQpKio6depUS660X79+7u7uQohDhw65uLgY3itpJZcuXTJ7aQ90P/mfAfh3veKwZOjQoZWVlRkZGeXl5QMHDjx69GhTU9O2bdsMB5SXl6enp5eXlw8dOlQIIZfLGxsb09PTd+zYMXz4cCGEt7f34cOH09PT/f39zU5RUVGRlpZWXV2tUChMx+snNXuekpKSpqamjIyMgQMHmq6koqJC/3BtOtHLL79cVFSUmZm5e/fu4ODgP78SKhSnT5/OyMgICgoqKirKyMiQpmvJlfbv3z89PX3Xrl19+vQxvFf6lVi6tAe6nwD+XYGWy+X6d9AdO3bUb+/evbv0yHb27NlDhw6ZHtitW7fKykohRGVlZbdu3YQQMpmsrKxMCHHz5k3pG3cHDx6Uvo+nVCrNnqGqqkoIcf78eek9sqXx9z2P0Uqam5tramqsTPTcc88NGTIkNDR05MiRtra2MplMOqqurq6+vl6r1UofSDVvyZVeuHBh1KhR7du33717t+Ha9CuxfgktnAXAv+sVh+k7aInULCkxarXaygDDU+lHNjc3CyHGjRtXVVVVXFxs9vtgcrlcfyrpbJbGWz+P6Up0Op20AEsT2djYfPPNNxqNRiaTubi4SIO1Wq30gUajMTy8JVeak5PTtWtXHx+f3r175+bmmq7E+iW0cBYAvOIQQoi6ujo3NzchhIeHx+DBgw3rJrl06VKvXr2EEL169bp8+bLZiHTu3LmyslIul+sTaai2tlaaomfPnpbGS5NaP4/pSu470ZUrV6QtPXr0uO9PXNz3Su3s7CZNmlRbW7t7925XV1fTe2Xl0h7ofgL4dz1BW5KXlxcSEuLt7a1Wq6Xftv/yyy8TJkzIysrSv3YICQnp27ev9E0tsycpKSkJDw+/evWqWq2Wy+Varfb69esBAQHSTzjk5eWNHDnS29u7trZWq9WaHS9Narrd6AWI9ZWYTpSXlxccHOzl5aXT6fbs2WP9Vtz3/Gq1+ueff46IiJDJZMePHze9V1Yu7YHuJ4DWRubs7Gxld77zq9IHAXXbuVkA8LC0pK78SUIAaKUINAAQaAAAgQYAAg0AINAAQKABAAQaAECgAYBAAwAINAAQaAAAgQYAEGgAINAAAAINAAQaAPBotfSfvNL/5f8AAJ6gAYBAAwBan/v8o7EAAJ6gAQAEGgAINACAQAMAgQYAEGgAINAAAAINAGiZ/wM9EiW/ygnrdwAAAABJRU5ErkJggg==",
+   "source": "Open-source capture",
+   "acquiredAt": "2026-08-05",
+   "identifierIds": [
+    "6a0a4cad-18cf-40ff-9f94-b8a066b3ad12",
+    "4f3abb6a-308e-4f04-84f2-71dbbc5d7718"
+   ],
+   "pinIds": [
+    "21375dfd-7c74-4d68-8f61-9c8c1ddc8b20"
+   ],
+   "addedAt": "2026-08-05T10:15:00.000Z",
+   "addedBy": "Analyst J. Doe",
+   "custody": [
+    {
+     "id": "92d27981-465d-4c40-9b3f-b5ca8bd58228",
+     "ts": "2026-08-05T10:15:00.000Z",
+     "action": "Kayda alındı",
+     "person": "Analyst J. Doe",
+     "note": "SHA-256: 04eb8f91c0fe384e0f456600d1c6c05a399f72a17aeff3175cbf9fd75f203bf4"
+    }
+   ],
+   "verifications": [
+    {
+     "id": "29b88829-b813-4367-82c5-ace490069137",
+     "ts": "2026-08-21T14:02:00.000Z",
+     "ok": true,
+     "fileName": "nightjar_profile_capture.png",
+     "sha256": "04eb8f91c0fe384e0f456600d1c6c05a399f72a17aeff3175cbf9fd75f203bf4",
+     "analyst": "Analyst J. Doe"
+    }
+   ]
+  },
+  {
+   "id": "918b100a-a76c-4508-b50d-c73e293bf1df",
+   "number": "D-004",
+   "title": "Surveillance photo, café meeting",
+   "description": "Hale and Kovac at the same table for ~40 minutes.",
+   "fileName": "cafe_meeting.png",
+   "mimeType": "image/png",
+   "size": 4903,
+   "sha256": "55bf60d18b51c0ecf870f3b62ce13ed12782d15b09129f4f08516f210222aedc",
+   "dataUrl": "data:image/png;base64,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2dnZY8eOlabNzs62OubMmTMBAQFCiICAALNPHS13r6io6NOnjxDCz8+vqqrK/qWzM7OlmTNnGm+fpe8iQohPP/1UetDcu3fv0tJSq0sC0Ej8A8+gExMTk5KSNBrN/fv3nZycdDqd6btarTY0NDQqKurBgwdLly5VKBQxMTHh4eGPHz9esmSJECImJmbdunV37ty5cOGC2b5GaWlpXl5eKSkpd+7cuX379ldffWXnuL17966uru7Xr59CofD19TWdZ+LEiYMHD3Z1dZV+fGL27Nlbt25dtWpVcHDw3bt3Fy9ebHVMXFxcTEzMRx99pNfrV6xYYTqh5e4rVqyQfvZDCLFs2TL7l87OzJaPXNq0aWP6gerGjRvff//99evXx8bGTp8+XavVfvHFF1aXBKCRkLm7u9t5uzLy6dMArwT+ziEAvDANqSvZBYBGikADAIEGABBoACDQAAACDQAEGgBAoAEABBoACDQAgEADAIEGABBoAACBBgACDQAg0ABAoAEABBoACDQAgEADAAg0ABBoAACBBgACDQAg0AAAAg0ABBoAQKABgEADAAg0ABBoAACBBgAQaAAg0AAAAg0ABBoAQKABAAQaAAg0AIBAAwCBBgAQaAAg0FwCACDQAAACDQAEGgBAoAGAQAMACDQAgEADAIEGABBoACDQAAACDQAg0ABAoAEABBoACDQAgEADAIEGABBoAACBBgACDQAg0ABAoAEABBoAQKABgEADAAg0ABBoAACBBgACDQAg0AAAAg0ABBoAQKABgEADAAg0AIBAAwCBBgAQaAAg0AAAAg0ABBoAQKABAAQaAAg0AIBAAwCBBgAQaAAAgQYAAg0AINAAQKABAAQaAECgAYBAAwAINAAQaAAAgQYAAg0AINAAAAINAAQaAECgAYBAAwAINACAQAMAgQYAEGgAINAAAAINAAQaAECgAQAEGgAINACAQAMAgQYAEGgAAIEGAAINACDQAECgAQAEGgAINACAQAMACDQAEGgAAIEGAAINACDQAAACDQAEGgBAoAGAQAMACDQAgEADAIEGABBoACDQAAACDQAEGgBAoAEABBoACDQAgEADAIEGABBoAACBBgACDQAg0ABAoAEABBoACDQAgEADAAg0ABBoAACBBgACDQAg0AAAAg0ABBoAQKABgEADAAg0ABBoAACBBgAQaAAg0AAAAg0ABBoAQKABAAQaAAg0AIBAAwCBBgAQaAAAgQYAAg0AINAAQKABAAQaAAg0AIBAAwAINAAQaAAAgQYAAg0AINAAAAINAAT636ply5aBgYHOzs5cCgD/hYGeP39++H8EBAS4ubn5+flZHdm/f38hhJ0BDTFnzpzn2i4d1JYJEybo9XqDwfD3F/Bi2V/2C7yeAP5Zipc6e11dXXJysumW6upqqyMDAwNzcnKqq6ttDXgZpIPaerdp06YFBQWN8NfM/rL/wesJ4N8UaKv3mBs2bHjttddCQkJcXFwMBkNqaqq/v7+Tk9M777yzd+9eaUDTpk1HjRrl6Oj45MmTw4cPP3z4cM6cOefOnfPw8HB2dj59+nRZWZmbm1twcLCzs/PFixfPnj1rdqAmTZqEhoa6uLjcu3dP2mI2ftCgQdJBs7KyLOfx8/NzcnIKDw8/cuRIUFCQ2UrKysr+/PNPKd+WB3JxcQkKCmratKmDg0N2dvb169elEy8rK/P09MzNze3QoUP79u0LCgrOnj3bkDPt06ePj4+PEOL48eMeHh6m10paydWrV62e2nNdT/5jAF6tRxy2DB8+XKPRJCcnFxcXDxo06NSpUzqdbu/evaYDiouL1Wp1cXHx8OHDhRByufzRo0dqtXr//v0jR44UQvj7+584cUKtVgcGBlo9RElJSVJSUllZmUKhsBxvPKjVec6dO6fT6ZKTkwcNGmS5kpKSEuPNteWBhg0bVlBQsGfPnrS0tJCQkKffCRWK8+fPJycnBwcHFxQUJCcnS4dryJm+9dZbarX60KFDPXv2NL1WxpXYOrXnup4AXq1Ay+Vy4zPoli1bGrd7eXlJt2yXLl06fvy45Y6enp4ajUYIodFoPD09hRAymayoqEgIUVNTI31wl52dLX2O5+TkZHWG0tJSIUR5ebn0HNnW+GfOY7aS+vr6yspKOwfq1KnT0KFDw8PDR48e7ejoKJPJpL1u3Lhx//79uro66YVU84acaUVFxZgxY5o3b56Wlma6NuNK7J9CA48C4NV6xGH5DFoiNUtKjFartTPAdCrjyPr6eiHE+PHjS0tLCwsLrX4OJpfLjVNJs9kab38ey5UYDAZpAbYO5ODgsG/fPr1eL5PJPDw8pMF1dXXSC71eb7p7Q840PT29Q4cOffv27dGjx+HDhy1XYv8UGngUADziEEKIGzdudOnSRQjRq1evIUOGmNZNcvXq1W7dugkhunXr9vvvv1uNSNu2bTUajVwuNybS1LVr16RDdO3a1dZ46aD257FcyTMPVFVVJW3p3LnzM3/i4pln6uzsPGXKlGvXrqWlpXl7e1teKzun9lzXE8CrdQdtS1ZWVmhoqL+/v1arlf7Y/scff0ycODElJcX42CE0NNTX11f6UMvqJOfOnYuIiLh165ZWq5XL5XV1dXfv3u3fv7/0Ew5ZWVmjR4/29/e/du1aXV2d1fHSQS23mz0Asb8SywNlZWWFhIT4+fkZDIYjR47YvxTPnF+r1f7222+RkZEymezXX3+1vFZ2Tu25rieAxkbm7u5u5+3KyKc/BeyVwF9pAYAXpiF1JbsA0EgRaAAg0AAAAg0ABBoAQKABgEADAAg0AIBAAwCBBgAQaAAg0AAAAg0AINAAQKABAAQaAAg0AODlaug/eWX8n/8DALiDBgACDQBofJ7xj8YCALiDBgAQaAAg0AAAAg0ABBoAQKABgEADAAg0AKBh/gfJ9SzfS1x3zwAAAABJRU5ErkJggg==",
+   "source": "Surveillance team 3",
+   "acquiredAt": "2026-08-16",
+   "identifierIds": [
+    "4f3abb6a-308e-4f04-84f2-71dbbc5d7718",
+    "597e32de-f19a-41a7-a501-a205a6dad6bb"
+   ],
+   "pinIds": [
+    "21375dfd-7c74-4d68-8f61-9c8c1ddc8b20"
+   ],
+   "addedAt": "2026-08-16T10:15:00.000Z",
+   "addedBy": "Analyst J. Doe",
+   "custody": [
+    {
+     "id": "1a73297d-c1fd-4bf4-aaf5-fa99b09534c1",
+     "ts": "2026-08-16T10:15:00.000Z",
+     "action": "Kayda alındı",
+     "person": "Analyst J. Doe",
+     "note": "SHA-256: 55bf60d18b51c0ecf870f3b62ce13ed12782d15b09129f4f08516f210222aedc"
+    }
+   ],
+   "verifications": [
+    {
+     "id": "681add88-9b97-4e67-a0d9-0b16526d0d1e",
+     "ts": "2026-08-21T14:02:00.000Z",
+     "ok": true,
+     "fileName": "cafe_meeting.png",
+     "sha256": "55bf60d18b51c0ecf870f3b62ce13ed12782d15b09129f4f08516f210222aedc",
+     "analyst": "Analyst J. Doe"
+    }
+   ]
+  },
+  {
+   "id": "1ff5b2f3-6a62-4274-ab19-6e13d7b6462d",
+   "number": "D-005",
+   "title": "Bank transfer summary",
+   "description": "Three transfers to a crypto exchange in August.",
+   "fileName": "transfers_aug2026.csv",
+   "mimeType": "text/csv",
+   "size": 226,
+   "sha256": "5f242c90f37632f0eed66a9260cfc1e974ce60058c67e4bef59109f4e954d526",
+   "dataUrl": "data:text/csv;base64,ZGF0ZSxmcm9tLHRvLGFtb3VudCxjdXJyZW5jeQoyMDI2LTA4LTAzLFhYMDAgU0FNUCAwMDAwIDAwMDAgMDAwMCAwMCxleGNoYW5nZSBkZXBvc2l0LDE4NTAwLEVVUgoyMDI2LTA4LTEwLFhYMDAgU0FNUCAwMDAwIDAwMDAgMDAwMCAwMCxleGNoYW5nZSBkZXBvc2l0LDIyMDAwLEVVUgoyMDI2LTA4LTE3LFhYMDAgU0FNUCAwMDAwIDAwMDAgMDAwMCAwMCxleGNoYW5nZSBkZXBvc2l0LDk3NTAsRVVSCg==",
+   "source": "Financial intelligence referral FIR-22",
+   "acquiredAt": "2026-08-18",
+   "identifierIds": [
+    "1c6f27fb-55f9-4e6e-82fd-bdf07179b2de",
+    "138afb7a-5e9b-4f07-a73f-fe523290cb39",
+    "1289cb55-bec0-417b-9e2d-17938ea9fa7b"
+   ],
+   "pinIds": [],
+   "addedAt": "2026-08-18T10:15:00.000Z",
+   "addedBy": "Analyst J. Doe",
+   "custody": [
+    {
+     "id": "f18a0283-acce-4697-a334-bef97c7cdc91",
+     "ts": "2026-08-18T10:15:00.000Z",
+     "action": "Kayda alındı",
+     "person": "Analyst J. Doe",
+     "note": "SHA-256: 5f242c90f37632f0eed66a9260cfc1e974ce60058c67e4bef59109f4e954d526"
+    }
+   ],
+   "verifications": [
+    {
+     "id": "f7502a95-d07f-48d0-8ee8-eee0f415b97e",
+     "ts": "2026-08-21T14:02:00.000Z",
+     "ok": true,
+     "fileName": "transfers_aug2026.csv",
+     "sha256": "5f242c90f37632f0eed66a9260cfc1e974ce60058c67e4bef59109f4e954d526",
+     "analyst": "Analyst J. Doe"
+    }
+   ]
+  }
+ ],
+ "auditLog": [
+  {
+   "id": "27b4d318-3144-43a2-8914-a38bf1e86efc",
+   "ts": "2026-08-02T08:30:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Dosya oluşturuldu",
+   "detail": "Operation Nightjar"
+  },
+  {
+   "id": "8b468102-431f-47f0-9cec-1a8a954d6540",
+   "ts": "2026-08-02T08:41:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Tanımlayıcı eklendi",
+   "detail": "Subject: Marcus Hale"
+  },
+  {
+   "id": "5dcdd4e5-6a75-4518-b9a9-5c3c522e57a8",
+   "ts": "2026-08-04T10:02:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Tanımlayıcı eklendi",
+   "detail": "Organisation: Harbor Line Trading Ltd."
+  },
+  {
+   "id": "f811af11-e5cf-486c-950b-2a1baed77ff9",
+   "ts": "2026-08-05T10:15:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Delil kayda alındı",
+   "detail": "D-003 nightjar_profile_capture.png · SHA-256 04eb8f91c0fe384e…"
+  },
+  {
+   "id": "c64bc188-556e-402e-846c-676282e2ef51",
+   "ts": "2026-08-05T13:11:00.000Z",
+   "analyst": "Analyst R. Stone",
+   "action": "Bağlantı kuruldu",
+   "detail": "Marcus Hale ↔ @nightjar.travels"
+  },
+  {
+   "id": "7e288f36-c3ee-46a9-8afe-37323e74c069",
+   "ts": "2026-08-09T10:15:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Delil kayda alındı",
+   "detail": "D-001 witness_statement_W-02.txt · SHA-256 34842f371b74b4ca…"
+  },
+  {
+   "id": "49396ee7-3ba4-46e5-a3ce-e292a44f24cf",
+   "ts": "2026-08-11T10:15:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Delil kayda alındı",
+   "detail": "D-002 anpr_SMPL4471.png · SHA-256 ae1d71b69b86793f…"
+  },
+  {
+   "id": "bdcf9f77-f6f8-4cb4-a93f-1cd6533b9249",
+   "ts": "2026-08-13T19:05:00.000Z",
+   "analyst": "Analyst R. Stone",
+   "action": "Olay eklendi",
+   "detail": "2026-08-13 Hale and Kovac meet at Harbour Café"
+  },
+  {
+   "id": "89df4149-af4d-46ac-b396-27896390073b",
+   "ts": "2026-08-16T10:15:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Delil kayda alındı",
+   "detail": "D-004 cafe_meeting.png · SHA-256 55bf60d18b51c0ec…"
+  },
+  {
+   "id": "c1a05ec3-1625-45b8-8e4a-021368c1cce9",
+   "ts": "2026-08-18T10:15:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Delil kayda alındı",
+   "detail": "D-005 transfers_aug2026.csv · SHA-256 5f242c90f37632f0…"
+  },
+  {
+   "id": "95e401d8-c357-42f1-a620-09666ebb1ca1",
+   "ts": "2026-08-20T09:10:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Künye güncellendi",
+   "detail": "Status: Active pursuit"
+  },
+  {
+   "id": "211d8f9a-dcb2-4fad-8f7e-cbdf4a9c7366",
+   "ts": "2026-08-21T14:02:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Delil doğrulandı",
+   "detail": "D-001 witness_statement_W-02.txt"
+  },
+  {
+   "id": "697aac07-1a28-4d9c-b3f3-f20b0e32b01f",
+   "ts": "2026-08-21T14:30:00.000Z",
+   "analyst": "Analyst J. Doe",
+   "action": "Dosya kaydedildi",
+   "detail": "Unencrypted"
+  }
+ ],
+ "mapDisplay": {
+  "showPinConnections": false,
+  "pinConnectionColor": "#ef4444",
+  "showRadius": true,
+  "showDensity": true
+ }
+}
