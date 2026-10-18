@@ -1,7 +1,7 @@
 {
   "name": "osint-case",
   "private": true,
-  "version": "0.3.3",
+  "version": "0.3.4",
   "type": "module",
   "description": "OSINT Case — a browser-based investigation workspace for profiling, note-taking, link analysis and reporting. Fork of OSINTMapper (GPL-3.0).",
   "scripts": {
