@@ -27,7 +27,6 @@ dependencies = [
 [project.urls]
 Homepage = "https://osintcase.com"
 Source = "https://github.com/emrekybs/OsintCase"
-Upstream = "https://github.com/Geistnigma/OSINTMapper"
 
 [project.scripts]
 osintcase = "osintcase.cli:main"
