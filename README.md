@@ -32,6 +32,7 @@ From source (Node.js 18+):
 npm install
 npm run dev
 ```
+
 ## What it does
 
 Link network with confirmed, probable and doubtful links, shortest path and centrality. Subject
