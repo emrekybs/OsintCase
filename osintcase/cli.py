@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import ctypes
+import os
+import platform
 import subprocess
 import sys
 import time
@@ -10,6 +13,37 @@ from pathlib import Path
 from . import __version__, server, shortcut
 
 ICON = Path(__file__).resolve().parent / "assets" / "icon.png"
+
+
+VENDOR = Path(__file__).resolve().parent / "_vendor" / "linux-x86_64"
+
+
+def _window_env() -> dict:
+    """On Linux, Qt needs a few small XCB libraries that some distributions do not install
+    (libxcb-cursor0 above all). Copies of them ship with the package; any the system lacks
+    are linked into a private folder that is put on LD_LIBRARY_PATH for the window only."""
+    env = os.environ.copy()
+    if not sys.platform.startswith("linux") or platform.machine() not in ("x86_64", "AMD64") or not VENDOR.is_dir():
+        return env
+    missing = []
+    for lib in sorted(VENDOR.glob("lib*.so.*")):
+        try:
+            ctypes.CDLL(lib.name)
+        except OSError:
+            missing.append(lib)
+    if not missing:
+        return env
+    libdir = shortcut.DATA_DIR / "libs"
+    try:
+        libdir.mkdir(parents=True, exist_ok=True)
+        for old in libdir.iterdir():
+            old.unlink()
+        for lib in missing:
+            (libdir / lib.name).symlink_to(lib)
+    except OSError:
+        libdir = VENDOR
+    env["LD_LIBRARY_PATH"] = os.pathsep.join(filter(None, [str(libdir), env.get("LD_LIBRARY_PATH", "")]))
+    return env
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -46,7 +80,8 @@ def _gui(url: str) -> bool:
     started = time.monotonic()
     try:
         rc = subprocess.run(
-            [sys.executable, "-m", "osintcase._window", url, str(storage), str(ICON)]
+            [sys.executable, "-m", "osintcase._window", url, str(storage), str(ICON)],
+            env=_window_env(),
         ).returncode
     except OSError as exc:
         print(f"Could not start the window ({exc}).", file=sys.stderr)
@@ -57,8 +92,7 @@ def _gui(url: str) -> bool:
         return True
     if sys.platform.startswith("linux"):
         print(
-            "The window could not start. On Debian/Ubuntu this is usually fixed with:\n"
-            "  sudo apt install libxcb-cursor0 libxkbcommon-x11-0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0",
+            "The window could not start; opening OSINT Case in your browser instead.",
             file=sys.stderr,
         )
     return False

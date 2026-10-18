@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "osintcase"
-version = "0.3.2"
+version = "0.3.3"
 description = "OSINT Case: investigation case workspace for profiling, notes, link analysis and reports. Runs locally."
 readme = "PYPI.md"
 requires-python = ">=3.9"
@@ -38,7 +38,7 @@ include-package-data = true
 include = ["osintcase*"]
 
 [tool.setuptools.package-data]
-osintcase = ["static/**/*", "assets/*"]
+osintcase = ["static/**/*", "assets/*", "_vendor/linux-x86_64/*"]
 
 # Linux: `pip install` (user or system) puts the menu entry and icon in share/ directly.
 # (pipx installs into a private venv, so there the entry is created on first launch.)

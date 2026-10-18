@@ -16,12 +16,12 @@ osintcase --web               # opens it in your browser
 Recent Debian, Ubuntu, Fedora and Arch refuse a plain `pip install` into the system Python;
 use pipx there.
 
-| Distribution | Get pipx | Window dependency |
-|---|---|---|
-| Debian / Ubuntu / Mint | `sudo apt install pipx` | `sudo apt install libxcb-cursor0` |
-| Fedora | `sudo dnf install pipx` | `sudo dnf install xcb-util-cursor` |
-| Arch / Manjaro | `sudo pacman -S python-pipx` | `sudo pacman -S xcb-util-cursor` |
-| openSUSE | `sudo zypper install python3-pipx` | `sudo zypper install libxcb-cursor0` |
+| Distribution | Get pipx |
+|---|---|
+| Debian / Ubuntu / Mint / Kali | `sudo apt install pipx` |
+| Fedora | `sudo dnf install pipx` |
+| Arch / Manjaro | `sudo pacman -S python-pipx` |
+| openSUSE | `sudo zypper install python3-pipx` |
 
 Then run `pipx ensurepath` once and open a new terminal. Requires Python 3.9+.
 
