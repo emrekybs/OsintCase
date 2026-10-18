@@ -49,6 +49,13 @@ Link network, map, subject profiles, timeline, evidence vault and reports (PDF o
 |---|---|
 | ![Evidence](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/evidence-dark.png) | ![Report](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/report-dark.png) |
 
+## Example reports
+
+Generated from the sample case *Operation Nightjar*:
+
+- [Dark report (PDF)](https://github.com/emrekybs/OsintCase/blob/main/example/example-reports/en/report-dark.pdf)
+- [Light report, redacted and watermarked (PDF)](https://github.com/emrekybs/OsintCase/blob/main/example/example-reports/en/report-light-redacted-watermarked.pdf)
+
 Three fictional sample cases are on the home screen.
 
 Licensed under GPL-3.0. Source: https://github.com/emrekybs/OsintCase

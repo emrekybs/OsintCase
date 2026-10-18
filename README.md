@@ -50,6 +50,13 @@ Reports as PDF or single-file HTML.
 |---|---|
 | ![Evidence](docs/screenshots/evidence-dark.png) | ![Report](docs/screenshots/report-dark.png) |
 
+## Example reports
+
+Generated from the sample case *Operation Nightjar*:
+
+- [Dark report (PDF)](example/example-reports/en/report-dark.pdf)
+- [Light report, redacted and watermarked (PDF)](example/example-reports/en/report-light-redacted-watermarked.pdf)
+
 ## Sample cases
 
 Three fictional cases are listed on the home screen and in [`example/`](example).
