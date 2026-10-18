@@ -7,13 +7,11 @@ export a report. No server, no telemetry.
 
 ## Install
 
-Debian, Ubuntu, Kali, Mint, Parrot (nothing else needed, the menu entry is added on install):
+Debian, Ubuntu, Kali, Mint, Parrot — one command, the menu entry and icon come with it:
 
 ```bash
-sudo apt install ./osintcase_0.3.4_amd64.deb
+curl -fsSL https://github.com/emrekybs/OsintCase/releases/latest/download/osintcase_amd64.deb -o /tmp/osintcase.deb && sudo apt install -y /tmp/osintcase.deb
 ```
-
-Download it from the [releases page](https://github.com/emrekybs/OsintCase/releases).
 
 Other systems, with pipx or pip:
 
