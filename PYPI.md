@@ -1,19 +1,20 @@
 # OSINT Case
 
-Investigation case workspace for profiling subjects, taking notes, mapping links and writing up
-the case. It does **not** run tools or scrape anything; it organises what you collected elsewhere.
-Everything runs locally. Turkish and English interface and reports.
+<p align="center"><img src="https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/osintcase.png" alt="OSINT Case" width="240"></p>
+
+A local investigation workspace: profile subjects, map links, build a timeline, keep evidence,
+export a report. No server, no telemetry.
 
 ## Install (Linux, macOS, Windows)
 
 ```bash
-pipx install osintcase
+pipx install osintcase        # or: pip install osintcase
 osintcase                     # opens the app in its own window
-osintcase --web               # opens it in your browser instead
+osintcase --web               # opens it in your browser
 ```
 
-Use **pipx** where possible. Recent Debian, Ubuntu, Fedora and Arch refuse a plain `pip install`
-into the system Python ("externally-managed-environment"); pipx avoids that.
+Recent Debian, Ubuntu, Fedora and Arch refuse a plain `pip install` into the system Python;
+use pipx there.
 
 | Distribution | Get pipx | Window dependency |
 |---|---|---|
@@ -22,17 +23,20 @@ into the system Python ("externally-managed-environment"); pipx avoids that.
 | Arch / Manjaro | `sudo pacman -S python-pipx` | `sudo pacman -S xcb-util-cursor` |
 | openSUSE | `sudo zypper install python3-pipx` | `sudo zypper install libxcb-cursor0` |
 
-Then run `pipx ensurepath` once and open a new terminal. If a window cannot be opened,
-OSINT Case falls back to your browser. Requires Python 3.9+ (glibc-based Linux; Alpine is not supported).
-
-* The application menu entry and logo icon are added on first start (`--install-shortcut` does it by hand)
-* `osintcase --uninstall` removes the menu entry and the package
-* The server listens on `127.0.0.1` only; no telemetry
+Then run `pipx ensurepath` once and open a new terminal. Requires Python 3.9+.
 
 ## What it does
 
-* Case files, evidence hashing (SHA-256), Admiralty grading, audit log, optional AES-256-GCM encryption
-* Link network, map, timeline, report (PDF / single-file HTML)
-* Three fictional sample cases on the home screen (Turkish and English)
+Link network, map, subject profiles, timeline, evidence vault and reports (PDF or single-file HTML).
+
+| Link network | Map |
+|---|---|
+| ![Network](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/network.png) | ![Map](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/map.png) |
+
+| Subject profile | Report |
+|---|---|
+| ![Subject](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/subject.png) | ![Report](https://raw.githubusercontent.com/emrekybs/OsintCase/main/docs/screenshots/report.png) |
+
+Three fictional sample cases are on the home screen.
 
 Licensed under GPL-3.0. Source: https://github.com/emrekybs/OsintCase
