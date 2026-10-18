@@ -11,11 +11,12 @@
 
 ## Install
 
-Debian, Ubuntu, Kali, Mint, Parrot — one command, the menu entry and icon come with it:
+Debian, Ubuntu, Kali, Mint, Parrot — the menu entry and icon come with it:
 
 ```bash
-
-curl -fsSL https://github.com/emrekybs/OsintCase/releases/latest/download/osintcase_amd64.deb -o /tmp/osintcase.deb && sudo apt install -y /tmp/osintcase.deb```
+curl -LO https://github.com/emrekybs/OsintCase/releases/latest/download/osintcase_amd64.deb
+sudo apt install -y ./osintcase_amd64.deb
+```
 
 Other systems, with pipx or pip:
 
@@ -31,7 +32,6 @@ From source (Node.js 18+):
 npm install
 npm run dev
 ```
-
 ## What it does
 
 Link network with confirmed, probable and doubtful links, shortest path and centrality. Subject
