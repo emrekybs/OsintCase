@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=OSINT Case
+GenericName=Investigation case workspace
+Comment=Profiling, notes, link analysis and reports for OSINT investigations
+Exec=osintcase
+TryExec=osintcase
+Icon=osintcase
+Terminal=false
+Categories=Utility;Security;Network;
+StartupWMClass=osintcase
+Keywords=OSINT;investigation;case;intelligence;

@@ -1,0 +1,11 @@
+#!/bin/sh
+# OSINT Case launcher (.deb build): runs the app with the bundled Qt and pywebview.
+APP=/opt/osintcase
+PY=python3
+PYV=$($PY -c 'import sys; print("%d.%d" % sys.version_info[:2])' 2>/dev/null) || {
+  echo "python3 is required" >&2; exit 1; }
+SIP="$APP/lib-sip/$PYV"
+[ -d "$SIP" ] || SIP=""
+export PYTHONPATH="$APP${SIP:+:$SIP}:$APP/lib${PYTHONPATH:+:$PYTHONPATH}"
+export OSINTCASE_NO_SHORTCUT=1 OSINTCASE_DEB=1 PYTHONDONTWRITEBYTECODE=1
+exec $PY -m osintcase "$@"

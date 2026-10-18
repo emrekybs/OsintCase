@@ -11,6 +11,16 @@
 
 ## Install
 
+Debian, Ubuntu, Kali, Mint, Parrot (nothing else needed, the menu entry is added on install):
+
+```bash
+sudo apt install ./osintcase_0.3.4_amd64.deb
+```
+
+Download it from the [releases page](https://github.com/emrekybs/OsintCase/releases).
+
+Other systems, with pipx or pip:
+
 ```bash
 pipx install osintcase        # or: pip install osintcase
 osintcase                     # opens the app in its own window

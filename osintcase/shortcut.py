@@ -225,6 +225,9 @@ def ensure_once() -> None:
 
 def uninstall_package() -> int:
     """Remove the menu entry and uninstall the package (pipx or pip)."""
+    if os.environ.get("OSINTCASE_DEB"):
+        print("OSINT Case was installed from the .deb package. Remove it with:\n  sudo apt remove osintcase")
+        return 0
     for item in remove():
         print("removed:", item)
     (DATA_DIR / ".shortcut-declined").unlink(missing_ok=True)  # a later reinstall may add the entry again

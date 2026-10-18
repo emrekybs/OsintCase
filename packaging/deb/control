@@ -1,0 +1,12 @@
+Package: osintcase
+Version: @VERSION@
+Section: utils
+Priority: optional
+Architecture: amd64
+Installed-Size: @SIZE@
+Maintainer: Emre Kybs <noreply@osintcase.com>
+Homepage: https://osintcase.com
+Depends: python3 (>= 3.9), libxcb-cursor0, libxcb-icccm4, libxcb-image0, libxcb-keysyms1, libxcb-randr0, libxcb-render-util0, libxcb-shape0, libxcb-xfixes0, libxcb-xkb1, libxcb-sync1, libxcb-shm0, libxkbcommon-x11-0, libxkbcommon0, libx11-xcb1, libegl1, libgl1, libgbm1, libdrm2, libfontconfig1, libfreetype6, libdbus-1-3, libnss3, libnspr4, libxcomposite1, libxdamage1, libxrandr2, libxtst6, libxkbfile1, libxshmfence1, libasound2t64 | libasound2, libglib2.0-0t64 | libglib2.0-0
+Description: Local investigation case workspace
+ OSINT Case is a local investigation workspace: profile subjects, map links,
+ build a timeline, keep evidence and export reports. No server, no telemetry.

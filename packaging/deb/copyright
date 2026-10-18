@@ -1,0 +1,16 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: osintcase
+Source: https://github.com/emrekybs/OsintCase
+
+Files: opt/osintcase/osintcase/*
+License: GPL-3.0-only
+
+Files: opt/osintcase/lib/PyQt6/* opt/osintcase/lib-sip/*
+Copyright: Riverbank Computing Limited; The Qt Company Ltd.
+License: GPL-3.0-only and LGPL-3.0-only (Qt)
+
+Files: opt/osintcase/lib/webview/* opt/osintcase/lib/qtpy/* opt/osintcase/lib/bottle.py opt/osintcase/lib/proxy_tools/* opt/osintcase/lib/packaging/* opt/osintcase/lib/typing_extensions.py
+License: BSD-3-Clause / MIT / Apache-2.0 / PSF (see each package's dist-info)
+
+License: GPL-3.0-only
+ On Debian systems the full text is in /usr/share/common-licenses/GPL-3.
